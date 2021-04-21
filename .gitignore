@@ -3,3 +3,5 @@ bert_score
 markevaluate
 bleurt
 .vscode
+.ipynb_checkpoints
+default*
