@@ -8,18 +8,18 @@ cand , ref = ["asdf", "the thing goes skrrrrya pam pam pam pam pam", "and a kut 
 
 me_main : me = me.MarkEvaluate(cand, ref)
 result_me : dict = me_main.estimate()
-print(result_me)
+print("Mark-Evaluate: ", result_me)
 
 scorer_bertscore : BERTScorer = BERTScorer(lang="en")
 scores_bertscore : list = scorer_bertscore.score(cand, ref) # actual type is tensor
-print(scores_bertscore)
+print("BERTScore: ", scores_bertscore)
 
 scorer_bleurt : score.BleurtScorer = score.BleurtScorer(checkpoint="bleurt/bleurt/test_checkpoint") # checkpoint
 scores_bleurt : list = scorer_bleurt.score(references=ref, candidates=cand)
-print(scores_bleurt)
+print("BLEURT: ", scores_bleurt)
 
 scores_gruen = Main.get_gruen(cand)
-print(scores_gruen)
+print("GRUEN: ", scores_gruen)
 
 
 
