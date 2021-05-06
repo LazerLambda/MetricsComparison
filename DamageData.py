@@ -24,6 +24,8 @@ class DamageData:
     def perturb_data(self, text : str, percentage : float) -> list:
         """ Perturbation function
 
+        Complexity is O(n^2).
+
         Parameters
         ----------
         text : str
@@ -85,46 +87,92 @@ class DamageData:
 
 
     @staticmethod
-    def createRepetitions(sentences, tokens, sentence, phraseLength, nTimes):
-        """
+    def createRepetitions(\
+            sentences : list,\
+            doc : spacy.tokens.doc.Doc,\
+            sent_ind : int,\
+            phraseLength : int,\
+            nTimes : int) -> None:
+        """ Creating Repetitions in one sentence
+
+        Function to create repetitions in one sentence. To avoid 
+        the repitition of punctations, only phrase without punctuations 
+        will be choosen.  Alteration is done inplace.
+        Complexity is O(n).
+
+        Parameter
+        ---------
+        sentences : list
+            list of sentences in which one sentence will be perturbated
+        doc : pacy.tokens.doc.Doc
+            parsed tokens as a spaCy doc
+        sent_ind : int
+            index of sentence to be perturbated
+        phraseLength : int
+            length of a phrase to be repeated
+        nTimes : int
+            number of times the phrase will be repeated
         """
         # subtract 1 because of indexing
-        for i in reversed(range(phraseLength - 1, len(tokens))):
-            token_slice = tokens[(i - phraseLength):i]
+        for i in reversed(range(phraseLength - 1, len(doc))):
+            token_slice = doc[(i - phraseLength):i]
             if not True in [token.pos_ == 'PUNCT' for token in token_slice]:
+
+                index = doc[i].idx
+
                 rep = " ".join([token.text for token in token_slice])
+                further_tokens = " ".join([token.text for token in doc[i:len(doc)]])
+                sentences[sent_ind ] = sentences[sent_ind ][0:index] + " " + rep + further_tokens
 
-                further_tokens = " ".join([token.text for token in tokens[i:len(tokens)]])
-                index = tokens[i].idx
-
-                sentences[sentence] = sentences[sentence][0:index] + " " + rep + further_tokens
-                print(f"Repetition for a phrase with %i words %i times added. Sentence No.: %i" % (phraseLength, nTimes, sentence))
+                print(f"Repetition for a phrase with %i words %i times added. Sentence No.: %i" % (phraseLength, nTimes, sent_ind))
                 break
-
-            else:
-                continue
 
 
 
     def repeat_words(self, text : str, probability : float, nTimes : int = 3, phraseLength : int = 4) -> list:
+        """ Repeat words function
+
+        Function to repeat some word phrases n times. Which sentence is perturbated is determined by a random variable.
+        With the passed probability, a sentence in the text is perturbated.
+        Complexity is O(n^2) (function call).
+
+        Parameter
+        ---------
+        text : str
+            The whole text to be deteriorated
+        probability : float
+            value in [0,1] determining the probabilty of deterioration
+        nTimes : int
+            number of repetitions of each phrase
+        phraseLength : int
+            length of phrase to be repeated
+
+        Raises
+        ------
+        Exception
+            if probability is not in [0,1]
+
+        Returns
+        -------
+        list
+            list of sentences
+
         """
-        """
-        if probability > 1 or probability < 0:
-            print("probability must be in [0,1]")
-            return []
+        if probability < 0 or probability > 1:
+            raise Exception("Probability must be a number in [0,1].")
 
         sentences = nltk.sent_tokenize(text)
         for sentence in range(len(sentences)):
             
-            # if function returns 1, repeat phrase
-            if bool(np.random.binomial(size=1, n=1, p= probability)):
+            # if function returns True, repeat phrase
+            if bool(np.random.binomial(size=1, n=1, p=probability)):
 
                 tokens = self.nlp(sentences[sentence])
 
                 if len(tokens) <= phraseLength:
                     continue
 
-                self.createRepetitions(sentences=sentences, tokens=tokens, sentence=sentence, phraseLength=phraseLength, nTimes=nTimes)
+                self.createRepetitions(sentences=sentences, doc=tokens, sent_ind =sentence, phraseLength=phraseLength, nTimes=nTimes)
         
         return sentences
 
@@ -136,6 +184,7 @@ class DamageData:
 
         Function to swap one random pair of words. Using the random sample function,
         two elements are choosen and swaped later on.
+        Complexity is O(n).
 
         Parameter
         ---------
@@ -185,6 +234,7 @@ class DamageData:
 
         Function to swap a specific amound of words, determined by the probability parameter. A whole 
         text is passed, split into sentences and later on deteriorated to a specific degree.
+        Complexity is O(n^2) (function call).
 
         Parameter
         ---------
@@ -233,7 +283,8 @@ class DamageData:
     def drop_single(sentence : str, doc : spacy.tokens.doc.Doc) -> list:
         """ Drop single word function
 
-        Function to drop a single word from a sentence. 
+        Function to drop a single word from a sentence.
+        Complexity is O(n).
 
         Parameter
         ---------
@@ -270,6 +321,7 @@ class DamageData:
 
         Function to drop a specific amound of words, determined by the probability parameter. A whole 
         text is passed, split into sentences and later on deteriorated to a specific degree.
+        Complexity is O(n^2) (function call).
 
         Parameter
         ---------
