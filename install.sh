@@ -11,6 +11,13 @@ cd ..
 echo "Installing BERTScore"
 pip install bert-score
 
+echo "Installing nubia"
+git clone https://github.com/wl-research/nubia.git
+cd nubia
+pip install -r requirements.txt
+pip install .
+cd ..
+
 echo "Installing GRUEN"
 git clone https://github.com/WanzhengZhu/GRUEN
 cd GRUEN
