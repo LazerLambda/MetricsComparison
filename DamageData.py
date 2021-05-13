@@ -15,7 +15,15 @@ from typing import Tuple
 class DamageData:
 
 
-    def __init__(self):
+    def load(self) -> None:
+        """ Load function
+
+        loads data using the datasets library.
+
+        Returns
+        -------
+        None
+        """
         self.nlp = spacy.load("en_core_web_sm")
         self.data_set = load_dataset('cnn_dailymail', '3.0.0')
 
