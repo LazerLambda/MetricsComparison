@@ -67,10 +67,10 @@ class TestSuite:
 
 
 cand , ref = ["BLEURT is a trained metric, that is, it is a regression model trained on ratings data.",\
-    "the thing goes skrrrrya pam pam pam pam pam",\
+    # "the thing goes skrrrrya pam pam pam pam pam",\
     "and a kut tun tun boom yo"],\
     ["asd",\
-    "The thing goes crazy.",\
+    # "The thing goes crazy.",\
     "And makes some noise."]
 
 
