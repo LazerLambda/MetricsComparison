@@ -59,7 +59,6 @@ class Visualize:
         ax.set_xlabel('Percentage of perturbation')
         plt.gca().legend(tuple(mapper.key_names))
         plt.show()
-        # TODO add description
 
 
 
