@@ -7,3 +7,4 @@ bleurt
 default*
 nubia
 test.py
+__pycache__/*
