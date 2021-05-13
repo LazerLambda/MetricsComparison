@@ -12,6 +12,9 @@ from typing import Tuple
 
 
 class Visualize:
+    """
+    TODO
+    """
 
     def __init__(self,\
             results : list,\
@@ -35,10 +38,14 @@ class Visualize:
         self.fig.suptitle("Metric performance over increasing damaged data")
 
 
+
     def draw_subplot(self,\
             map_to_y : Mapper,\
             metric : str,\
             ylim : tuple = (-0.1,1.1)) -> None:
+        """
+        TODO
+        """
         
         # Prepare data for specific metric
         x, y = list(zip(*list(map(lambda elem : (elem[0], elem[1][metric]), self.results))))
@@ -93,10 +100,7 @@ class Visualize:
 
         if "GRUEN" in self.metrics:
             self.draw_subplot(AverageMapper, "GRUEN")
-        return self
-
-
-    def show(self) -> None:
+        
         plt.show()
 
 
@@ -123,4 +127,4 @@ if __name__ == "__main__":
         (0.2 , {'P': [0.4123, 0.592, 0.5132], 'R': [0.712, 0.212, 0.312], 'F1': [0.5123, 0.2, 0.46]})]
     x, y = list(zip(*test))
     x, y = list(x), list(y)
-    Visualize(test_, metrics=["BERTScore", "ME", "BLEURT", "GRUEN"]).visualize().show()
+    Visualize(test_, metrics=["BERTScore", "ME", "BLEURT", "GRUEN"]).visualize()

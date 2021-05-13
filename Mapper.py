@@ -4,6 +4,9 @@ from typing import Tuple
 
 
 class Mapper:
+    """
+    TODO
+    """
 
     def __init__(self, x : list):
         if len(x) == 0:
@@ -22,6 +25,9 @@ class Mapper:
 
 
 class AverageMapper(Mapper):
+    """
+    TODO
+    """
 
     def mapping(self) -> np.ndarray:
         # average over sentences
