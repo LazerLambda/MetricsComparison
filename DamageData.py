@@ -26,10 +26,12 @@ class DamageData:
         """
         self.nlp = spacy.load("en_core_web_sm")
         self.data_set = load_dataset('cnn_dailymail', '3.0.0')
+        self.damaged_data : list = list()
+        self.reference_data : list = list()
 
 
 
-    def perturb_data(self, text : str, percentage : float) -> list:
+    def negate_data(self, text : str, percentage : float) -> list:
         """ Perturbation function
 
         Complexity is O(n^2).

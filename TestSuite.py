@@ -27,7 +27,7 @@ class TestSuite:
 
         length_data : int = np.shape(data.data_set)['train'][0]
         
-        for i in range(length_data):
+        for _ in range(length_data):
             result : dict = dict()
 
             result['ME'] = Metrics.comp_ME(self.cand, self.ref)

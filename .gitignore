@@ -8,3 +8,4 @@ default*
 nubia
 test.py
 __pycache__/*
+*.p
