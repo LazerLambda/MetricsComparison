@@ -374,3 +374,79 @@ class DamageData:
             else:
                 ret_list.append(sentence)
         return ret_list
+
+
+
+    @staticmethod
+    def drop_single_pos(sentence : str, doc : spacy.tokens.doc.Doc, pos : str) -> list:
+    """ Drop single word function
+
+    Function to drop words based on their POS tag. 
+
+    Parameter
+    ---------
+    sentence : str
+        sentence to be deteriorated
+    doc : spacy.tokens.doc.Doc
+        spacy document, to extract the indices of the token from
+    pos : str
+        pos tag whose words will be dropped
+
+    Returns
+    -------
+    str
+        deteriorated sentence
+    """
+
+    candidates : list = []
+
+    for i in range(len(doc)):
+
+        if doc[i].pos_ == pos:
+            candidates.append(i)
+        else:
+            continue
+    
+    if len(candidates) == 0:
+        return sentence, False
+    
+    diff : int = 0
+    for i in candidates:
+        bounds = doc[i].idx - diff, doc[i].idx + len(doc[i].text) - diff
+        sentence = sentence[0:bounds[0]] + sentence[(bounds[1] + 1)::]
+        diff += len(doc[i].text) + 1
+    
+
+    return sentence, True
+    
+
+
+    @staticmethod
+    def pos_drop(sentences : list, pos : str):
+        """ POS drop function
+
+        Function to drop random words with a specific POS-Tag from a sentence.
+
+        Parameter
+        ---------
+        sentences : list
+            list of already tokenized sentence tokens
+
+        Returns
+        -------
+        list
+            list of sentences
+        """
+
+        ret_list : list = []
+        indices : list = []
+
+        for i, sentence in enumerate(sentences):
+                new_sentence = sentence
+                new_sentence, success = drop_single_pos(sentence=new_sentence, doc=nlp(new_sentence), pos=pos)
+
+                if success:
+                    indices.append(i)
+                ret_list.append(new_sentence)
+    
+        return ret_list, indices
