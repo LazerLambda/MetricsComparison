@@ -17,6 +17,9 @@ cand , ref = ["BLEURT is a trained metric, that is, it is a regression model tra
     ["asd",\
     "The thing goes crazy."]
 
+
+
+
 me_main : me = me.MarkEvaluate(cand, ref)
 result_me : dict = me_main.estimate()
 print("Mark-Evaluate: ", result_me)
@@ -31,14 +34,14 @@ scores_bleurt : list = scorer_bleurt.score(references=ref, candidates=cand)
 print(type(scores_bleurt))
 print("BLEURT: ", scores_bleurt)
 
-scores_gruen = Main.get_gruen(cand)
-print(type(scores_gruen))
-print("GRUEN: ", scores_gruen)
+# scores_gruen = Main.get_gruen(cand)
+# print(type(scores_gruen))
+# print("GRUEN: ", scores_gruen)
 
-n = Nubia()
-t = n.score(cand[0], ref[0], verbose=True, get_features=True)
-print(t)
-print(type(t))
+# n = Nubia()
+# t = n.score(cand[0], ref[0], verbose=True, get_features=True)
+# print(t)
+# print(type(t))
 
 
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import checklist
 import math
 import nltk
@@ -6,7 +8,6 @@ import random
 import spacy
 
 from checklist.perturb import Perturb
-from datasets import load_dataset
 from progress.bar import ShadyBar
 from typing import Tuple
 
@@ -15,23 +16,12 @@ from typing import Tuple
 class DamageData:
 
 
-    def load(self) -> None:
-        """ Load function
-
-        loads data using the datasets library.
-
-        Returns
-        -------
-        None
-        """
+    def __init__(self):
         self.nlp = spacy.load("en_core_web_sm")
-        self.data_set = load_dataset('cnn_dailymail', '3.0.0')
-        self.damaged_data : list = list()
-        self.reference_data : list = list()
 
 
 
-    def negate_data(self, text : str, percentage : float) -> list:
+    def negate_data(self, text : str, percentage : float) -> Tuple[list, list]:
         """ Perturbation function
 
         Complexity is O(n^2).
@@ -67,12 +57,12 @@ class DamageData:
         while loopCond:
 
             if counter > maxLen:
-                print("Couldn't find proper negations.")
                 loopCond = False
 
-            indices = random.sample(range(len(sentences)), math.floor(percentage * len(sentences)))
+            sample = random.sample(range(len(sentences)), math.floor(percentage * len(sentences)))
+            indices : list = []
 
-            for i in indices:
+            for i in sample:
 
                 ret = None
 
@@ -80,19 +70,18 @@ class DamageData:
                     ret = Perturb.perturb([doc[i]], Perturb.add_negation, keep_original=False)
                     if len(ret.data) > 0:
                         sentences[i] = ret.data[0][0]
-                        print(f"Sentence %i: Negated." % i)
+                        indices.append(i)
                     else:
                         loopCond = False
 
-                except TypeError:
-                    print("Couldn't find proper negation. Another sentence will be tried.")
+                except Exception:
                     loopCond = True
 
                 loopCond = False
             
             counter += 1
 
-        return sentences
+        return sentences, indices
 
 
 
@@ -123,6 +112,8 @@ class DamageData:
         nTimes : int
             number of times the phrase will be repeated
         """
+        indices : list = []
+
         # subtract 1 because of indexing
         for i in reversed(range(phraseLength - 1, len(doc))):
             token_slice = doc[(i - phraseLength):i]
@@ -134,12 +125,14 @@ class DamageData:
                 further_tokens = " ".join([token.text for token in doc[i:len(doc)]])
                 sentences[sent_ind ] = sentences[sent_ind ][0:index] + " " + rep + further_tokens
 
+                indices.append(i)
                 print(f"Repetition for a phrase with %i words %i times added. Sentence No.: %i" % (phraseLength, nTimes, sent_ind))
                 break
+        return indices
 
 
 
-    def repeat_words(self, text : str, probability : float, nTimes : int = 3, phraseLength : int = 4) -> list:
+    def repeat_words(self, text : str, probability : float, nTimes : int = 3, phraseLength : int = 4) -> Tuple[list, list]:
         """ Repeat words function
 
         Function to repeat some word phrases n times. Which sentence is perturbated is determined by a random variable.
@@ -182,14 +175,14 @@ class DamageData:
                 if len(tokens) <= phraseLength:
                     continue
 
-                self.createRepetitions(sentences=sentences, doc=tokens, sent_ind =sentence, phraseLength=phraseLength, nTimes=nTimes)
+                indices : list = self.createRepetitions(sentences=sentences, doc=tokens, sent_ind =sentence, phraseLength=phraseLength, nTimes=nTimes)
         
-        return sentences
+        return sentences, indices
 
 
 
     @staticmethod
-    def swap_pair(sentence : str, doc : spacy.tokens.doc.Doc) -> str:
+    def swap_pair(sentence : str, doc : spacy.tokens.doc.Doc) -> Tuple[str, bool]:
         """ Swap pair function
 
         Function to swap one random pair of words. Using the random sample function,
@@ -222,6 +215,10 @@ class DamageData:
             else:
                 continue
 
+        if len(candidates) < 3:
+            return sentence, False
+
+
         pair : list = random.sample(candidates, 2)
         first, second = (pair[0], pair[1]) if pair[0] < pair[1] else (pair[1], pair[0])
     
@@ -235,11 +232,11 @@ class DamageData:
         
         return sentence[0:(first_bounds[0])] + second_token + " " +\
             sentence[(first_bounds[1] + 1):(second_bounds[0])] + first_token + \
-            sentence[(second_bounds[1])::]
+            sentence[(second_bounds[1])::], True
 
         
 
-    def word_swap(self, text : str, probability : float) -> list:
+    def word_swap(self, text : str, probability : float) -> Tuple[list, list]:
         """ Word swap function
 
         Function to swap a specific amound of words, determined by the probability parameter. A whole 
@@ -263,6 +260,7 @@ class DamageData:
         list
             list of sentences
         """
+        # TODO include times in return 
 
         if probability < 0 or probability > 1:
             raise Exception("Probability must be a number in [0,1].")
@@ -270,23 +268,25 @@ class DamageData:
         sentences = nltk.sent_tokenize(text)
 
         ret_list : list = []
+        indices : list = []
 
-        for i, sentence in enumerate(sentences):
+        for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
 
             if bool(np.random.binomial(size=1, n=1, p= probability)):
 
-                times : int = random.randrange(1, 5)
-                new_sentence = sentence
+                times : int = random.randrange(1, len(sentence)) # altered afterwards
 
                 for _ in range(times):
-                    new_sentence = self.swap_pair(sentence=new_sentence, doc=self.nlp(new_sentence))
-
+                    new_sentence, success = self.swap_pair(sentence=sentences[i], doc=sentence)
                 ret_list.append(new_sentence)
-                print("Sentence %i: Swapped %i times" % (i, times))
+
+                if success:
+                    indices.append(i)
 
             else:
-                ret_list.append(sentence)
-        return ret_list
+                ret_list.append(sentences[i])
+        return ret_list, indices
+
 
 
     @staticmethod
@@ -308,6 +308,9 @@ class DamageData:
         str
             deteriorated sentence
         """
+
+        if len(doc) == 0:
+            return sentence
 
         candidates : list = []
 
@@ -357,23 +360,23 @@ class DamageData:
         sentences = nltk.sent_tokenize(text)
 
         ret_list : list = []
+        indices : list = []
 
-        for i, sentence in enumerate(sentences):
+        for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
 
             if bool(np.random.binomial(size=1, n=1, p= probability)):
 
-                times : int = random.randrange(1, 5)
-                new_sentence = sentence
+                times : int = random.randrange(1, len(sentence)) # altered afterwards
 
                 for _ in range(times):
-                    new_sentence = self.drop_single(sentence=new_sentence, doc=self.nlp(new_sentence))
+                    new_sentence = self.drop_single(sentence=sentences[i], doc=sentence)
 
                 ret_list.append(new_sentence)
-                print("Sentence %i: Dropped %i words" % (i, times))
+                indices.append(i)
 
             else:
-                ret_list.append(sentence)
-        return ret_list
+                ret_list.append(sentences[i])
+        return ret_list, indices
 
 
 
@@ -421,7 +424,7 @@ class DamageData:
         
 
 
-    def pos_drop(self, text : str,  probability : float, pos : str):
+    def pos_drop(self, text : str,  probability : float, pos : str) -> Tuple[list, list]:
         """ POS drop function
 
         Function to drop random words with a specific POS-Tag from a sentence.
@@ -455,14 +458,14 @@ class DamageData:
         indices : list = []
 
         # TODO pipe sentences
-        for i, sentence in enumerate(sentences):
+        for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
                 if bool(np.random.binomial(size=1, n=1, p= probability)):
-                    new_sentence, success = drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos=pos)
+                    new_sentence, success = self.drop_single_pos(sentence=sentences[i], doc=sentence, pos=pos)
 
                     if success:
                         indices.append(i)
                     ret_list.append(new_sentence)
                 else:
-                    ret_list.append(sentence)
+                    ret_list.append(sentences[i])
     
-        return ret_list, indices
+        return  ret_list, indices
