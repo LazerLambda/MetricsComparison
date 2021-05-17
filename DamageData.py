@@ -91,12 +91,14 @@ class DamageData:
             doc : spacy.tokens.doc.Doc,\
             sent_ind : int,\
             phraseLength : int,\
-            nTimes : int) -> None:
+            nTimes : int) -> bool:
         """ Creating Repetitions in one sentence
 
         Function to create repetitions in one sentence. To avoid 
         the repitition of punctations, only phrase without punctuations 
         will be choosen.  Alteration is done inplace.
+        Search for an appropriate phrase to repeat with no punctuation in 
+        it from the end of the sentence and then repeat the phrase nTimes.
         Complexity is O(n).
 
         Parameter
@@ -112,7 +114,6 @@ class DamageData:
         nTimes : int
             number of times the phrase will be repeated
         """
-        indices : list = []
 
         # subtract 1 because of indexing
         for i in reversed(range(phraseLength - 1, len(doc))):
@@ -125,10 +126,9 @@ class DamageData:
                 further_tokens = " ".join([token.text for token in doc[i:len(doc)]])
                 sentences[sent_ind ] = sentences[sent_ind ][0:index] + " " + rep + further_tokens
 
-                indices.append(i)
-                print(f"Repetition for a phrase with %i words %i times added. Sentence No.: %i" % (phraseLength, nTimes, sent_ind))
-                break
-        return indices
+                # print(f"Repetition for a phrase with %i words %i times added. Sentence No.: %i" % (phraseLength, nTimes, sent_ind))
+                return True
+        return False
 
 
 
@@ -165,17 +165,21 @@ class DamageData:
             raise Exception("Probability must be a number in [0,1].")
 
         sentences = nltk.sent_tokenize(text)
-        for sentence in range(len(sentences)):
+        indices : list = []
+        for i in range(len(sentences)):
             
             # if function returns True, repeat phrase
             if bool(np.random.binomial(size=1, n=1, p=probability)):
 
-                tokens = self.nlp(sentences[sentence])
+                tokens = self.nlp(sentences[i])
 
                 if len(tokens) <= phraseLength:
                     continue
 
-                indices : list = self.createRepetitions(sentences=sentences, doc=tokens, sent_ind =sentence, phraseLength=phraseLength, nTimes=nTimes)
+                success : bool = self.createRepetitions(sentences=sentences, doc=tokens, sent_ind=i, phraseLength=phraseLength, nTimes=nTimes)
+
+                if success:
+                    indices.append(i)
         
         return sentences, indices
 
@@ -266,6 +270,9 @@ class DamageData:
             raise Exception("Probability must be a number in [0,1].")
 
         sentences = nltk.sent_tokenize(text)
+
+        if len(sentences) == 0:
+            return [], []
 
         ret_list : list = []
         indices : list = []
@@ -358,6 +365,9 @@ class DamageData:
             raise Exception("Probability must be a number in [0,1].")
 
         sentences = nltk.sent_tokenize(text)
+
+        if len(sentences) == 0:
+            return [], []
 
         ret_list : list = []
         indices : list = []
