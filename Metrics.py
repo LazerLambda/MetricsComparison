@@ -7,40 +7,45 @@ from nubia.nubia_score import Nubia
 
 
 class Metrics:
-    
-    @staticmethod
-    def comp_ME(cand : list, ref : list) -> dict:
+
+    def __init__(self):
+        self.scorer_bertscore : BERTScorer = BERTScorer(lang="en")
+        self.scorer_bleurt : score.BleurtScorer = score.BleurtScorer(checkpoint="bleurt/bleurt/test_checkpoint")
+        self.n = Nubia()
+        
+
+
+    def comp_ME(self, cand : list, ref : list) -> dict:
         me_main : me = me.MarkEvaluate(cand, ref)
-        return me_main.estimate()
+        results : dict = me_main.estimate()
+        del me_main
+        return results
 
 
-    @staticmethod
-    def comp_BERTScore(cand : list, ref : list) -> dict:
-        scorer_bertscore : BERTScorer = BERTScorer(lang="en")
-        scores_bertscore : tuple = scorer_bertscore.score(cand, ref) # actual type in tuple is tensor
+
+    def comp_BERTScore(self, cand : list, ref : list) -> dict:
+        scores_bertscore : tuple = self.scorer_bertscore.score(cand, ref) # actual type in tuple is tensor
         return {"P": scores_bertscore[0],\
             "R": scores_bertscore[1],\
             "F1": scores_bertscore[2]}
 
 
-    @staticmethod
-    def comp_BLEURT(cand : list, ref : list) -> dict:
-        scorer_bleurt : score.BleurtScorer = score.BleurtScorer(checkpoint="bleurt/bleurt/test_checkpoint") # checkpoint
-        return {'BLEURT': scorer_bleurt.score(references=ref, candidates=cand)}
+
+    def comp_BLEURT(self, cand : list, ref : list) -> dict:
+        return {'BLEURT': self.scorer_bleurt.score(references=ref, candidates=cand)}
 
 
-    @staticmethod
-    def comp_GRUEN(cand : list, ref : list) -> dict:
+
+    def comp_GRUEN(self, cand : list, ref : list) -> dict:
         scores_gruen = Main.get_gruen(cand)
         return {"GRUEN": scores_gruen}
 
 
-    @staticmethod
-    def comp_NUBIA(cand : list, ref : list) -> dict:
-        n = Nubia()
+
+    def comp_NUBIA(self, cand : list, ref : list) -> dict:
         return list(
             map(
-                lambda candref : n.score(candref[0], candref[1], verbose=False, get_features=True),
+                lambda candref : self.n.score(candref[0], candref[1], verbose=False, get_features=True),
                 zip(cand, ref)
                 )
             )

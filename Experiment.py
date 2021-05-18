@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import nltk
 import numpy as np
 import pickle
+import sys
 
 from DamageData import DamageData
 from datasets import load_dataset
@@ -12,6 +14,8 @@ class Experiment:
 
     def __init__(self, data_set_name : str = 'cnn_dailymail', data_set_vers : str = '3.0.0'):
          self.data_set = load_dataset(data_set_name, data_set_vers) # TODO type
+         self.data_ref : list = []
+         self.metrics : Metrics = Metrics()
 
 
 
@@ -44,6 +48,7 @@ class Experiment:
     def perturb_data(self) -> None:
 
         self.deteriorated_data : dict = {
+            'ref' : self.data_ref,
             'negated' : [],
             'word_drop' : [],
             'word_swap' : [],
@@ -89,24 +94,58 @@ class Experiment:
 
 
     
-    def evaluate(self) -> None:
-        infile = open("deteriorated_data.p", "rb" )
-        self.deteriorated_data = pickle.load(infile)  
+    def evaluate_gen(self):
 
         for pert_type in self.deteriorated_data.keys():
-            bar = ShadyBar(pert_type, max=len(self.step_arr))
+            if pert_type == "ref":
+                continue
             perturbations : list = self.deteriorated_data[pert_type]
             for i, degree in enumerate(self.step_arr):
-                cand_list : tuple = perturbations[i]
+                # tuple of (degree, array)
+                cand_list : list = perturbations[i][1]
+                # results : list = []
                 for j, text in enumerate(self.data_ref):
-                    cand : list = cand_list[j]
-                    # print(text, cand)
-                    Metrics.comp_ME(text, cand)
-                    bar.next()
+                    # tuple of (perturbed text, indices of perturbed sentences)
+                    cand : list = cand_list[j][0]
+                    perturb_indcs : list = cand_list[j][1]
+                    # results.append(Metrics.comp_BERTScore(nltk.sent_tokenize(text), cand))
+                    ref_sentences : list = nltk.sent_tokenize(text)
+                    yield (
+                        self.metrics.comp_BERTScore(ref_sentences, cand),
+                        self.metrics.comp_BLEURT(ref_sentences, cand),
+                        self.metrics.comp_ME(ref_sentences, cand),
+                        perturb_indcs
+                        )
+                    del cand
+            # bar.finish()
+
+
+
+    def eval(self) -> None:
+        
+        infile = open("deteriorated_data.p", "rb" )
+        self.deteriorated_data = pickle.load(infile)
+        self.data_ref = self.deteriorated_data['ref']
+
+        for pert_type in self.deteriorated_data.keys():
+            if pert_type == "ref":
+                continue
+            results_type : tuple = (pert_type, [])
+
+            bar = ShadyBar(pert_type, max=len(self.step_arr) * len(self.data_ref))
+            for i, degree in enumerate(self.step_arr):
+                for j, text in enumerate(self.data_ref):
+                    try:
+                        results_type[1].append((degree, next(self.evaluate_gen())))
+                        bar.next()
+                    except StopIteration:
+                        run = False
+
+            file = open(str(pert_type) + "_data.p", "wb" )
+            pickle.dump(results_type, file)
+            file.close()
+            del results_type
             bar.finish()
-
-
-
 
 
 
@@ -114,8 +153,8 @@ class Experiment:
 
 if __name__ == "__main__":
     exp : Experiment = Experiment()
-    exp.sample(2)
+    exp.sample(50)
     exp.set_degrees(10)
-    # exp.perturb_data()
-    exp.evaluate()
+    exp.perturb_data()
+    exp.eval()
     # print(exp.deteriorated_data['word_swap'])g the Afghan Constitution and who are willing to come back willing to come back. "', 'Yet another piece of evidence about the folly of the U.S. involvement in Afghanistan came in the resignation of Matthew Hoh, a Foreign Service 
