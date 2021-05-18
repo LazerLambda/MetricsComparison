@@ -124,7 +124,7 @@ class Experiment:
 
 
     def eval(self) -> None:
-
+        
         infile = open("deteriorated_data.p", "rb" )
         self.deteriorated_data = pickle.load(infile)
         self.data_ref = self.deteriorated_data['ref']
@@ -142,8 +142,10 @@ class Experiment:
                         bar.next()
                     except StopIteration:
                         run = False
-            print(results_type)
-            pickle.dump(results_type, open(str(pert_type) + "_data.p", "wb" ))
+
+            file = open(str(pert_type) + "_data.p", "wb" )
+            pickle.dump(results_type, file)
+            file.close()
             del results_type
             bar.finish()
 
