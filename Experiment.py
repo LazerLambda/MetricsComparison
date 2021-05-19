@@ -145,7 +145,7 @@ class Experiment:
                         results_type[1].append((degree, next(self.evaluate_gen())))
                         bar.next()
                     except StopIteration:
-                        run = False
+                        pass
 
             file = open(str(pert_type) + "_data.p", "wb" )
             pickle.dump(results_type, file)
@@ -159,8 +159,8 @@ class Experiment:
 
 if __name__ == "__main__":
     exp : Experiment = Experiment()
-    exp.sample(1)
-    exp.set_degrees(4)
+    exp.sample(2)
+    exp.set_degrees(2)
     exp.perturb_data()
     exp.eval()
     # print(exp.deteriorated_data['word_swap'])g the Afghan Constitution and who are willing to come back willing to come back. "', 'Yet another piece of evidence about the folly of the U.S. involvement in Afghanistan came in the resignation of Matthew Hoh, a Foreign Service 
