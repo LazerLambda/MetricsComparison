@@ -12,12 +12,13 @@ from Metrics import Metrics
 
 class Experiment:
 
-    # TODO __slots__
+    __slots__ = ["data_set", "data_ref", "metrics", "step_arr", "deteriorated_data"]
 
     def __init__(self, data_set_name : str = 'cnn_dailymail', data_set_vers : str = '3.0.0'):
          self.data_set = load_dataset(data_set_name, data_set_vers) # TODO type
          self.data_ref : list = []
          self.metrics : Metrics = Metrics()
+         self.step_arr : list = []
 
 
 
@@ -128,6 +129,9 @@ class Experiment:
         infile = open("deteriorated_data.p", "rb" )
         self.deteriorated_data = pickle.load(infile)
         self.data_ref = self.deteriorated_data['ref']
+
+        if len(self.step_arr) == 0:
+            raise Exception("ERROR: Call set_degrees(steps : int) first.")
 
         for pert_type in self.deteriorated_data.keys():
             if pert_type == "ref":

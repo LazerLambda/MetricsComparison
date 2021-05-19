@@ -1,6 +1,7 @@
 
-
+echo "Installing python dependencies"
 pip install --upgrade pip
+pip install -r requirements.txt
 
 echo "Installing BLEURT"
 git clone https://github.com/google-research/bleurt.git
