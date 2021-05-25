@@ -10,7 +10,7 @@ from Apply import Apply
 
 class VisData:
 
-        def __init__(self, data : tuple, metric_name : str, apply : callable):
+        def __init__(self, data : tuple):
 
                 # initialization 
                 steps : np.ndarray = np.unique([e[0] for e in data[1]])
@@ -516,9 +516,9 @@ example_data : tuple = ('word_drop',
 
 
 if __name__ == "__main__":
-        test = VisData(example_data, 'BERTScore', lambda x : x)
+        test = VisData(example_data)
         assert len(example_data[1][0][1][0][0]['P'] + example_data[1][0][1][1][0]['P']) == len(test.combined_data['BERTScore']['data'][0][1]['P'])
         assert len(example_data[1][0][1][0][0]['R'] + example_data[1][0][1][1][0]['R']) == len(test.combined_data['BERTScore']['data'][0][1]['R'])
         assert len(example_data[1][0][1][0][0]['F1'] + example_data[1][0][1][1][0]['F1']) == len(test.combined_data['BERTScore']['data'][0][1]['F1'])
-        # print(test.combined_data)
+        print(test.combined_data)
         test.export_results()
