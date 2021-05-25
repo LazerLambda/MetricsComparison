@@ -25,6 +25,7 @@ class Experiment:
     def sample(self, sample_size) -> None:
         sample : np.ndarray = np.random.choice(np.arange(len(self.data_set['train'])), sample_size)
         self.data_ref = self.data_set['train'][sample]['article'] # TODO make property generics
+        print("Sample chosen: " + str(sample))
 
 
 
@@ -104,14 +105,10 @@ class Experiment:
                 continue
             perturbations : list = self.deteriorated_data[pert_type]
             for i, degree in enumerate(self.step_arr):
-                # tuple of (degree, array)
                 cand_list : list = perturbations[i][1]
-                # results : list = []
                 for j, text in enumerate(self.data_ref):
-                    # tuple of (perturbed text, indices of perturbed sentences)
                     cand : list = cand_list[j][0]
                     perturb_indcs : list = cand_list[j][1]
-                    # results.append(Metrics.comp_BERTScore(nltk.sent_tokenize(text), cand))
                     ref_sentences : list = nltk.sent_tokenize(text)
                     yield (
                         self.metrics.comp_BERTScore(ref_sentences, cand),
@@ -119,8 +116,6 @@ class Experiment:
                         self.metrics.comp_ME(ref_sentences, cand),
                         perturb_indcs
                         )
-                    del cand
-            # bar.finish()
 
 
 
@@ -133,19 +128,27 @@ class Experiment:
         if len(self.step_arr) == 0:
             raise Exception("ERROR: Call set_degrees(steps : int) first.")
 
+        eval_generator = self.evaluate_gen()
+
+        # [(pert_type: [...])]
         for pert_type in self.deteriorated_data.keys():
             if pert_type == "ref":
                 continue
             results_type : tuple = (pert_type, [])
 
             bar = ShadyBar(pert_type, max=len(self.step_arr) * len(self.data_ref))
-            for i, degree in enumerate(self.step_arr):
-                for j, text in enumerate(self.data_ref):
+            # [(pert_type: [(degree, [...])])]
+            for degree in self.step_arr:
+                result_tuple : tuple = (degree, [])
+                # [(pert_type: [(degree, [{'BERTScore' : ..., 'BLEURT' : ..., 'ME' : ...}, ...])])]
+                for _ in self.data_ref:
                     try:
-                        results_type[1].append((degree, next(self.evaluate_gen())))
+                        result_tuple[1].append(next(eval_generator))
                         bar.next()
                     except StopIteration:
                         pass
+                results_type[1].append(result_tuple)
+
 
             file = open(str(pert_type) + "_data.p", "wb" )
             pickle.dump(results_type, file)

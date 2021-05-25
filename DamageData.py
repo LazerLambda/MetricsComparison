@@ -250,7 +250,7 @@ class DamageData:
         Parameter
         ---------
         text : str
-            Whole text which wil be deteriorated
+            Whole text which will be deteriorated
         probability : float
             float in [0,1]
 
