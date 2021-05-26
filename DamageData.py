@@ -340,6 +340,7 @@ class DamageData:
             times : int = random.randrange(0, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
 
             new_sentence = sentences[i]
+            success : bool = False
             for _ in range(times):
                 new_sentence, success = self.swap_pair(sentence=new_sentence, doc=sentence)
             ret_list.append(new_sentence)
