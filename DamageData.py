@@ -283,8 +283,9 @@ class DamageData:
 
                 times : int = random.randrange(1, len(sentence)) # altered afterwards
 
+                new_sentence = sentences[i]
                 for _ in range(times):
-                    new_sentence, success = self.swap_pair(sentence=sentences[i], doc=sentence)
+                    new_sentence, success = self.swap_pair(sentence=new_sentence, doc=sentence)
                 ret_list.append(new_sentence)
 
                 if success:
@@ -292,6 +293,59 @@ class DamageData:
 
             else:
                 ret_list.append(sentences[i])
+        return ret_list, indices
+
+
+
+    def word_swap_by_p(self, text : str, probability : float) -> Tuple[list, list]:
+        """ Word swap function
+
+        Function to swap a specific amound of words, determined by the probability parameter for every sentence. A whole 
+        text is passed, split into sentences and later on deteriorated.
+        Complexity is O(n^2) (function call).
+
+        Parameter
+        ---------
+        text : str
+            Whole text which will be deteriorated
+        probability : float
+            float in [0,1]
+
+        Raises
+        ------
+        Exception
+            if probability is not in [0,1]
+
+        Returns
+        -------
+        list
+            list of sentences
+        """
+        # TODO include times in return 
+
+        if probability < 0 or probability > 1:
+            raise Exception("Probability must be a number in [0,1].")
+
+        sentences = nltk.sent_tokenize(text)
+
+        if len(sentences) == 0:
+            return [], []
+
+        ret_list : list = []
+        indices : list = []
+
+        for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
+
+
+            times : int = random.randrange(0, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
+
+            new_sentence = sentences[i]
+            for _ in range(times):
+                new_sentence, success = self.swap_pair(sentence=new_sentence, doc=sentence)
+            ret_list.append(new_sentence)
+
+            if success:
+                indices.append(i)
         return ret_list, indices
 
 
@@ -378,14 +432,67 @@ class DamageData:
 
                 times : int = random.randrange(1, len(sentence)) # altered afterwards
 
+                new_sentence = sentences[i]
                 for _ in range(times):
-                    new_sentence = self.drop_single(sentence=sentences[i], doc=sentence)
+                    new_sentence = self.drop_single(sentence=new_sentence, doc=sentence)
 
                 ret_list.append(new_sentence)
                 indices.append(i)
 
             else:
                 ret_list.append(sentences[i])
+        return ret_list, indices
+
+
+    
+    def word_drop_by_p(self, text : str, probability : float) -> list:
+        """ Word drop function
+
+        Function to drop a specific amound of words, determined by the probability parameter in a sentence. A whole 
+        text is passed, split into sentences and later every sentence is deteriorated.
+        Complexity is O(n^2) (function call).
+
+        Parameter
+        ---------
+        text : str
+            Whole text which wil be deteriorated
+        probability : float
+            float in [0,1]
+
+        Raises
+        ------
+        Exception
+            if probability is not in [0,1]
+
+        Returns
+        -------
+        list
+            list of sentences
+        """
+
+        if probability < 0 or probability > 1:
+            raise Exception("Probability must be a number in [0,1].")
+
+        sentences = nltk.sent_tokenize(text)
+
+        if len(sentences) == 0:
+            return [], []
+
+        ret_list : list = []
+        indices : list = []
+
+        for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
+
+
+            times : int = random.randrange(0, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
+
+            new_sentence = sentences[i]
+            for _ in range(times):
+                new_sentence = self.drop_single(sentence=new_sentence, doc=sentence)
+
+            ret_list.append(new_sentence)
+            indices.append(i)
+
         return ret_list, indices
 
 

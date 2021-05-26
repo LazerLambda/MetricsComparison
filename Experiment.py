@@ -55,7 +55,9 @@ class Experiment:
             'ref' : self.data_ref,
             'negated' : [],
             'word_drop' : [],
+            'word_drop_every_sentence' : [],
             'word_swap' : [],
+            'word_swap_every_sentence' : [],
             'pos_drop_adj' : [],
             'pos_drop_det' : [],
             'repetitions' : []
@@ -67,9 +69,14 @@ class Experiment:
 
         self.apply_perturbations('word_drop', 'Creating word drop samples.', dd.word_drop)
 
+        self.apply_perturbations('word_drop_every_sentence', 'Creating word drop with increasing drop propability.', dd.word_drop_by_p)
+        
         self.apply_perturbations('word_swap', 'Creating word swap samples.', dd.word_swap)
 
+        self.apply_perturbations('word_swap_every_sentence', 'Creating word swap with increasing swap propability.', dd.word_swap_by_p)
+
         self.apply_perturbations('repetitions', 'Creating repetitions in samples.', dd.repeat_words)
+
 
         bar = ShadyBar('Creating ADJ POS dropped samples.', max=len(self.step_arr))
         for i, degree in enumerate(self.step_arr):
