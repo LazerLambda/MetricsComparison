@@ -45,7 +45,7 @@ class Experiment:
 
     def set_degrees(self, steps : int) -> None:
         step_size : float = 1 / steps
-        self.step_arr = np.flip(1 - np.concat( (np.arange(0,1, step=step_size), np.array([1])) ) )
+        self.step_arr = np.flip(1 - np.concatenate( (np.arange(0,1, step=step_size), np.array([1])) ) )
         print(self.step_arr)
     
 
@@ -172,6 +172,6 @@ if __name__ == "__main__":
     exp : Experiment = Experiment()
     exp.sample(2)
     exp.set_degrees(2)
-    # exp.perturb_data()
-    # exp.eval()
+    exp.perturb_data()
+    exp.eval()
     # print(exp.deteriorated_data['word_swap'])g the Afghan Constitution and who are willing to come back willing to come back. "', 'Yet another piece of evidence about the folly of the U.S. involvement in Afghanistan came in the resignation of Matthew Hoh, a Foreign Service 
