@@ -336,8 +336,9 @@ class DamageData:
 
         for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
 
-
-            times : int = random.randrange(0, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
+            upper : int = math.ceil(probability * 0.5 * len(sentence))
+            upper = 1 if upper < 1 else upper
+            times : int = random.randrange(0, upper) # altered afterwards
 
             new_sentence = sentences[i]
             success : bool = False
@@ -484,8 +485,9 @@ class DamageData:
 
         for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
 
-
-            times : int = random.randrange(0, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
+            upper : int = math.ceil(probability * 0.5 * len(sentence))
+            upper = 1 if upper < 1 else upper
+            times : int = random.randrange(0, upper) # altered afterwards
 
             new_sentence = sentences[i]
             for _ in range(times):
