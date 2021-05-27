@@ -45,7 +45,7 @@ class Experiment:
 
     def set_degrees(self, steps : int) -> None:
         step_size : float = 1 / steps
-        self.step_arr = np.flip(1 - np.concat( (np.arange(0,1, step=step_size), np.array([1])) ) )
+        self.step_arr = np.flip(1 - np.concatenate( (np.arange(0,1, step=step_size), np.array([1])) ) )
     
 
 
