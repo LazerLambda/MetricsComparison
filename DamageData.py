@@ -337,7 +337,7 @@ class DamageData:
         for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
 
 
-            times : int = random.randrange(0, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
+            times : int = random.randrange(1, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
 
             new_sentence = sentences[i]
             success : bool = False
@@ -383,7 +383,7 @@ class DamageData:
             else:
                 continue
         
-        to_drop : int = random.randrange(0, len(doc))
+        to_drop : int = random.randrange(1, len(doc))
 
         bounds = doc[to_drop].idx, doc[to_drop].idx + len(doc[to_drop].text)
 
@@ -485,7 +485,7 @@ class DamageData:
         for i, sentence in enumerate(list(self.nlp.pipe(sentences))):
 
 
-            times : int = random.randrange(0, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
+            times : int = random.randrange(1, math.ceil(probability * 0.5 * len(sentence))) # altered afterwards
 
             new_sentence = sentences[i]
             for _ in range(times):
