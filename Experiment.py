@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import nltk
+import os
 import numpy as np
 import pickle
 import sys
@@ -14,11 +15,12 @@ class Experiment:
 
     __slots__ = ["data_set", "data_ref", "metrics", "step_arr", "deteriorated_data"]
 
-    def __init__(self, data_set_name : str = 'cnn_dailymail', data_set_vers : str = '3.0.0'):
+    def __init__(self, data_set_name : str = 'cnn_dailymail', data_set_vers : str = '3.0.0', path=""):
          self.data_set = load_dataset(data_set_name, data_set_vers) # TODO type
          self.data_ref : list = []
          self.metrics : Metrics = Metrics()
          self.step_arr : list = []
+         self.path = os.path.join(os.getcwd())
 
 
 
@@ -101,7 +103,7 @@ class Experiment:
             bar.next()
         bar.finish()
 
-        pickle.dump(self.deteriorated_data, open("deteriorated_data.p", "wb" ))
+        pickle.dump(self.deteriorated_data, open("deteriorated_data_raw.p", "wb" ))
 
 
     
