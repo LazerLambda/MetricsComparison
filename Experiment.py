@@ -20,7 +20,7 @@ class Experiment:
          self.data_ref : list = []
          self.metrics : Metrics = Metrics()
          self.step_arr : list = []
-         self.path = os.path.join(os.getcwd())
+        #  self.path = os.path.join(os.getcwd())
 
 
 
@@ -107,7 +107,7 @@ class Experiment:
 
 
     
-    def evaluate_gen(self):
+    def evaluate_gen(self, fun_list : list):
 
         for pert_type in self.deteriorated_data.keys():
             if pert_type == "ref":
@@ -116,28 +116,33 @@ class Experiment:
             for i, degree in enumerate(self.step_arr):
                 cand_list : list = perturbations[i][1]
                 for j, text in enumerate(self.data_ref):
+                    print(cand_list[j][1])
                     cand : list = cand_list[j][0]
                     perturb_indcs : list = cand_list[j][1]
                     ref_sentences : list = nltk.sent_tokenize(text)
-                    yield (
-                        self.metrics.comp_BERTScore(ref_sentences, cand),
-                        self.metrics.comp_BLEURT(ref_sentences, cand),
-                        self.metrics.comp_ME(ref_sentences, cand),
-                        perturb_indcs
-                        )
+
+                    ret_lst : list = []
+                    for f in fun_list:
+                        v = f(ref_sentences, cand)
+                        ret_lst.append(v)
+
+                    ret_lst.append(perturb_indcs)
+
+                    yield ret_lst
 
 
 
-    def eval(self) -> None:
+    def eval(self, fun_list : list) -> None:
         
-        infile = open("deteriorated_data.p", "rb" )
+        # TODO const
+        infile = open("deteriorated_data_raw.p", "rb" )
         self.deteriorated_data = pickle.load(infile)
         self.data_ref = self.deteriorated_data['ref']
 
         if len(self.step_arr) == 0:
             raise Exception("ERROR: Call set_degrees(steps : int) first.")
 
-        eval_generator = self.evaluate_gen()
+        eval_generator = self.evaluate_gen(fun_list)
 
         # [(pert_type: [...])]
         for pert_type in self.deteriorated_data.keys():
@@ -171,8 +176,11 @@ class Experiment:
 
 if __name__ == "__main__":
     exp : Experiment = Experiment()
-    exp.sample(2)
-    exp.set_degrees(2)
-    exp.perturb_data()
-    exp.eval()
+    #exp.sample(2)
+    exp.set_degrees(1)
+    #exp.perturb_data()
+    exp.eval(
+        # [exp.metrics.comp_BERTScore,
+        [exp.metrics.comp_BLEURT,])
+        # exp.metrics.comp_ME])
     # print(exp.deteriorated_data['word_swap'])g the Afghan Constitution and who are willing to come back willing to come back. "', 'Yet another piece of evidence about the folly of the U.S. involvement in Afghanistan came in the resignation of Matthew Hoh, a Foreign Service 
