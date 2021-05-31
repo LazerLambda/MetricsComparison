@@ -101,14 +101,14 @@ class Metrics:
                     }
 
 
-    # TODO correct Peterson to Peterson
+    # TODO correct Petersen to Petersen
     @staticmethod
     def con_ME(acc, elem):
         for e in elem:
             if isinstance(e, dict):
-                if 'Schnabel' in e.keys() and 'Peterson' in e.keys() and 'CAPTURE' in e.keys():
+                if 'Schnabel' in e.keys() and 'Petersen' in e.keys() and 'CAPTURE' in e.keys():
                     return {
-                        'Petersen': acc['Petersen'] + [e['Peterson']],
+                        'Petersen': acc['Petersen'] + [e['Petersen']],
                         'Schnabel': acc['Schnabel'] + [e['Schnabel']],
                         'CAPTURE': acc['CAPTURE'] + [e['CAPTURE']]
                     }

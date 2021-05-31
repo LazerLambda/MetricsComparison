@@ -108,14 +108,14 @@ class Visualize:
 
 if __name__ == "__main__":
     test_ : list = [(0.0, {
-        'ME': {'Peterson': 1.0, 'Schnabel': 1.0, 'CAPTURE': 1.0},
+        'ME': {'Petersen': 1.0, 'Schnabel': 1.0, 'CAPTURE': 1.0},
         'BERTScore': {'P': [0.7943, 0.8081], 'R': [0.7889, 0.8825], 'F1': [0.7916, 0.8436]},
         'BLEURT': {'BLEURT': [-1.251094102859497, -1.0400080680847168]},
         'GRUEN': {'GRUEN': [0.7391475883349699, 0.4926017081756097]},
         'NUBIA': [{'nubia_score': 0.05430618350698457, 'features': {'semantic_relation': 1.5312963724136353, 'contradiction': 69.75854635238647, 'irrelevancy': 12.858390808105469, 'logical_agreement': 17.383064329624176, 'grammar_ref': 5.018170356750488, 'grammar_hyp': 8.034308433532715}}, {'nubia_score': 0.15190720827875148, 'features': {'semantic_relation': 0.8979882001876831, 'contradiction': 0.061019702116027474, 'irrelevancy': 2.988027408719063, 'logical_agreement': 96.95096015930176, 'grammar_ref': 7.9379754066467285, 'grammar_hyp': 6.1522674560546875}}]
         }),
         (0.1, {
-            'ME': {'Peterson': 0.75, 'Schnabel': 0.9, 'CAPTURE': 1.0},
+            'ME': {'Petersen': 0.75, 'Schnabel': 0.9, 'CAPTURE': 1.0},
             'BERTScore': {'P': [0.7943, 0.8081], 'R': [0.7889, 0.8825], 'F1': [0.7916, 0.8436]},
             'BLEURT': {'BLEURT': [-0.9123, -0.8400080680847168]},
             'GRUEN': {'GRUEN': [0.52, 0.23]},

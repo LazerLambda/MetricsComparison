@@ -97,7 +97,7 @@ class Test_Reduce_Data(unittest.TestCase):
                               0.6688219308853149,
                               0.9113960862159729,
                               0.8971254825592041]},
-                  {'Peterson': 0.9910714285714286,
+                  {'Petersen': 0.9910714285714286,
                         'Schnabel': 0.9910714285714286,
                         'CAPTURE': 0.9821428571428571},
                   [0,
@@ -155,7 +155,7 @@ class Test_Reduce_Data(unittest.TestCase):
                               0.8648319244384766,
                               0.8489693403244019,
                               0.8486870527267456]},
-                  {'Peterson': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
+                  {'Petersen': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
                   [2, 6, 8, 11, 13, 14, 15, 16, 17, 18])]),
                   (1.0,
                   [({'P': torch.Tensor([0.9832, 0.9787, 0.9803, 0.9282, 0.9892, 0.9895, 0.9913, 0.9865, 0.9950,
@@ -235,7 +235,7 @@ class Test_Reduce_Data(unittest.TestCase):
                               0.8714327812194824,
                               0.6941704750061035,
                               0.8998167514801025]},
-                  {'Peterson': 0.9910714285714286,
+                  {'Petersen': 0.9910714285714286,
                         'Schnabel': 0.9989177489177489,
                         'CAPTURE': 0.9821428571428571},
                         [0,
@@ -323,7 +323,7 @@ class Test_Reduce_Data(unittest.TestCase):
                               0.7490243911743164,
                               0.8543717861175537,
                               0.8290738463401794]},
-                        {'Peterson': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
+                        {'Petersen': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
                         [0,
                         1,
                         2,
@@ -350,19 +350,106 @@ class Test_Reduce_Data(unittest.TestCase):
             test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])
             test.__add_data__(self.example_data)
 
-            len_fun_data_p = len(test.data['word_drop']['BERTScore']['data'][0][1]['P'])
-            len_fun_data_r = len(test.data['word_drop']['BERTScore']['data'][0][1]['R'])
-            len_fun_data_f1 = len(test.data['word_drop']['BERTScore']['data'][0][1]['F1'])
+            len_fun_data_p_BERTScore = len(test.data['word_drop']['BERTScore']['data'][0][1]['P'])
+            len_fun_data_r_BERTScore = len(test.data['word_drop']['BERTScore']['data'][0][1]['R'])
+            len_fun_data_f1_BERTScore = len(test.data['word_drop']['BERTScore']['data'][0][1]['F1'])
 
-            len_ex_data_p = len(self.example_data[1][0][1][0][0]['P'].tolist() + self.example_data[1][0][1][1][0]['P'].tolist())
-            len_ex_data_r = len(self.example_data[1][0][1][0][0]['R'].tolist() + self.example_data[1][0][1][1][0]['R'].tolist())
-            len_ex_data_f1 = len(self.example_data[1][0][1][0][0]['F1'].tolist() + self.example_data[1][0][1][1][0]['F1'].tolist())
+            len_fun_data_BLEURT= len(test.data['word_drop']['BLEURT']['data'][0][1]['BLEURT'])
+
+            len_fun_data_Schnabel_ME = len(test.data['word_drop']['ME']['data'][0][1]['Schnabel'])
+            len_fun_data_Petersen_ME = len(test.data['word_drop']['ME']['data'][0][1]['Petersen'])
+            len_fun_data_CAPTURE_ME = len(test.data['word_drop']['ME']['data'][0][1]['CAPTURE'])
+
+            len_ex_data_p_BERTScore = len(self.example_data[1][0][1][0][0]['P'].tolist() + self.example_data[1][0][1][1][0]['P'].tolist())
+            len_ex_data_r_BERTScore = len(self.example_data[1][0][1][0][0]['R'].tolist() + self.example_data[1][0][1][1][0]['R'].tolist())
+            len_ex_data_f1_BERTScore = len(self.example_data[1][0][1][0][0]['F1'].tolist() + self.example_data[1][0][1][1][0]['F1'].tolist())
+
+            len_ex_data_BLEURT = len(self.example_data[1][0][1][0][1]['BLEURT'] + self.example_data[1][0][1][1][1]['BLEURT'])
            
-            self.assertEqual(len_fun_data_f1, len_ex_data_f1, msg="Check length of arrays, BERTScore F1")
-            self.assertEqual(len_fun_data_r, len_ex_data_r, msg="Check length of arrays, BERTScore R")
-            self.assertEqual(len_fun_data_p, len_ex_data_p, msg="Check length of arrays, BERTScore P")
+            len_ex_data_Schnabel_ME = len([self.example_data[1][0][1][0][2]['Schnabel']] + [self.example_data[1][0][1][1][2]['Schnabel']])
+            len_ex_data_Petersen_ME = len([self.example_data[1][0][1][0][2]['Petersen']] + [self.example_data[1][0][1][1][2]['Petersen']])
+            len_ex_data_CAPTURE_ME = len([self.example_data[1][0][1][0][2]['CAPTURE']] + [self.example_data[1][0][1][1][2]['CAPTURE']])
+
+            self.assertEqual(len_fun_data_f1_BERTScore, len_ex_data_f1_BERTScore, msg="Check length of arrays, BERTScore F1")
+            self.assertEqual(len_fun_data_r_BERTScore, len_ex_data_r_BERTScore, msg="Check length of arrays, BERTScore R")
+            self.assertEqual(len_fun_data_p_BERTScore, len_ex_data_p_BERTScore, msg="Check length of arrays, BERTScore P")
+
+            self.assertEqual(len_fun_data_BLEURT, len_ex_data_BLEURT, msg="Check length of arrays, BLEURT")
+
+            self.assertEqual(len_fun_data_Schnabel_ME , len_ex_data_Schnabel_ME, msg="Check length of arrays, ME Schnabel")
+            self.assertEqual(len_fun_data_Petersen_ME , len_ex_data_Petersen_ME, msg="Check length of arrays, ME Petersen")
+            self.assertEqual(len_fun_data_CAPTURE_ME , len_ex_data_CAPTURE_ME, msg="Check length of arrays, ME CAPTURE")
+
+      def test_len_f(self):
+            test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])
+            test.__add_data__(self.example_data)
+
+            indices_0 = np.asarray(self.example_data[1][0][1][0][3])
+            indices_1 = np.asarray(self.example_data[1][0][1][1][3])
+
+            len_fun_data_p_BERTScore = len(test.data['word_drop']['BERTScore_f']['data'][0][1]['P'])
+            len_fun_data_r_BERTScore = len(test.data['word_drop']['BERTScore_f']['data'][0][1]['R'])
+            len_fun_data_f1_BERTScore = len(test.data['word_drop']['BERTScore_f']['data'][0][1]['F1'])
+
+            # print(test.data['word_drop']['BERTScore_f']['data'][0][1]['F1'])
+
+            len_fun_data_BLEURT= len(test.data['word_drop']['BLEURT_f']['data'][0][1]['BLEURT'])
+
+            len_ex_data_p_BERTScore =  len(np.concatenate((np.asarray(self.example_data[1][0][1][0][0]['P'].tolist())[indices_0],   np.asarray(self.example_data[1][0][1][1][0]['P'].tolist())[indices_1])))
+            len_ex_data_r_BERTScore =  len(np.concatenate((np.asarray(self.example_data[1][0][1][0][0]['R'].tolist())[indices_0],   np.asarray(self.example_data[1][0][1][1][0]['R'].tolist())[indices_1])))
+            len_ex_data_f1_BERTScore = len(np.concatenate((np.asarray(self.example_data[1][0][1][0][0]['F1'].tolist())[indices_0], np.asarray(self.example_data[1][0][1][1][0]['F1'].tolist())[indices_1])))
+
+            len_ex_data_BLEURT = len(np.concatenate((np.asarray(self.example_data[1][0][1][0][1]['BLEURT'])[indices_0], np.asarray(self.example_data[1][0][1][1][1]['BLEURT'])[indices_1])))
+
+            self.assertEqual(len_fun_data_f1_BERTScore, len_ex_data_f1_BERTScore, msg="Check length of arrays, BERTScore F1")
+            self.assertEqual(len_fun_data_r_BERTScore, len_ex_data_r_BERTScore, msg="Check length of arrays, BERTScore R")
+            self.assertEqual(len_fun_data_p_BERTScore, len_ex_data_p_BERTScore, msg="Check length of arrays, BERTScore P")
+
+            self.assertEqual(len_fun_data_BLEURT, len_ex_data_BLEURT, msg="Check length of arrays, BLEURT")
+
+      def test_avg(self):
+            test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])
+            test.__add_data__(self.example_data)
+
+            ex_data_p_BERTScore = self.example_data[1][0][1][0][0]['P'].tolist() + self.example_data[1][0][1][1][0]['P'].tolist()
+            ex_data_r_BERTScore = self.example_data[1][0][1][0][0]['R'].tolist() + self.example_data[1][0][1][1][0]['R'].tolist()
+            ex_data_f1_BERTScore = self.example_data[1][0][1][0][0]['F1'].tolist() + self.example_data[1][0][1][1][0]['F1'].tolist()
+
+            ex_data_BLEURT = self.example_data[1][0][1][0][1]['BLEURT'] + self.example_data[1][0][1][1][1]['BLEURT']
+           
+            ex_data_Schnabel_ME = [self.example_data[1][0][1][0][2]['Schnabel']] + [self.example_data[1][0][1][1][2]['Schnabel']]
+            ex_data_Petersen_ME = [self.example_data[1][0][1][0][2]['Petersen']] + [self.example_data[1][0][1][1][2]['Petersen']]
+            ex_data_CAPTURE_ME = [self.example_data[1][0][1][0][2]['CAPTURE']] + [self.example_data[1][0][1][1][2]['CAPTURE']]
+
+            self.assertEqual(np.average(np.asarray(ex_data_p_BERTScore)), test.data['word_drop']['BERTScore']['mean'][0][1]['P'], msg="Check length of arrays, BERTScore P")
+            self.assertEqual(np.average(np.asarray(ex_data_r_BERTScore)), test.data['word_drop']['BERTScore']['mean'][0][1]['R'], msg="Check length of arrays, BERTScore R")
+            self.assertEqual(np.average(np.asarray(ex_data_f1_BERTScore)), test.data['word_drop']['BERTScore']['mean'][0][1]['F1'], msg="Check length of arrays, BERTScore F1")
+
+            self.assertEqual(np.average(np.asarray(ex_data_BLEURT)), test.data['word_drop']['BLEURT']['mean'][0][1]['BLEURT'], msg="Check length of arrays, BLEURT")
+
+            self.assertEqual(np.average(np.asarray(ex_data_Schnabel_ME)), test.data['word_drop']['ME']['mean'][0][1]['Schnabel'], msg="Check length of arrays, ME Schnabel")
+            self.assertEqual(np.average(np.asarray(ex_data_Petersen_ME)), test.data['word_drop']['ME']['mean'][0][1]['Petersen'], msg="Check length of arrays, ME Petersen")
+            self.assertEqual(np.average(np.asarray(ex_data_CAPTURE_ME)), test.data['word_drop']['ME']['mean'][0][1]['CAPTURE'], msg="Check length of arrays, ME CAPTURE")
+
+      def test_avg_f(self):
+            test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])
+            test.__add_data__(self.example_data)
+
+            indices_0 = np.asarray(self.example_data[1][0][1][0][3])
+            indices_1 = np.asarray(self.example_data[1][0][1][1][3])
+
+            ex_data_p_BERTScore_f = np.concatenate((np.asarray(self.example_data[1][0][1][0][0]['P'].tolist())[indices_0], np.asarray(self.example_data[1][0][1][1][0]['P'].tolist())[indices_1]))
+            ex_data_r_BERTScore_f = np.concatenate((np.asarray(self.example_data[1][0][1][0][0]['R'].tolist())[indices_0], np.asarray(self.example_data[1][0][1][1][0]['R'].tolist())[indices_1]))
+            ex_data_f1_BERTScore_f = np.concatenate((np.asarray(self.example_data[1][0][1][0][0]['F1'].tolist())[indices_0], np.asarray(self.example_data[1][0][1][1][0]['F1'].tolist())[indices_1]))
+
+            ex_data_BLEURT_f = np.concatenate((np.asarray(self.example_data[1][0][1][0][1]['BLEURT'])[indices_0], np.asarray(self.example_data[1][0][1][1][1]['BLEURT'])[indices_1]))
 
 
+            self.assertEqual(np.average(np.asarray(ex_data_p_BERTScore_f)), test.data['word_drop']['BERTScore_f']['mean'][0][1]['P'], msg="Check length of arrays, BERTScore P")
+            self.assertEqual(np.average(np.asarray(ex_data_r_BERTScore_f)), test.data['word_drop']['BERTScore_f']['mean'][0][1]['R'], msg="Check length of arrays, BERTScore R")
+            self.assertEqual(np.average(np.asarray(ex_data_f1_BERTScore_f)), test.data['word_drop']['BERTScore_f']['mean'][0][1]['F1'], msg="Check length of arrays, BERTScore F1")
+
+            self.assertEqual(np.average(np.asarray(ex_data_BLEURT_f)), test.data['word_drop']['BLEURT_f']['mean'][0][1]['BLEURT'], msg="Check length of arrays, BLEURT")
 
 
 if __name__ == '__main__':

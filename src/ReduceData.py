@@ -71,7 +71,7 @@ class ReduceData:
             # combined_data['BERTScore_f']['data'][i] = (degree, functools.reduce(mtrc.con_BERTScore_f, data[i][1], {'P': [], 'R' : [], 'F1' : []}))
             # combined_data['BLEURT']['data'][i] = (degree, functools.reduce(mtrc.con_BLEURT, data[i][1], {'BLEURT' : []}))
             # combined_data['BLEURT_f']['data'][i] = (degree, functools.reduce(mtrc.con_BLEURT_f, data[i][1], {'BLEURT' : []}))
-            # combined_data['ME']['data'][i] = (degree, functools.reduce(mtrc.con_ME, data[i][1], {'Peterson' : [], 'Schnabel' : [], 'CAPTURE' : []}))
+            # combined_data['ME']['data'][i] = (degree, functools.reduce(mtrc.con_ME, data[i][1], {'Petersen' : [], 'Schnabel' : [], 'CAPTURE' : []}))
 
             for metric in metric_reductions:
                 value: dict = functools.reduce(
@@ -114,7 +114,7 @@ class ReduceData:
             #         'BLEURT': np.average(np.asarray(combined_data['BLEURT_f']['data'][i][1]['BLEURT']))
             # })
             # combined_data['ME']['mean'][i] = (degree, {
-            #         'Peterson': np.average(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Petersen': np.average(np.asarray(combined_data['ME']['data'][i][1]['Petersen'])),
             #         'Schnabel': np.average(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
             #         'CAPTURE': np.average(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
             # })
@@ -137,7 +137,7 @@ class ReduceData:
             #         'BLEURT': np.min(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
             # })
             # combined_data['ME']['min'][i] = (degree, {
-            #         'Peterson': np.min(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Petersen': np.min(np.asarray(combined_data['ME']['data'][i][1]['Petersen'])),
             #         'Schnabel': np.min(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
             #         'CAPTURE': np.min(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
             # })
@@ -160,7 +160,7 @@ class ReduceData:
             #         'BLEURT': np.max(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
             # })
             # combined_data['ME']['max'][i] = (degree, {
-            #         'Peterson': np.max(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Petersen': np.max(np.asarray(combined_data['ME']['data'][i][1]['Petersen'])),
             #         'Schnabel': np.max(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
             #         'CAPTURE': np.max(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
             # })
@@ -183,7 +183,7 @@ class ReduceData:
             #         'BLEURT': np.median(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
             # })
             # combined_data['ME']['median'][i] = (degree, {
-            #         'Peterson': np.median(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Petersen': np.median(np.asarray(combined_data['ME']['data'][i][1]['Petersen'])),
             #         'Schnabel': np.median(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
             #         'CAPTURE':  np.median(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
             # })
@@ -320,7 +320,7 @@ example_data: tuple = ('word_drop',
                                        0.6688219308853149,
                                        0.9113960862159729,
                                        0.8971254825592041]},
-                           {'Peterson': 0.9910714285714286,
+                           {'Petersen': 0.9910714285714286,
                                'Schnabel': 0.9910714285714286,
                                'CAPTURE': 0.9821428571428571},
                            [0,
@@ -378,7 +378,7 @@ example_data: tuple = ('word_drop',
                                          0.8648319244384766,
                                          0.8489693403244019,
                                          0.8486870527267456]},
-                             {'Peterson': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
+                             {'Petersen': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
                              [2, 6, 8, 11, 13, 14, 15, 16, 17, 18])]),
                            (1.0,
                             [({'P': torch.Tensor([0.9832, 0.9787, 0.9803, 0.9282, 0.9892, 0.9895, 0.9913, 0.9865, 0.9950,
@@ -458,7 +458,7 @@ example_data: tuple = ('word_drop',
                                           0.8714327812194824,
                                           0.6941704750061035,
                                           0.8998167514801025]},
-                              {'Peterson': 0.9910714285714286,
+                              {'Petersen': 0.9910714285714286,
                                 'Schnabel': 0.9989177489177489,
                                'CAPTURE': 0.9821428571428571},
                                 [0,
@@ -546,7 +546,7 @@ example_data: tuple = ('word_drop',
                                           0.7490243911743164,
                                           0.8543717861175537,
                                           0.8290738463401794]},
-                                {'Peterson': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
+                                {'Petersen': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
                                 [0,
                                  1,
                                  2,
