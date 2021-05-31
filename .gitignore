@@ -13,3 +13,6 @@ __pycache__
 output_*
 *.json
 misc
+
+# created folders
+test_*
