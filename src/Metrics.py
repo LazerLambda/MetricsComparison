@@ -102,14 +102,13 @@ class Metrics:
 
 
     # TODO correct Peterson to Peterson
-
     @staticmethod
     def con_ME(acc, elem):
         for e in elem:
             if isinstance(e, dict):
-                if 'Schnabel' in e.keys() and 'Petersen' in e.keys() and 'CAPTURE' in e.keys():
+                if 'Schnabel' in e.keys() and 'Peterson' in e.keys() and 'CAPTURE' in e.keys():
                     return {
-                        'Peterson': acc['Peterson'] + [e['Peterson']],
+                        'Petersen': acc['Petersen'] + [e['Peterson']],
                         'Schnabel': acc['Schnabel'] + [e['Schnabel']],
                         'CAPTURE': acc['CAPTURE'] + [e['CAPTURE']]
                     }
@@ -156,4 +155,12 @@ Metrics.REDUCE_DICT : dict = {
     'BLEURT' : Metrics.con_BLEURT,
     'BLEURT_f' : Metrics.con_BLEURT_f,
     'ME' : Metrics.con_ME
+}
+
+Metrics.SUBMETRICS : dict = {
+    'BERTScore' : ['P', 'R', 'F1'],
+    'BERTScore_f' : ['P', 'R', 'F1'],
+    'BLEURT' : ['BLEURT'],
+    'BLEURT_f' : ['BLEURT'],
+    'ME' : ['Schnabel', 'Petersen', 'CAPTURE']
 }

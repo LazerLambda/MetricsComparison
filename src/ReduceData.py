@@ -20,13 +20,32 @@ class ReduceData:
         self.plot_data: dict = {}
         self.data: dict = dict()
 
+    def apply_fun(
+            self,
+            fun: callable,
+            fun_str: str,
+            combined_data: list,
+            metric_list: list,
+            i: int,
+            degree: float):
+
+        for metric in metric_list:
+
+            acc_dict: list = []
+            for sub_metric in mtrc.SUBMETRICS[metric]:
+                number: float = fun(np.asarray(
+                    combined_data[metric]['data'][i][1][sub_metric]))
+                acc_dict.append((sub_metric, number))
+
+            acc_dict: dict = dict(acc_dict)
+
+            combined_data[metric][fun_str][i] = (degree, acc_dict)
+
     def __add_data__(self, data: tuple):
 
         self.steps: np.ndarray = np.unique([e[0] for e in data[1]])
         task: str = data[0]
         data = data[1]
-
-        get_indices: np.ndarray = lambda elem: np.asarray(elem[len(elem) - 1])
 
         new_data: list = lambda: {
             'data': [None for step in self.steps],
@@ -44,124 +63,130 @@ class ReduceData:
                                for name in metric_reductions]
         combined_data: dict = dict(combined_data)
 
-        # combined_data : dict = {
-        #         'BERTScore' : new_data(),
-        #         'BERTScore_f' : new_data(),
-        #         'BLEURT' : new_data(),
-        #         'BLEURT_f' : new_data(),
-        #         'ME' : new_data()
-        # }
 
         for i, degree in enumerate(self.steps):
 
-                # accumulate data
-                # combined_data['BERTScore']['data'][i] = (degree, functools.reduce(mtrc.con_BERTScore, data[i][1], {'P': [], 'R' : [], 'F1' : []}))
-                # combined_data['BERTScore_f']['data'][i] = (degree, functools.reduce(mtrc.con_BERTScore_f, data[i][1], {'P': [], 'R' : [], 'F1' : []}))
-                # combined_data['BLEURT']['data'][i] = (degree, functools.reduce(mtrc.con_BLEURT, data[i][1], {'BLEURT' : []}))
-                # combined_data['BLEURT_f']['data'][i] = (degree, functools.reduce(mtrc.con_BLEURT_f, data[i][1], {'BLEURT' : []}))
-                # combined_data['ME']['data'][i] = (degree, functools.reduce(mtrc.con_ME, data[i][1], {'Peterson' : [], 'Schnabel' : [], 'CAPTURE' : []}))
+            # accumulate data
+            # combined_data['BERTScore']['data'][i] = (degree, functools.reduce(mtrc.con_BERTScore, data[i][1], {'P': [], 'R' : [], 'F1' : []}))
+            # combined_data['BERTScore_f']['data'][i] = (degree, functools.reduce(mtrc.con_BERTScore_f, data[i][1], {'P': [], 'R' : [], 'F1' : []}))
+            # combined_data['BLEURT']['data'][i] = (degree, functools.reduce(mtrc.con_BLEURT, data[i][1], {'BLEURT' : []}))
+            # combined_data['BLEURT_f']['data'][i] = (degree, functools.reduce(mtrc.con_BLEURT_f, data[i][1], {'BLEURT' : []}))
+            # combined_data['ME']['data'][i] = (degree, functools.reduce(mtrc.con_ME, data[i][1], {'Peterson' : [], 'Schnabel' : [], 'CAPTURE' : []}))
 
-                for metric in metric_reductions:
-                        value : dict = functools.reduce(
-                                mtrc.REDUCE_DICT[metric], data[i][1], mtrc.INIT_DICT[metric])
-                        combined_data[metric]['data'][i] = (degree, value)
+            for metric in metric_reductions:
+                value: dict = functools.reduce(
+                    mtrc.REDUCE_DICT[metric], data[i][1], mtrc.INIT_DICT[metric])
+                combined_data[metric]['data'][i] = (degree, value)
 
-                print(combined_data)
+            # mean
+            self.apply_fun(np.average, 'mean', combined_data,
+                           metric_reductions, i, degree)
 
-                # mean
-                # combined_data['BERTScore']['mean'][i] = (degree, {
-                #         'P': np.average(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
-                #         'R': np.average(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
-                #         'F1': np.average(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
-                # })
-                # combined_data['BERTScore_f']['mean'][i] = (degree, {
-                #         'P': np.average(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
-                #         'R': np.average(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
-                #         'F1': np.average(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
-                # })
-                # combined_data['BLEURT']['mean'][i] = (degree, {
-                #         'BLEURT': np.average(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['BLEURT_f']['mean'][i] = (degree, {
-                #         'BLEURT': np.average(np.asarray(combined_data['BLEURT_f']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['ME']['mean'][i] = (degree, {
-                #         'Peterson': np.average(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
-                #         'Schnabel': np.average(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
-                #         'CAPTURE': np.average(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
-                # })
+            # min
+            self.apply_fun(np.min, 'min', combined_data,
+                           metric_reductions, i, degree)
 
-                # # minima
-                # combined_data['BERTScore']['min'][i] = (degree, {
-                #         'P': np.min(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
-                #         'R': np.min(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
-                #         'F1': np.min(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
-                # })
-                # combined_data['BERTScore_f']['min'][i] = (degree, {
-                #         'P': np.min(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
-                #         'R': np.min(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
-                #         'F1': np.min(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
-                # })
-                # combined_data['BLEURT']['min'][i] = (degree, {
-                #         'BLEURT': np.min(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['BLEURT_f']['min'][i] = (degree, {
-                #         'BLEURT': np.min(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['ME']['min'][i] = (degree, {
-                #         'Peterson': np.min(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
-                #         'Schnabel': np.min(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
-                #         'CAPTURE': np.min(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
-                # })
+            # max
+            self.apply_fun(np.max, 'max', combined_data,
+                           metric_reductions, i, degree)
 
-                # # maxima
-                # combined_data['BERTScore']['max'][i] = (degree, {
-                #         'P': np.max(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
-                #         'R': np.max(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
-                #         'F1': np.max(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
-                # })
-                # combined_data['BERTScore_f']['max'][i] = (degree, {
-                #         'P': np.max(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
-                #         'R': np.max(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
-                #         'F1': np.max(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
-                # })
-                # combined_data['BLEURT']['max'][i] = (degree, {
-                #         'BLEURT': np.max(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['BLEURT_f']['max'][i] = (degree, {
-                #         'BLEURT': np.max(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['ME']['max'][i] = (degree, {
-                #         'Peterson': np.max(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
-                #         'Schnabel': np.max(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
-                #         'CAPTURE': np.max(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
-                # })
+            # median
+            self.apply_fun(np.median, 'median', combined_data,
+                           metric_reductions, i, degree)
 
-                # # median
-                # combined_data['BERTScore']['median'][i] = (degree, {
-                #         'P':  np.median(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
-                #         'R':  np.median(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
-                #         'F1': np.median(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
-                # })
-                # combined_data['BERTScore_f']['median'][i] = (degree, {
-                #         'P':  np.median(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
-                #         'R':  np.median(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
-                #         'F1': np.median(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
-                # })
-                # combined_data['BLEURT']['median'][i] = (degree, {
-                #         'BLEURT': np.median(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['BLEURT_f']['median'][i] = (degree, {
-                #         'BLEURT': np.median(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
-                # })
-                # combined_data['ME']['median'][i] = (degree, {
-                #         'Peterson': np.median(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
-                #         'Schnabel': np.median(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
-                #         'CAPTURE':  np.median(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
-                # })
+            self.data[task] = combined_data
 
+            # mean
+            # combined_data['BERTScore']['mean'][i] = (degree, {
+            #         'P': np.average(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
+            #         'R': np.average(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
+            #         'F1': np.average(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
+            # })
+            # combined_data['BERTScore_f']['mean'][i] = (degree, {
+            #         'P': np.average(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
+            #         'R': np.average(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
+            #         'F1': np.average(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
+            # })
+            # combined_data['BLEURT']['mean'][i] = (degree, {
+            #         'BLEURT': np.average(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['BLEURT_f']['mean'][i] = (degree, {
+            #         'BLEURT': np.average(np.asarray(combined_data['BLEURT_f']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['ME']['mean'][i] = (degree, {
+            #         'Peterson': np.average(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Schnabel': np.average(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
+            #         'CAPTURE': np.average(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
+            # })
 
-        self.data[task] = combined_data
+            # # minima
+            # combined_data['BERTScore']['min'][i] = (degree, {
+            #         'P': np.min(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
+            #         'R': np.min(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
+            #         'F1': np.min(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
+            # })
+            # combined_data['BERTScore_f']['min'][i] = (degree, {
+            #         'P': np.min(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
+            #         'R': np.min(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
+            #         'F1': np.min(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
+            # })
+            # combined_data['BLEURT']['min'][i] = (degree, {
+            #         'BLEURT': np.min(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['BLEURT_f']['min'][i] = (degree, {
+            #         'BLEURT': np.min(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['ME']['min'][i] = (degree, {
+            #         'Peterson': np.min(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Schnabel': np.min(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
+            #         'CAPTURE': np.min(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
+            # })
+
+            # # maxima
+            # combined_data['BERTScore']['max'][i] = (degree, {
+            #         'P': np.max(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
+            #         'R': np.max(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
+            #         'F1': np.max(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
+            # })
+            # combined_data['BERTScore_f']['max'][i] = (degree, {
+            #         'P': np.max(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
+            #         'R': np.max(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
+            #         'F1': np.max(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
+            # })
+            # combined_data['BLEURT']['max'][i] = (degree, {
+            #         'BLEURT': np.max(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['BLEURT_f']['max'][i] = (degree, {
+            #         'BLEURT': np.max(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['ME']['max'][i] = (degree, {
+            #         'Peterson': np.max(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Schnabel': np.max(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
+            #         'CAPTURE': np.max(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
+            # })
+
+            # # median
+            # combined_data['BERTScore']['median'][i] = (degree, {
+            #         'P':  np.median(np.asarray(combined_data['BERTScore']['data'][i][1]['P'])),
+            #         'R':  np.median(np.asarray(combined_data['BERTScore']['data'][i][1]['R'])),
+            #         'F1': np.median(np.asarray(combined_data['BERTScore']['data'][i][1]['F1']))
+            # })
+            # combined_data['BERTScore_f']['median'][i] = (degree, {
+            #         'P':  np.median(np.asarray(combined_data['BERTScore_f']['data'][i][1]['P'])),
+            #         'R':  np.median(np.asarray(combined_data['BERTScore_f']['data'][i][1]['R'])),
+            #         'F1': np.median(np.asarray(combined_data['BERTScore_f']['data'][i][1]['F1']))
+            # })
+            # combined_data['BLEURT']['median'][i] = (degree, {
+            #         'BLEURT': np.median(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['BLEURT_f']['median'][i] = (degree, {
+            #         'BLEURT': np.median(np.asarray(combined_data['BLEURT']['data'][i][1]['BLEURT']))
+            # })
+            # combined_data['ME']['median'][i] = (degree, {
+            #         'Peterson': np.median(np.asarray(combined_data['ME']['data'][i][1]['Peterson'])),
+            #         'Schnabel': np.median(np.asarray(combined_data['ME']['data'][i][1]['Schnabel'])),
+            #         'CAPTURE':  np.median(np.asarray(combined_data['ME']['data'][i][1]['CAPTURE']))
+            # })
 
     def add_data(self, task_list: list, folder_path: str):
         for task_name in task_list:
@@ -169,7 +194,7 @@ class ReduceData:
             data = pickle.load(data_file)
             self.__add_data__(data)
 
-    def get_data(self, task: str, key: str, id: str):
+    def __get_data__(self, task: str, key: str, id: str):
         # x value as deterioration step, y value as different metrices
         plot_data = [(x, np.asarray(list(y.values())))
                      for x, y in self.data[task][key][id]]
@@ -184,12 +209,11 @@ class ReduceData:
             self.plot_data[task] = dict()
             for i, key in enumerate(self.data[task].keys()):
 
-                description: dict = Consts.CONSTS[key]
 
-                x_data, y_data_mean = self.get_data(task, key, 'mean')
-                # _, y_data = self.get_data(key, 'data')
-                _, y_data_min = self.get_data(task, key, 'min')
-                _, y_data_max = self.get_data(task, key, 'max')
+                x_data, y_data_mean = self.__get_data__(task, key, 'mean')
+                # _, y_data = self.__get_data__(key, 'data')
+                _, y_data_min = self.__get_data__(task, key, 'min')
+                _, y_data_max = self.__get_data__(task, key, 'max')
 
                 self.plot_data[task][key] = {
                     'description': Consts.CONSTS[key],
@@ -216,29 +240,30 @@ class ReduceData:
         del results_json
 
 
+import torch
 example_data: tuple = ('word_drop',
                        [(0.5,
-                         [({'P': [0.9770, 0.9760, 0.9803, 0.9295, 0.9693, 1.0000, 1.0000, 0.9908, 0.9851,
+                         [({'P': torch.Tensor([0.9770, 0.9760, 0.9803, 0.9295, 0.9693, 1.0000, 1.0000, 0.9908, 0.9851,
                                   1.0000, 1.0000, 0.9840, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000,
                                   0.9745, 1.0000, 0.9865, 0.9928, 0.9849, 1.0000, 1.0000, 0.9828, 1.0000,
                                   1.0000, 0.9736, 0.9877, 1.0000, 1.0000, 1.0000, 0.9693, 0.9941, 0.9533,
                                   1.0000, 1.0000, 1.0000, 0.9404, 0.9888, 0.9946, 0.9729, 1.0000, 1.0000,
                                   1.0000, 1.0000, 0.9740, 1.0000, 1.0000, 0.9883, 1.0000, 0.9699, 0.9510,
-                                  1.0000, 1.0000],
-                             'R': [0.9764, 0.9808, 0.9844, 0.9622, 0.9817, 1.0000, 1.0000, 0.9941, 0.9924,
+                                  1.0000, 1.0000]),
+                             'R': torch.Tensor([0.9764, 0.9808, 0.9844, 0.9622, 0.9817, 1.0000, 1.0000, 0.9941, 0.9924,
                                    1.0000, 1.0000, 0.9896, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000,
                                    0.9838, 1.0000, 0.9873, 0.9964, 0.9933, 1.0000, 1.0000, 0.9868, 1.0000,
                                    1.0000, 0.9852, 0.9926, 1.0000, 1.0000, 1.0000, 0.9757, 0.9937, 0.9599,
                                    1.0000, 1.0000, 1.0000, 0.9707, 0.9950, 0.9946, 0.9781, 1.0000, 1.0000,
                                    1.0000, 1.0000, 0.9805, 1.0000, 1.0000, 0.9879, 1.0000, 0.9844, 0.9752,
-                                   1.0000, 1.0000],
-                            'F1': [0.9767, 0.9784, 0.9823, 0.9456, 0.9754, 1.0000, 1.0000, 0.9924, 0.9887,
+                                   1.0000, 1.0000]),
+                            'F1': torch.Tensor([0.9767, 0.9784, 0.9823, 0.9456, 0.9754, 1.0000, 1.0000, 0.9924, 0.9887,
                                    1.0000, 1.0000, 0.9868, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000,
                                    0.9791, 1.0000, 0.9869, 0.9946, 0.9891, 1.0000, 1.0000, 0.9848, 1.0000,
                                    1.0000, 0.9793, 0.9901, 1.0000, 1.0000, 1.0000, 0.9725, 0.9939, 0.9566,
                                    1.0000, 1.0000, 1.0000, 0.9553, 0.9919, 0.9946, 0.9755, 1.0000, 1.0000,
                                    1.0000, 1.0000, 0.9773, 1.0000, 1.0000, 0.9881, 1.0000, 0.9771, 0.9629,
-                                   1.0000, 1.0000]},
+                                   1.0000, 1.0000])},
                            {'BLEURT': [0.871826708316803,
                                        0.8672036528587341,
                                        0.8317148089408875,
@@ -324,15 +349,15 @@ example_data: tuple = ('word_drop',
                                50,
                                52,
                                53]),
-                          ({'P': [1.0000, 1.0000, 0.9810, 1.0000, 1.0000, 1.0000, 0.9904, 1.0000, 0.9835,
+                          ({'P': torch.Tensor([1.0000, 1.0000, 0.9810, 1.0000, 1.0000, 1.0000, 0.9904, 1.0000, 0.9835,
                                   1.0000, 1.0000, 0.9747, 1.0000, 0.9007, 0.9892, 0.9820, 0.9835, 0.9879,
-                                  0.9823, 1.0000],
-                            'R': [1.0000, 1.0000, 0.9796, 1.0000, 1.0000, 1.0000, 0.9936, 1.0000, 0.9896,
+                                  0.9823, 1.0000]),
+                            'R': torch.Tensor([1.0000, 1.0000, 0.9796, 1.0000, 1.0000, 1.0000, 0.9936, 1.0000, 0.9896,
                                   1.0000, 1.0000, 0.9772, 1.0000, 0.9495, 0.9920, 0.9850, 0.9868, 0.9887,
-                                  0.9812, 1.0000],
-                            'F1': [1.0000, 1.0000, 0.9803, 1.0000, 1.0000, 1.0000, 0.9920, 1.0000, 0.9865,
+                                  0.9812, 1.0000]),
+                            'F1': torch.Tensor([1.0000, 1.0000, 0.9803, 1.0000, 1.0000, 1.0000, 0.9920, 1.0000, 0.9865,
                                    1.0000, 1.0000, 0.9759, 1.0000, 0.9244, 0.9906, 0.9835, 0.9851, 0.9883,
-                                   0.9818, 1.0000]},
+                                   0.9818, 1.0000])},
                              {'BLEURT': [0.8540278673171997,
                                          0.8415284156799316,
                                          0.8557943105697632,
@@ -356,27 +381,27 @@ example_data: tuple = ('word_drop',
                              {'Peterson': 1.0, 'Schnabel': 1.0, 'CAPTURE': 0.975},
                              [2, 6, 8, 11, 13, 14, 15, 16, 17, 18])]),
                            (1.0,
-                            [({'P': [0.9832, 0.9787, 0.9803, 0.9282, 0.9892, 0.9895, 0.9913, 0.9865, 0.9950,
+                            [({'P': torch.Tensor([0.9832, 0.9787, 0.9803, 0.9282, 0.9892, 0.9895, 0.9913, 0.9865, 0.9950,
                                      0.9840, 0.9848, 0.9827, 0.9987, 0.9860, 0.9841, 0.9954, 0.9626, 0.9886,
                                      0.9723, 0.9874, 0.9781, 0.9849, 0.9872, 0.9841, 0.9773, 0.9904, 0.9285,
                                      0.9479, 0.9922, 0.9761, 0.8868, 0.9808, 0.9798, 0.9795, 0.9808, 0.9554,
                                      0.9830, 0.9896, 0.9915, 0.9444, 0.9700, 0.9931, 0.9862, 0.9497, 0.9829,
                                      0.9877, 0.9744, 0.9949, 0.9869, 0.9836, 0.9787, 0.9925, 0.9699, 0.9871,
-                                     0.9552, 0.9870],
-                               'R': [0.9877, 0.9868, 0.9844, 0.9612, 0.9972, 0.9942, 0.9958, 0.9936, 0.9969,
+                                     0.9552, 0.9870]),
+                               'R': torch.Tensor([0.9877, 0.9868, 0.9844, 0.9612, 0.9972, 0.9942, 0.9958, 0.9936, 0.9969,
                                      0.9828, 0.9859, 0.9905, 0.9988, 0.9940, 0.9892, 0.9979, 0.9673, 0.9896,
                                      0.9737, 0.9954, 0.9940, 0.9903, 0.9883, 0.9853, 0.9857, 0.9916, 0.9312,
                                      0.9758, 0.9968, 0.9750, 0.9439, 0.9894, 0.9863, 0.9863, 0.9817, 0.9736,
                                      0.9831, 0.9965, 0.9909, 0.9863, 0.9726, 0.9936, 0.9935, 0.9859, 0.9823,
                                      0.9898, 0.9729, 0.9959, 0.9906, 0.9865, 0.9840, 0.9954, 0.9844, 0.9862,
-                                     0.9767, 0.9926],
-                                'F1': [0.9854, 0.9827, 0.9823, 0.9444, 0.9932, 0.9919, 0.9935, 0.9900, 0.9959,
+                                     0.9767, 0.9926]),
+                                'F1': torch.Tensor([0.9854, 0.9827, 0.9823, 0.9444, 0.9932, 0.9919, 0.9935, 0.9900, 0.9959,
                                        0.9834, 0.9853, 0.9866, 0.9988, 0.9900, 0.9866, 0.9966, 0.9650, 0.9891,
                                        0.9730, 0.9914, 0.9860, 0.9876, 0.9878, 0.9847, 0.9815, 0.9910, 0.9299,
                                        0.9617, 0.9945, 0.9756, 0.9144, 0.9851, 0.9830, 0.9829, 0.9812, 0.9644,
                                        0.9831, 0.9930, 0.9912, 0.9649, 0.9713, 0.9934, 0.9898, 0.9675, 0.9826,
                                        0.9888, 0.9737, 0.9954, 0.9887, 0.9851, 0.9813, 0.9940, 0.9771, 0.9867,
-                                       0.9658, 0.9898]},
+                                       0.9658, 0.9898])},
                               {'BLEURT': [0.624107837677002,
                                           0.8156464695930481,
                                           0.8317148089408875,
@@ -492,15 +517,15 @@ example_data: tuple = ('word_drop',
                                  53,
                                  54,
                                  55]),
-                             ({'P': [0.9713, 0.9933, 0.9895, 0.9963, 0.8927, 0.9840, 0.9913, 0.9908, 0.9907,
+                             ({'P': torch.Tensor([0.9713, 0.9933, 0.9895, 0.9963, 0.8927, 0.9840, 0.9913, 0.9908, 0.9907,
                                      0.9808, 0.9659, 0.9825, 0.9788, 0.9408, 0.9955, 0.9836, 0.9836, 0.9789,
-                                     0.9886, 0.9698],
-                               'R': [0.9731, 0.9967, 0.9915, 0.9979, 0.9506, 0.9867, 0.9945, 0.9926, 0.9926,
+                                     0.9886, 0.9698]),
+                               'R': torch.Tensor([0.9731, 0.9967, 0.9915, 0.9979, 0.9506, 0.9867, 0.9945, 0.9926, 0.9926,
                                      0.9802, 0.9751, 0.9855, 0.9913, 0.9843, 0.9979, 0.9885, 0.9853, 0.9835,
-                                     0.9848, 0.9712],
-                               'F1': [0.9722, 0.9950, 0.9905, 0.9971, 0.9208, 0.9854, 0.9929, 0.9917, 0.9916,
+                                     0.9848, 0.9712]),
+                               'F1': torch.Tensor([0.9722, 0.9950, 0.9905, 0.9971, 0.9208, 0.9854, 0.9929, 0.9917, 0.9916,
                                       0.9805, 0.9704, 0.9840, 0.9850, 0.9620, 0.9967, 0.9860, 0.9844, 0.9812,
-                                      0.9867, 0.9705]},
+                                      0.9867, 0.9705])},
                               {'BLEURT': [0.7738461494445801,
                                           0.8129750490188599,
                                           0.8620864748954773,
@@ -545,6 +570,15 @@ example_data: tuple = ('word_drop',
 
 
 if __name__ == "__main__":
+
+    test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])
+    test.__add_data__(example_data)
+    
+    assert len(example_data[1][0][1][0][0]['P'].tolist() + example_data[1][0][1][1][0]['P'].tolist()) == len(test.data['word_drop']['BERTScore']['data'][0][1]['P'])
+    assert len(example_data[1][0][1][0][0]['R'].tolist() + example_data[1][0][1][1][0]['R'].tolist()) == len(test.data['word_drop']['BERTScore']['data'][0][1]['R'])
+    assert len(example_data[1][0][1][0][0]['F1'].tolist() + example_data[1][0][1][1][0]['F1'].tolist()) == len(test.data['word_drop']['BERTScore']['data'][0][1]['F1'])
+
+
     test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])
     task_list = [
         "negated",
@@ -555,11 +589,7 @@ if __name__ == "__main__":
         "word_drop_every_sentence",
         "word_swap",
         "word_swap_every_sentence"]
-
     test.add_data(task_list, folder_path="./output_9/")
-    # assert len(example_data[1][0][1][0][0]['P'] + example_data[1][0][1][1][0]['P']) == len(test.data['word_drop']['BERTScore']['data'][0][1]['P'])
-    # assert len(example_data[1][0][1][0][0]['R'] + example_data[1][0][1][1][0]['R']) == len(test.data['word_drop']['BERTScore']['data'][0][1]['R'])
-    # assert len(example_data[1][0][1][0][0]['F1'] + example_data[1][0][1][1][0]['F1']) == len(test.data['word_drop']['BERTScore']['data'][0][1]['F1'])
-    # test.export_results()
-    # test.vis_ready()
-    print(test.plot_data)
+    test.export_results()
+    test.vis_ready()
+    # print(test.plot_data)
