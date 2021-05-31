@@ -1,5 +1,6 @@
 
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 
@@ -14,10 +15,12 @@ class Visualize:
 
         def __init__(
                         self,
-                        file_path : str = "",
+                        folder_path : str = "",
                         color_arr: list = ['c', 'm', 'y', 'k'],
                         linestyle_arr: list = ['-', '--', ':', '-.']):
 
+
+                self.folder_path : str = folder_path
                 self.color_arr: list = color_arr
                 self.linestyle_arr: list = linestyle_arr
                 # self.fig: plt.figure = plt.figure()
@@ -68,22 +71,24 @@ class Visualize:
 
 
         def plot(self, data : dict, fun : callable):
-                fun(data, self.create_plot)
+                fun(data, self.create_plot, self.folder_path)
                 plt.show()
 
 
 
-        def show_metrics_on_tasks(self, data : dict, plot : callable):
+        def show_metrics_on_tasks(self, data : dict, plot : callable, path : str):
 
                 for task in data.keys():
                         fig: plt.figure = plt.figure()
                         for score in data[task].keys():
                                 plot(data[task][score], task, score, fig, data[task][score]['description']['title'])
+                        path_tmp = os.path.join(path, "how_metrics_on_tasks-" + task + ".png")
+                        plt.savefig(path_tmp)
                         plt.show()
 
 
 
-        def show_tasks_by_metric(self, data : dict, plot : callable):
+        def show_tasks_by_metric(self, data : dict, plot : callable, path : str):
                 
                 scores : list =list(data[list(data.keys())[0]].keys())
                 for s in scores:
@@ -94,36 +99,38 @@ class Visualize:
                                         if score == s:
                                                 plot(data[task][score], task, score, fig, task,subplot_info=(3,3))
                         fig.suptitle(s)
+                        path_tmp = os.path.join(path, "show_task_by_metric-" + s + ".png")
+                        plt.savefig(path_tmp)
                         plt.show()
 
 
-if __name__ == "__main__":
-        # import pickle
-        file_list = [
-                "negated_data.p",
-                "pos_drop_adj_data.p",
-                "pos_drop_det_data.p",
-                "repetitions_data.p",
-                "word_drop_data.p",
-                "word_drop_every_sentence_data.p",
-                "word_swap_data.p",
-                "word_swap_every_sentence_data.p"]
+# if __name__ == "__main__":
+#         # import pickle
+#         file_list = [
+#                 "negated_data.p",
+#                 "pos_drop_adj_data.p",
+#                 "pos_drop_det_data.p",
+#                 "repetitions_data.p",
+#                 "word_drop_data.p",
+#                 "word_drop_every_sentence_data.p",
+#                 "word_swap_data.p",
+#                 "word_swap_every_sentence_data.p"]
 
-        # test =ReduceData(example_data)
-        task_list = [
-                "negated",
-                "pos_drop_adj",
-                "pos_drop_det",
-                "repetitions",
-                "word_drop",
-                "word_drop_every_sentence",
-                "word_swap",
-                "word_swap_every_sentence"]
+#         # test =ReduceData(example_data)
+#         task_list = [
+#                 "negated",
+#                 "pos_drop_adj",
+#                 "pos_drop_det",
+#                 "repetitions",
+#                 "word_drop",
+#                 "word_drop_every_sentence",
+#                 "word_swap",
+#                 "word_swap_every_sentence"]
 
-        test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE])
-        test.add_data(task_list, folder_path="./output_9/")
-        test.vis_ready()
+#         test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE])
+#         test.add_data(task_list, folder_path="./output_9/")
+#         test.vis_ready()
 
-        testVis = Visualize()
-        # testVis.plot(test.plot_data, testVis.show_metrics_on_tasks)
-        testVis.plot(test.plot_data, testVis.show_tasks_by_metric)
+#         testVis = Visualize()
+#         # testVis.plot(test.plot_data, testVis.show_metrics_on_tasks)
+#         testVis.plot(test.plot_data, testVis.show_tasks_by_metric)

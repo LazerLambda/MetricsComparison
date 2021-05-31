@@ -82,7 +82,7 @@ class Comparison:
         return self
 
     def create_plot(self) -> Comparison:
-        vis = Visualize()
+        vis = Visualize(folder_path=self.exp_wd)
         # testVis.plot(test.plot_data, testVis.show_metrics_on_tasks)
         vis.plot(self.rd.plot_data, vis.show_tasks_by_metric)
         return self
