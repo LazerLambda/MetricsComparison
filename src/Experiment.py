@@ -124,7 +124,7 @@ class Experiment:
 
                     ret_lst : list = []
                     for f in fun_list:
-                        # TODO change order
+                        # TODO check if sentence is empty!!!
                         v = f(cand=cand, ref=ref_sentences)
                         ret_lst.append(v)
 
