@@ -3,20 +3,20 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
-import Consts
+import src.Consts
 import numpy as np
 import torch
 import unittest
 
-from ReduceData import ReduceData
-from Metrics import Metrics as mtrc
+from src.ReduceData import ReduceData
+from src.Metrics import Metrics as mtrc
 
 
 
-class Test_Reduce_Data(unittest.TestCase):
+class ReduceData_Test(unittest.TestCase):
 
       example_data: tuple = ('word_drop',
             [(0.5,
@@ -345,6 +345,21 @@ class Test_Reduce_Data(unittest.TestCase):
                         18,
                         19])])])
     
+      def test_general(self):
+            test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE])
+            task_list = [
+                  "negated",
+                  "pos_drop_adj",
+                  "pos_drop_det",
+                  "repetitions",
+                  "word_drop",
+                  "word_drop_every_sentence",
+                  "word_swap",
+                  "word_swap_every_sentence"]
+            test.add_data(task_list, folder_path="src/output_9/")
+            test.export_results()
+            test.vis_ready()
+
 
       def test_len(self):
             test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])

@@ -1,5 +1,4 @@
 
-import Consts
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -7,10 +6,11 @@ import matplotlib.pyplot as plt
 from cycler import cycler
 from matplotlib.collections import EventCollection
 from matplotlib.pyplot import figure
-from ReduceData import ReduceData
+from .Metrics import Metrics as mtrc
+from .ReduceData import ReduceData
 
 
-class Visualize_:
+class Visualize:
 
         def __init__(
                         self,
@@ -120,10 +120,10 @@ if __name__ == "__main__":
                 "word_swap",
                 "word_swap_every_sentence"]
 
-        test = ReduceData()
+        test = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE])
         test.add_data(task_list, folder_path="./output_9/")
         test.vis_ready()
 
-        testVis = Visualize_()
+        testVis = Visualize()
         # testVis.plot(test.plot_data, testVis.show_metrics_on_tasks)
         testVis.plot(test.plot_data, testVis.show_tasks_by_metric)

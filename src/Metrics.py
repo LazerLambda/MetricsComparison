@@ -1,8 +1,8 @@
-from ME.markevaluate import MarkEvaluate as me
+from .ME.markevaluate import MarkEvaluate as me
 from bert_score import BERTScorer
 from bleurt import score
-from GRUEN import Main
-from nubia.nubia_score import Nubia
+# from .GRUEN import Main
+# from .nubia.nubia_score import Nubia
 
 import numpy as np
 
@@ -12,8 +12,8 @@ class Metrics:
     def __init__(self):
         self.scorer_bertscore: BERTScorer = BERTScorer(lang="en")
         self.scorer_bleurt: score.BleurtScorer = score.BleurtScorer(
-            checkpoint="bleurt/bleurt/test_checkpoint")
-        self.n = Nubia()
+            checkpoint="src/bleurt/bleurt/test_checkpoint")
+        # self.n = Nubia()
 
     def comp_ME(self, cand: list, ref: list) -> dict:
         me_main: me = me.MarkEvaluate(cand, ref)
@@ -31,18 +31,18 @@ class Metrics:
     def comp_BLEURT(self, cand: list, ref: list) -> dict:
         return {'BLEURT': self.scorer_bleurt.score(references=ref, candidates=cand)}
 
-    def comp_GRUEN(self, cand: list, ref: list) -> dict:
-        scores_gruen = Main.get_gruen(cand)
-        return {"GRUEN": scores_gruen}
+    # def comp_GRUEN(self, cand: list, ref: list) -> dict:
+    #     scores_gruen = Main.get_gruen(cand)
+    #     return {"GRUEN": scores_gruen}
 
-    def comp_NUBIA(self, cand: list, ref: list) -> dict:
-        return list(
-            map(
-                lambda candref: self.n.score(
-                    candref[0], candref[1], verbose=False, get_features=True),
-                zip(cand, ref)
-            )
-        )
+    # def comp_NUBIA(self, cand: list, ref: list) -> dict:
+    #     return list(
+    #         map(
+    #             lambda candref: self.n.score(
+    #                 candref[0], candref[1], verbose=False, get_features=True),
+    #             zip(cand, ref)
+    #         )
+    #     )
 
     @staticmethod
     def con_BERTScore(acc, elem):

@@ -6,22 +6,23 @@ import numpy as np
 import pickle
 import sys
 
-from DamageData import DamageData
+from .DamageData import DamageData
 from datasets import load_dataset
 from progress.bar import ShadyBar
-from Metrics import Metrics
+from .Metrics import Metrics
 
 class Experiment:
 
     __slots__ = ["data_set", "data_ref", "metrics", "step_arr", "deteriorated_data"]
 
     def __init__(self, data_set_name : str = 'cnn_dailymail', data_set_vers : str = '3.0.0', path=""):
-         self.data_set = load_dataset(data_set_name, data_set_vers) # TODO type
          self.data_ref : list = []
          self.metrics : Metrics = Metrics()
          self.step_arr : list = []
         #  self.path = os.path.join(os.getcwd())
 
+    def load_dataset(self, data_set_name : str = 'cnn_dailymail', data_set_vers : str = '3.0.0'):
+        self.data_set = load_dataset(data_set_name, data_set_vers) # TODO type
 
 
     def sample(self, sample_size) -> None:
@@ -51,7 +52,7 @@ class Experiment:
     
 
 
-    def perturb_data(self) -> None:
+    def perturb_data(self, loc : str = "") -> None:
 
         self.deteriorated_data : dict = {
             'ref' : self.data_ref,
@@ -103,7 +104,8 @@ class Experiment:
             bar.next()
         bar.finish()
 
-        pickle.dump(self.deteriorated_data, open("deteriorated_data_raw.p", "wb" ))
+        path : str = os.path.join(loc, "deteriorated_data_raw.p")
+        pickle.dump(self.deteriorated_data, open(path, "wb" ))
 
 
     
@@ -116,14 +118,14 @@ class Experiment:
             for i, degree in enumerate(self.step_arr):
                 cand_list : list = perturbations[i][1]
                 for j, text in enumerate(self.data_ref):
-                    print(cand_list[j][1])
                     cand : list = cand_list[j][0]
                     perturb_indcs : list = cand_list[j][1]
                     ref_sentences : list = nltk.sent_tokenize(text)
 
                     ret_lst : list = []
                     for f in fun_list:
-                        v = f(ref_sentences, cand)
+                        # TODO change order
+                        v = f(cand=cand, ref=ref_sentences)
                         ret_lst.append(v)
 
                     ret_lst.append(perturb_indcs)
@@ -132,11 +134,13 @@ class Experiment:
 
 
 
-    def eval(self, fun_list : list) -> None:
+    def evaluate(self, fun_list : list, loc : str = "") -> None:
         
         # TODO const
-        infile = open("deteriorated_data_raw.p", "rb" )
+        path = os.path.join(loc, "deteriorated_data_raw.p")
+        infile = open(path, "rb" )
         self.deteriorated_data = pickle.load(infile)
+        infile.close()
         self.data_ref = self.deteriorated_data['ref']
 
         if len(self.step_arr) == 0:
@@ -176,11 +180,12 @@ class Experiment:
 
 if __name__ == "__main__":
     exp : Experiment = Experiment()
-    #exp.sample(2)
+    exp.load_dataset()
+    exp.sample(2)
     exp.set_degrees(1)
-    #exp.perturb_data()
-    exp.eval(
+    exp.perturb_data()
+    # exp.eval(
         # [exp.metrics.comp_BERTScore,
-        [exp.metrics.comp_BLEURT,])
+        # [exp.metrics.comp_BLEURT,])
         # exp.metrics.comp_ME])
     # print(exp.deteriorated_data['word_swap'])g the Afghan Constitution and who are willing to come back willing to come back. "', 'Yet another piece of evidence about the folly of the U.S. involvement in Afghanistan came in the resignation of Matthew Hoh, a Foreign Service 
