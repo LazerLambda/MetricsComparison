@@ -97,6 +97,8 @@ class ReduceData:
             file_path : str = os.path.join(folder_path, task_name + "_data.p")
             data_file = open(file_path, 'rb')
             data = pickle.load(data_file)
+            print(data)
+            data_file.close()
             self.__add_data__(data)
 
     def __get_data__(self, task: str, key: str, id: str):
@@ -140,5 +142,6 @@ class ReduceData:
 
         file_results = open('results.json', 'w')
         json.dump(results_json, file_results)
+        file_results.close()
         del results
         del results_json

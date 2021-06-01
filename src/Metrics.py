@@ -106,10 +106,11 @@ class Metrics:
     def con_ME(acc, elem):
         for e in elem:
             if isinstance(e, dict):
-                if 'Schnabel' in e.keys() and 'Petersen' in e.keys() and 'CAPTURE' in e.keys():
+                if 'Schnabel_qul' in e.keys() and 'Schnabel_div' in e.keys() and 'Petersen' in e.keys() and 'CAPTURE' in e.keys():
                     return {
                         'Petersen': acc['Petersen'] + [e['Petersen']],
-                        'Schnabel': acc['Schnabel'] + [e['Schnabel']],
+                        'Schnabel_div': acc['Schnabel_div'] + [e['Schnabel_div']],
+                        'Schnabel_qul': acc['Schnabel_qul'] + [e['Schnabel_qul']],
                         'CAPTURE': acc['CAPTURE'] + [e['CAPTURE']]
                     }
 
@@ -120,7 +121,7 @@ class Metrics:
         'BERTScore_f' : dict([(name, []) for name in ['P', 'R', 'F1']]),
         'BLEURT' : {'BLEURT' : []},
         'BLEURT_f' : {'BLEURT' : []},
-        'ME' : dict([(name, []) for name in ['Schnabel', 'Petersen', 'CAPTURE']])
+        'ME' : dict([(name, []) for name in ['Schnabel_div', 'Schnabel_qul', 'Petersen', 'CAPTURE']])
     }
 
     BLEURT: dict = {
@@ -146,7 +147,7 @@ class Metrics:
         'REDUCE_FUN' : {
             'ME' : con_ME
         },
-        'SUB' : ['Schnabel', 'Petersen', 'CAPTURE']
+        'SUB' : ['Schnabel_div', 'Schnabel_qul', 'Petersen', 'CAPTURE']
     }
 
 Metrics.REDUCE_DICT : dict = {
@@ -162,5 +163,5 @@ Metrics.SUBMETRICS : dict = {
     'BERTScore_f' : ['P', 'R', 'F1'],
     'BLEURT' : ['BLEURT'],
     'BLEURT_f' : ['BLEURT'],
-    'ME' : ['Schnabel', 'Petersen', 'CAPTURE']
+    'ME' : ['Schnabel_div', 'Schnabel_qul', 'Petersen', 'CAPTURE']
 }

@@ -466,6 +466,5 @@ class ReduceData_Test(unittest.TestCase):
 
             self.assertEqual(np.average(np.asarray(ex_data_BLEURT_f)), test.data['word_drop']['BLEURT_f']['mean'][0][1]['BLEURT'], msg="Check length of arrays, BLEURT")
 
-
 if __name__ == '__main__':
     unittest.main()
