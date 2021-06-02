@@ -11,8 +11,9 @@ class Metrics:
 
     def __init__(self):
         self.scorer_bertscore: BERTScorer = BERTScorer(lang="en")
+        path : str = os.path.abspath(os.path.join(os.path.dirname(__file__), "src/bleurt/bleurt/test_checkpoint"))
         self.scorer_bleurt: score.BleurtScorer = score.BleurtScorer(
-            checkpoint="src/bleurt/bleurt/test_checkpoint")
+            checkpoint=path)
         # self.n = Nubia()
 
     def comp_ME(self, cand: list, ref: list) -> dict:
