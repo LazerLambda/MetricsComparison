@@ -22,7 +22,9 @@ class Comparison:
 
     def set_dir(self, name : str = None, loc : str = None) -> Comparison:
 
+        # create directory if not specified
         if loc == None:
+            # create name if not specified
             if name == None:
                 name = "Comparison_gen_text_metrics"
             # TODO annotate
@@ -76,7 +78,7 @@ class Comparison:
                 "word_drop_every_sentence",
                 "word_swap",
                 "word_swap_every_sentence"]
-        self.rd = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE])
+        self.rd = ReduceData([mtrc.BLEURT, mtrc.BERTSCORE, mtrc.ME])
         self.rd.add_data(task_list, folder_path=self.exp_wd)
         self.rd.vis_ready()
         return self

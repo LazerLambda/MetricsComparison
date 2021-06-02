@@ -13,7 +13,7 @@ from .Metrics import Metrics
 
 class Experiment:
 
-    __slots__ = ["data_set", "data_ref", "metrics", "step_arr", "deteriorated_data"]
+    __slots__ = ["data_set", "data_ref", "metrics", "step_arr", "deteriorated_data", "loc"]
 
     def __init__(self, data_set_name : str = 'cnn_dailymail', data_set_vers : str = '3.0.0', path=""):
          self.data_ref : list = []
@@ -106,6 +106,7 @@ class Experiment:
 
         path : str = os.path.join(loc, "deteriorated_data_raw.p")
         pickle.dump(self.deteriorated_data, open(path, "wb" ))
+        self.loc : str = loc
 
 
     
@@ -167,12 +168,13 @@ class Experiment:
                         pass
                 results_type[1].append(result_tuple)
 
-
-            file = open(str(pert_type) + "_data.p", "wb" )
+            path : str = os.path.join(self.loc, str(pert_type) + "_data.p")
+            file = open(path, "wb" )
             pickle.dump(results_type, file)
+
             file.close()
-            del results_type
             bar.finish()
+            del results_type
 
 
 
