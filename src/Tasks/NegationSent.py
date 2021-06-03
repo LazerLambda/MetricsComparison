@@ -49,18 +49,29 @@ class Negation_Sent(Task):
             self.dmgd_texts.append(ret_tuple)
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        for ref, cand in zip(reference, candidate):
-            for f in metrics:
-                yield f(cand=cand, ref=ref)
 
+        for m in metrics:
+            yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
         self.results : list = []
-        for i, step in enumerate(self.step_arr):
-            for j, text in enumerate(self.texts):
-                reference : list = text
-                candidate : list = self.dmgd_texts[i][0]
-                self.results.append(*(res for res in self.__eval(reference, candidate, metrics)))
+        for i, _ in enumerate(self.step_arr):
+            step_results : list = []
+            for j, (sentences, _) in enumerate(self.texts):
+                reference : list = sentences
+                candidate : list = self.dmgd_texts[i][0][j]
+                step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
+            self.results.append(step_results)
+
+    def combine_results(self, metrics : list) -> None:
+        self.combined_results : list = []
+        for run in self.results:
+            acc = dict(zip([metric.name for metric in metrics], [dict(zip(metric.submetrics, [[] for _ in metric.submetrics])) for metric in metrics]))
+            for result in run:
+                for i, metric in enumerate(metrics):
+                    for j, submetric in enumerate(metric.submetrics):
+                        acc[metric.name][submetric] += result[i][j]
+            self.combined_results.append(acc)
 
     def plot(self, fig : plt.figure) -> None:
         pass

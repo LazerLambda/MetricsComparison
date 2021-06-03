@@ -5,7 +5,10 @@ import sys
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
 
-from src.Tasks.Negation_Sent import Negation_Sent
+from src.Tasks.NegationSent import Negation_Sent
+from src.metrics.Metric import Metric
+from src.metrics.BleurtMetric import BleurtMetric
+from src.metrics.BERTScoreMetric import BERTScoreMetric
 from src.Metrics import Metrics
 
 class Task_Test(unittest.TestCase):
@@ -18,8 +21,8 @@ class Task_Test(unittest.TestCase):
         self.assertEqual(len(test.texts), len(text))
 
         params = {
-            'steps' : 10,
-            'n' : 5
+            'steps' : 1,
+            'n' : 2
         }
 
         test.perturbate(params=params)
@@ -27,9 +30,32 @@ class Task_Test(unittest.TestCase):
         for e in test.dmgd_texts:
             self.assertEqual(len(e[1]), len(text))
 
-        test.evaluate([Metrics.comp_BLEURT])
-        print(test.results)
+        bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
+        bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
 
+        metrics = [bm, bsm]
+
+        test.evaluate(metrics)
+        test.combine_results(metrics)
+        
+        # check length of combined data
+        acc = 0
+        for (sentences, _) in test.texts:
+            acc += len(sentences)
+        # len_res = len(test.combined_results[0]['BLEURT']['BLEURT'])
+        for i in range(params['steps'] + 1):
+            for metric in metrics:
+                for j, submetric in enumerate(metric.submetrics):
+                    self.assertEqual(acc, len(test.combined_results[i][metric.name][submetric]))
+
+
+
+    def test_check(self):
+        cand = ["", "Hello world."]
+        ref = ["This is a test", "Hello world."]
+
+        test = Metric("", "", [])
+        self.assertRaises(Exception, test.check_input, ref, cand)
         
 if __name__ == '__main__':
     unittest.main()

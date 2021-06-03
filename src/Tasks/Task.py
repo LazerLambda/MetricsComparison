@@ -20,5 +20,8 @@ class Task():
     def evaluate(self, metrics: list) -> None:
         pass
 
+    def combine_results(self, metrics : list) -> None:
+        pass
+
     def plot(self, fig: plt.figure) -> None:
         pass
