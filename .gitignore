@@ -18,3 +18,7 @@ misc
 test_*
 test
 Comparison_*
+
+
+# yielded images
+*.png
