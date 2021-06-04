@@ -131,7 +131,8 @@ class Task_Test(unittest.TestCase):
         pickle.dump(res, f)
         f.close()
         _, axes = plt.subplots(1, 2)
-        test.plot(axes, "TEST")
+        test.plot(axes, "TEST", metrics)
+        plt.show()
 
     def test_check(self):
         cand = ["", "Hello world."]

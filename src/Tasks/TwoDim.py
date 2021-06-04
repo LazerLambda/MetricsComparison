@@ -1,5 +1,7 @@
 from .Task import Task
 
+from functools import reduce
+
 import matplotlib.pyplot as plt
 
 import copy
@@ -80,7 +82,6 @@ class TwoDim(Task):
                     indices : list = []
 
                     if step_txt == 0.0 or step_snt == 0.0:
-                        print("HIER ", step_txt, step_snt)
                         ret_tuple_snt[0].append([])
                         ret_tuple_snt[1].append([])
                         continue
@@ -93,7 +94,6 @@ class TwoDim(Task):
                             indices.append(i)
                             sentences[i] = new_sentence
 
-                    print(step_txt, step_snt)
                     ret_tuple_snt[0].append(sentences)
                     ret_tuple_snt[1].append(indices)
                 ret_txt.append(ret_tuple_snt)
@@ -165,8 +165,10 @@ class TwoDim(Task):
     def get_results(self) -> None:
         return self.df_sct.groupby(['metric', 'submetric', 'degree_txt', 'degree_snt']).mean()
 
-    def plot(self, ax, title : str) -> None:
-
-        result = self.df_sct.pivot(index="degree_snt", columns="degree_txt", values="value")
-        print(result)
+    def plot(self, ax, title : str, metrics : list) -> None:
+        submetric_list : list = reduce(lambda acc, elem: acc + elem, [metric.submetrics for metric in metrics], [])
+        results = [(self.df_sct[self.df_sct['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean()).pivot(index="degree_txt", columns="degree_snt", values="value") for submetric in submetric_list]
+        for result in results:
+            print(result)
+            sns.heatmap(result, annot=True, fmt="g", cmap='viridis', ax=ax)
         ax.title.set_text(title)
