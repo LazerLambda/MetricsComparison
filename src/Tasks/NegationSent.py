@@ -29,7 +29,8 @@ class Negation_Sent(OneDim):
                             indices.append(i)
                             continue
                     except Exception:
-                        print("Failed to negate sentence {}".format(i)) if verbose else None
+                        if verbose:
+                            print("Failed to negate sentence {}".format(i)) 
                 
                 ret_tuple[0].append(sentences)
                 ret_tuple[1].append(indices)

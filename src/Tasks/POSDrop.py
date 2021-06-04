@@ -8,7 +8,7 @@ import spacy
 class POSDrop(OneDim):
 
     @staticmethod
-    def drop_single_pos(sentence : str, doc : spacy.tokens.doc.Doc, pos : str) -> list:
+    def drop_single_pos(sentence : str, doc : spacy.tokens.doc.Doc, pos : str) -> tuple:
 
         candidates : list = []
 
