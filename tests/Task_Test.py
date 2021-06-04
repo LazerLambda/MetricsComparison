@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import os
+import pickle
 import unittest
 import spacy
 import sys
@@ -120,7 +121,17 @@ class Task_Test(unittest.TestCase):
         test.create_table(metrics)
         print(test.df_sct)
 
-        print(test.get_results())
+        res = test.get_results()
+        f = open("dataframe_poc.p", 'wb')
+        pickle.dump(test.df_sct, f)
+        f.close()
+
+        res = test.get_results()
+        f = open("dataframe_grouped_poc.p", 'wb')
+        pickle.dump(res, f)
+        f.close()
+        _, axes = plt.subplots(1, 2)
+        test.plot(axes, "TEST")
 
     def test_check(self):
         cand = ["", "Hello world."]

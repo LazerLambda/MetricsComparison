@@ -1,11 +1,15 @@
 from .Task import Task
 
+import matplotlib.pyplot as plt
+
 import copy
 import math
 import numpy as np
 import pandas as pd
 import random
+import seaborn as sns
 import spacy
+
 
 
 class TwoDim(Task):
@@ -160,3 +164,9 @@ class TwoDim(Task):
 
     def get_results(self) -> None:
         return self.df_sct.groupby(['metric', 'submetric', 'degree_txt', 'degree_snt']).mean()
+
+    def plot(self, ax, title : str) -> None:
+
+        result = self.df_sct.pivot(index="degree_snt", columns="degree_txt", values="value")
+        print(result)
+        ax.title.set_text(title)
