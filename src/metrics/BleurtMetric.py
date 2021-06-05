@@ -1,6 +1,10 @@
 from .Metric import Metric
+from ..Tasks.Task import Task
+from ..Tasks.OneDim import OneDim
+from ..Tasks.TwoDim import TwoDim 
 from bleurt import score
 
+import cmasher as cmr
 import os
 
 class BleurtMetric(Metric):
@@ -32,3 +36,19 @@ class BleurtMetric(Metric):
 
     def init_dict(self):
         return dict(zip(self._submetrics, [[] for _ in self._submetrics]))
+
+    def get_vis_info(self, t : Task) -> dict():
+        if isinstance(t, OneDim):
+            return dict()
+
+        if isinstance(t, TwoDim):
+            cmap = cmr.iceburn
+            return {
+                'color': cmap,
+                'vmin' : -2,
+                'vmax' : 2
+            }
+        
+        return None
+
+        

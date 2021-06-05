@@ -10,7 +10,7 @@ import spacy
 
 class Task():
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name"]
 
     def __init__(self, data: list, nlp: spacy.lang, path : str = ""):
 

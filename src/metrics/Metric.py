@@ -1,4 +1,6 @@
-
+from ..Tasks.Task import Task
+from ..Tasks.OneDim import OneDim
+from ..Tasks.TwoDim import TwoDim 
 import numpy as np
 
 class Metric:
@@ -35,3 +37,16 @@ class Metric:
 
     def init_dict(self):
         pass
+
+    def get_vis_info(self, t : Task) -> dict():
+        if isinstance(t, OneDim):
+            return dict()
+
+        if isinstance(t, TwoDim):
+            return {
+                'color': None,
+                'vmin' : None,
+                'vmax' : None
+            }
+        
+        return None

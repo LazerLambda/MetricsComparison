@@ -8,6 +8,7 @@ import copy
 import math
 import numpy as np
 import pandas as pd
+import pickle
 import random
 import seaborn as sns
 import spacy
@@ -15,6 +16,16 @@ import spacy
 
 
 class TwoDim(Task):
+
+    #TODO slots
+    #TODO subclass for drop
+    #TODO description
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
+
+    def __init__(self, data: list, nlp: spacy.lang, path : str = ""):
+        self.name = "drop_words"
+        self.descr = "Dropped words in sentences and on sentence level."
+        super(TwoDim, self).__init__(data, nlp, path)
 
     # overwrite
     def set_steps(self, steps : dict) -> Task:
@@ -162,13 +173,32 @@ class TwoDim(Task):
         
         self.df_sct = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree_txt', 'degree_snt', 'value'])
 
+        f = open(self.path + self.name + "_results_table_data.p", 'wb')
+        pickle.dump(self.df_sct, f)
+        f.close()
+
     def get_results(self) -> None:
         return self.df_sct.groupby(['metric', 'submetric', 'degree_txt', 'degree_snt']).mean()
 
     def plot(self, ax, title : str, metrics : list) -> None:
-        submetric_list : list = reduce(lambda acc, elem: acc + elem, [metric.submetrics for metric in metrics], [])
-        results = [(self.df_sct[self.df_sct['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean()).pivot(index="degree_txt", columns="degree_snt", values="value") for submetric in submetric_list]
-        for result in results:
-            print(result)
-            sns.heatmap(result, annot=True, fmt="g", cmap='viridis', ax=ax)
-        ax.title.set_text(title)
+        submetric_list : list = reduce(lambda acc, elem: acc + list(zip(elem.submetrics, [elem.name for _ in elem.submetrics])), [metric for metric in metrics], [])
+        metrics_dict : dict = dict(zip([metric.name for metric in metrics], metrics))
+        print(metrics_dict)
+        results = [(self.df_sct[self.df_sct['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean())
+            .pivot(index="degree_txt", columns="degree_snt", values="value")\
+                for submetric, _ in submetric_list]
+        results: tuple = results, submetric_list
+        for i, result in enumerate(results[0]):
+            metric = results[1][i][1]
+            vis_data = metrics_dict[metric].get_vis_info(self)
+            print(vis_data)
+            sns.heatmap(
+                result,
+                annot=True,
+                fmt="g",
+                cmap=vis_data['color'],
+                vmin=vis_data['vmin'],
+                vmax=vis_data['vmax'],
+                ax=ax[i])
+            ax[i].title.set_text(results[1][i][0])
+        plt.suptitle(self.descr)
