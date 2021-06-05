@@ -3,38 +3,29 @@ from .OneDim import OneDim
 import copy
 import math
 import numpy as np
+import spacy
 
 from checklist.perturb import Perturb
 
 
 class Negation_Sent(OneDim):
 
-    def perturbate(self, params : dict, verbose : bool=False) -> None:
-        # [(degree of deterioration, deteriorated text, indices)]
+    @staticmethod
+    def negate(sentence : str, doc : spacy.tokens.doc.Doc) -> tuple:
+        success : bool = False
+        try:
+            ret = Perturb.perturb([doc], Perturb.add_negation, keep_original=False)
+            if len(ret.data) > 0:
+                sentence = ret.data[0][0]
+                success = True
+        except Exception:
+            # if verbose:
+            #     print("Failed to negate sentence {}".format(i))
+            pass
 
-        for step in self.step_arr:
-            ret_tuple : tuple = ([], []) 
-            for _, (sentences, doc) in enumerate(self.texts):
-                
-                sentences : list = copy.deepcopy(sentences)
-                indices : list = []
+        return sentence, success
 
-                sample : int = int(math.floor(step * len(sentences)))
-
-                for i in range(sample):
-                    try:
-                        ret = Perturb.perturb([doc[i]], Perturb.add_negation, keep_original=False)
-                        if len(ret.data) > 0:
-                            sentences[i] = ret.data[0][0]
-                            indices.append(i)
-                            continue
-                    except Exception:
-                        if verbose:
-                            print("Failed to negate sentence {}".format(i)) 
-                
-                ret_tuple[0].append(sentences)
-                ret_tuple[1].append(indices)
-
-            self.dmgd_texts.append(ret_tuple)
+    def perturbate(self) -> None:
+        self.perturbate_1d(self.negate)
 
     

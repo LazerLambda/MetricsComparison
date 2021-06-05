@@ -42,11 +42,11 @@ class BleurtMetric(Metric):
             return dict()
 
         if isinstance(t, TwoDim):
-            cmap = cmr.iceburn
+            cmap = cmr.prinsenvlag
             return {
                 'color': cmap,
-                'vmin' : -2,
-                'vmax' : 2
+                'vmin' : -1.5,
+                'vmax' : 1.5
             }
         
         return None

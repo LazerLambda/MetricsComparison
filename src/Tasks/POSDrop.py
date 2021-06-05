@@ -7,14 +7,19 @@ import spacy
 
 class POSDrop(OneDim):
 
-    @staticmethod
-    def drop_single_pos(sentence : str, doc : spacy.tokens.doc.Doc, pos : str) -> tuple:
+    def __init__(self, data: list, nlp: spacy.lang, path : str = "", pos : str = "ADJ"):
+        self.name : str  = "rep_words_2d"
+        self.descr : str  = "Reapeated word phrases in the text and with different intensity. Penalization"
+        self.pos : str = pos
+        super(POSDrop, self).__init__(data, nlp, path)
+
+    def drop_single_pos(self, sentence : str, doc : spacy.tokens.doc.Doc) -> tuple:
 
         candidates : list = []
 
         for i in range(len(doc)):
 
-            if doc[i].pos_ == pos:
+            if doc[i].pos_ == self.pos:
                 candidates.append(i)
             else:
                 continue
@@ -30,29 +35,6 @@ class POSDrop(OneDim):
         
 
         return sentence, True
-    
-    def perturbate(self, params: dict):
 
-        tag : str = params['POS']
-
-        for step in self.step_arr:
-            ret_tuple : tuple = ([], []) 
-            for _, (sentences, doc) in enumerate(self.texts):
-
-                sentences : list = copy.deepcopy(sentences)
-                indices : list = []
-
-                sample : int = int(math.floor(step * len(sentences)))
-
-                for i in range(sample):
-                    new_sentence, success = self.drop_single_pos(sentence=sentences[i], doc=doc[i], pos=tag)
-
-                    if success:
-                        indices.append(i)
-                        sentences[i] = new_sentence
-
-                ret_tuple[0].append(sentences)
-                ret_tuple[1].append(indices)
-
-            self.dmgd_texts.append(ret_tuple)
-    
+    def perturbate(self) -> None:
+        self.perturbate_1d(self.drop_single_pos)
