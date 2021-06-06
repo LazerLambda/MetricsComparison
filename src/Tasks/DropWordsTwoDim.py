@@ -9,10 +9,10 @@ class DropWordsTwoDim(TwoDim):
     
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
 
-    def __init__(self, data: list, nlp: spacy.lang, path : str = ""):
+    def __init__(self, params : dict):
+        super(DropWordsTwoDim, self).__init__(params)
         self.name = "drop_words"
         self.descr = "Dropped words in sentences from the text and on sentence level."
-        super(DropWordsTwoDim, self).__init__(data, nlp, path)
 
     @staticmethod
     def drop_single(sentence : str, doc : spacy.tokens.doc.Doc, step_snt : float) -> tuple:
@@ -34,7 +34,7 @@ class DropWordsTwoDim(TwoDim):
             step_snt = bound
 
         prop : float = int(math.floor(step_snt * len(candidates)))
-        drop_list = list = random.sample(candidates, k=prop)
+        drop_list : list = random.sample(candidates, k=prop)
 
         sent : str = ""
 

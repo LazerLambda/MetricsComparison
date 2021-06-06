@@ -1,12 +1,26 @@
 from .Task import Task
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
 from checklist.perturb import Perturb
+from progress.bar import ShadyBar
 
 class OneDim(Task):
+
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
+
+    def __init__(self, params : dict):
+        super(OneDim, self).__init__(params=params)
+
+        self.set_steps(params['steps'])
+
+    def set_steps(self, steps : dict) -> Task:
+        step_size : float = 1 / steps['steps']
+        self.step_arr = np.flip(1 - np.concatenate( (np.arange(0,1, step=step_size), np.array([1])) ) )
+        return self
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
         for m in metrics:

@@ -15,6 +15,7 @@ output_*
 misc
 
 # created folders
+.test_*
 test_*
 test
 Comparison_*

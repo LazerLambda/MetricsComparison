@@ -8,13 +8,12 @@ import spacy
 
 class SwapWordsTwoDim(TwoDim):
 
-
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
 
-    def __init__(self, data: list, nlp: spacy.lang, path : str = ""):
+    def __init__(self, params : dict):
+        super(SwapWordsTwoDim, self).__init__(params=params)
         self.name = "swap_words"
         self.descr = "Swapped words in sentences from the text and on sentence level."
-        super(SwapWordsTwoDim, self).__init__(data, nlp, path)
 
     @staticmethod
     def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step_snt : float) -> tuple:

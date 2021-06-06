@@ -9,10 +9,10 @@ class RepetitionTwoDim(TwoDim):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
 
-    def __init__(self, data: list, nlp: spacy.lang, path : str = ""):
+    def __init__(self, params : dict):
+        super(RepetitionTwoDim, self).__init__(params=params)
         self.name = "rep_words_2d"
         self.descr = "Reapeated word phrases in the text and with different intensity. Penalization"
-        super(RepetitionTwoDim, self).__init__(data, nlp, path)
 
 
     @staticmethod
@@ -22,14 +22,10 @@ class RepetitionTwoDim(TwoDim):
             step_snt : float,\
             phraseLength : int = 4) -> bool:
 
-        # subtract 1 because of indexing
-        # end : int = len(doc) - 1
-        # eos_index = len(doc) - 1
         for i in reversed(range(0, len(doc))):
 
             # find phrase at the end of the sentence without punctuation in it incrementally
             token_slice = doc[(i - phraseLength):i]
-            # print([(token.text, token.pos_) for token in token_slice])
             for j in reversed(range(phraseLength)):
                 j += 1
                 token_slice = doc[(i - j):i]
@@ -60,7 +56,6 @@ class RepetitionTwoDim(TwoDim):
                         else:
                             word = " " + token.text
                         sent += word
-                    print(sent)
 
                     return sent, True
         

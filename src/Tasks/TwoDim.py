@@ -20,6 +20,10 @@ class TwoDim(Task):
     #TODO subclass for drop
     #TODO description
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
+    
+    def __init__(self, params : dict):
+        super(TwoDim, self).__init__(params)
+        self.set_steps(params['steps'])
 
     # overwrite
     def set_steps(self, steps : dict) -> Task:
@@ -37,9 +41,9 @@ class TwoDim(Task):
 
         id_value : any = None
 
-        for i, step_txt in enumerate(self.step_arr[0]):
+        for i, _ in enumerate(self.step_arr[0]):
             step_results_txt : list = []
-            for j, step_snt in enumerate(self.step_arr[1]):
+            for j, _ in enumerate(self.step_arr[1]):
                 step_results_snt : list = []
                 for k, (sentences, _) in enumerate(self.texts):
                     reference : list = sentences

@@ -11,6 +11,13 @@ from checklist.perturb import Perturb
 
 class Negation_Sent(OneDim, Task):
 
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
+
+    def __init__(self, params : dict):
+        super(Negation_Sent, self).__init__(params=params)
+        self.name = "negation"
+        self.descr = "Negated sentences with increasing degree in the text."
+
     @staticmethod
     def negate(sentence : str, doc : spacy.tokens.doc.Doc) -> tuple:
         success : bool = False

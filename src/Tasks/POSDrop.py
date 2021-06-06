@@ -7,11 +7,13 @@ import spacy
 
 class POSDrop(OneDim):
 
-    def __init__(self, data: list, nlp: spacy.lang, path : str = "", pos : str = "ADJ"):
-        self.name : str  = "rep_words_2d"
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr", "pos"]
+
+    def __init__(self, params : dict):
+        super(POSDrop, self).__init__(params=params)
+        self.name : str  = "pos_drop"
         self.descr : str  = "Reapeated word phrases in the text and with different intensity. Penalization"
-        self.pos : str = pos
-        super(POSDrop, self).__init__(data, nlp, path)
+        self.pos : str = params['pos']
 
     def drop_single_pos(self, sentence : str, doc : spacy.tokens.doc.Doc) -> tuple:
 

@@ -13,33 +13,39 @@ import seaborn as sns
 import spacy
 
 from functools import reduce
+from progress.bar import ShadyBar
+from typing import IO
 
 class Task():
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "df_sct", "step_arr", "path", "name"]
 
-    def __init__(self, data: list, nlp: spacy.lang, path : str = ""):
+    def __init__(self, params : dict):
 
         self.texts: list = []
         self.results : list = []
         self.combined_results : list = []
         self.step_arr : list = []
         self.dmgd_texts : list = []
-        self.path : str = path
+        self.path : str = params['path']
         self.df_sct : pd.DataFrame = None
+        self.name : str = ""
+
+        data : list = params['data']
+        nlp : spacy.lang = params['nlp']
 
         for text in data:
             sentences: list = nltk.sent_tokenize(text)
             doc: list = list(nlp.pipe(sentences))
             self.texts.append((sentences, doc))
 
-    def set_steps(self, steps : int) -> Task:
-        step_size : float = 1 / steps
-        self.step_arr = np.flip(1 - np.concatenate( (np.arange(0,1, step=step_size), np.array([1])) ) )
+    def set_steps(self, steps : dict) -> Task:
         return self
 
     def perturbate_1d(self, f : callable) -> None:
         # [(degree of deterioration, deteriorated text, indices)]
+
+        bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
         for step in self.step_arr:
             ret_tuple : tuple = ([], []) 
@@ -52,6 +58,9 @@ class Task():
 
                 for i in range(sample):
                     
+                    if len(doc[i]) < 2:
+                        continue
+
                     new_sentence = sentences[i]
                     new_sentence, success = f(sentence=sentences[i], doc=doc[i])
 
@@ -62,10 +71,16 @@ class Task():
                 
                 ret_tuple[0].append(sentences)
                 ret_tuple[1].append(indices)
+                bar.next()
 
             self.dmgd_texts.append(ret_tuple)
 
+        self.dump(self.dmgd_texts, "dmgd")
+        bar.finish()
+
     def perturbate_2d(self, f : callable) -> None:
+
+        bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr[0]) * len(self.step_arr[1]) * len(self.texts))
     
         for step_txt in self.step_arr[0]:
             ret_txt : list = []
@@ -80,9 +95,13 @@ class Task():
                     if step_txt == 0.0 or step_snt == 0.0:
                         ret_tuple_snt[0].append([])
                         ret_tuple_snt[1].append([])
+                        bar.next()
                         continue
 
                     for i in range(sample):
+
+                        if len(doc[i]) < 2:
+                            continue
 
                         new_sentence = sentences[i]
                         new_sentence, success = f(sentence=new_sentence, doc=doc[i], step_snt=step_snt)
@@ -92,14 +111,18 @@ class Task():
 
                     ret_tuple_snt[0].append(sentences)
                     ret_tuple_snt[1].append(indices)
+                    bar.next()
                 ret_txt.append(ret_tuple_snt)
             self.dmgd_texts.append(ret_txt)
 
-    def perturbate(self, params: dict) -> None:
+        self.dump(self.dmgd_texts, "dmgd")
+        bar.finish()
+
+    def perturbate(self) -> None:
         pass
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        print("her\n")
+        # TODO
         for m in metrics:
             yield m.compute(cand=candidate, ref=reference)
 
@@ -111,3 +134,13 @@ class Task():
 
     def plot(self, fig: plt.figure) -> None:
         pass
+
+    def dump(self, data : any, descr : str) -> None:
+
+        f_name : str = "." + self.name + "_" + descr + "_data.p"
+        path : str = os.path.join(self.path, f_name)
+        print(path)
+        
+        f : IO = open(path, 'wb')
+        pickle.dump(data, f)
+        f.close()
