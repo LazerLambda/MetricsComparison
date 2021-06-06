@@ -1,4 +1,5 @@
 from .OneDim import OneDim
+from .Task import Task
 
 import copy
 import math
@@ -8,7 +9,7 @@ import spacy
 from checklist.perturb import Perturb
 
 
-class Negation_Sent(OneDim):
+class Negation_Sent(OneDim, Task):
 
     @staticmethod
     def negate(sentence : str, doc : spacy.tokens.doc.Doc) -> tuple:

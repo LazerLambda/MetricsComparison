@@ -29,18 +29,92 @@ class TwoDim(Task):
         self.step_arr.append(np.flip(1 - np.concatenate( (np.arange(0,1, step=step_snt), np.array([1])))))
         return self
 
+    def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
+        for m in metrics:
+            yield m.compute(cand=candidate, ref=reference)
+
     def evaluate(self, metrics : list) -> None:
-        self.evaluate_2d(metrics)
+
+        id_value : any = None
+
+        for i, step_txt in enumerate(self.step_arr[0]):
+            step_results_txt : list = []
+            for j, step_snt in enumerate(self.step_arr[1]):
+                step_results_snt : list = []
+                for k, (sentences, _) in enumerate(self.texts):
+                    reference : list = sentences
+                    candidate : list = None
+                    if len(self.dmgd_texts[i][j][1][k]) == 0:
+                        # Check if value for cand = ref already exists
+                        if id_value == None:
+                            # if it doesn't exist, assign cand = ref
+                            candidate = sentences
+                        else:
+                            # if it exists, assign id value and continue
+                            step_results_snt.append(id_value)
+                            continue
+                    else:     
+                        candidate = self.dmgd_texts[i][j][0][k]
+
+                    step_results_snt.append([*(res for res in self.__eval(reference, candidate, metrics))])
+
+                    # if value for cand = ref doesn't exist, assign it to id value
+                    if id_value == None:
+                        id_value = step_results_snt[len(step_results_snt) - 1]
+
+                step_results_txt.append(step_results_snt)
+            self.results.append(step_results_txt)
 
     def combine_results(self, metrics : list) -> None:
-        self.combine_results_2d(metrics)
+        for outer_run in self.results:
+            outer_acc : list = []
+            for run in outer_run:
+                acc = dict(zip([metric.name for metric in metrics], [dict(zip(metric.submetrics, [[] for _ in metric.submetrics])) for metric in metrics]))
+                for result in run:
+                    for i, metric in enumerate(metrics):
+                        for j, submetric in enumerate(metric.submetrics):
+                            acc[metric.name][submetric] += result[i][j]
+                outer_acc.append(acc)
+            self.combined_results.append(outer_acc)
 
     def create_table(self, metrics : list) -> None:
-        self.create_table_2d(metrics)
+
+        data : list = []
+        for i, step_txt in enumerate(self.step_arr[0]):
+            for j, step_snt in enumerate(self.step_arr[1]):
+                for metric in metrics:
+                    for submetric in metric.submetrics:
+                        for value in self.combined_results[i][j][metric.name][submetric]:
+                            scatter_struc : dict = {'metric': metric.name, 'submetric': submetric, 'degree_txt' : float(step_txt), 'degree_snt' : float(step_snt), 'value' : float(value)}
+                            data.append(scatter_struc)
+        
+        self.df_sct = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree_txt', 'degree_snt', 'value'])
+
+        # TODO
+        # f = open(self.path + self.name + "_results_table_data.p", 'wb')
+        # pickle.dump(self.df_sct, f)
+        # f.close()
 
     def get_results(self) -> None:
-        self.get_results_2d()
+        return self.df_sct.groupby(['metric', 'submetric', 'degree_txt', 'degree_snt']).mean()
 
-    # TODO annotate
     def plot(self, ax, title : str, metrics : list) -> None:
-        self.plot_2d(ax, title, metrics)
+        submetric_list : list = reduce(lambda acc, elem: acc + list(zip(elem.submetrics, [elem.name for _ in elem.submetrics])), [metric for metric in metrics], [])
+        metrics_dict : dict = dict(zip([metric.name for metric in metrics], metrics))
+        results = [(self.df_sct[self.df_sct['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean())
+            .pivot(index="degree_txt", columns="degree_snt", values="value")\
+                for submetric, _ in submetric_list]
+        results: tuple = results, submetric_list
+        for i, result in enumerate(results[0]):
+            metric = results[1][i][1]
+            vis_data = metrics_dict[metric].get_vis_info(self)
+            sns.heatmap(
+                result,
+                annot=True,
+                fmt="g",
+                cmap=vis_data['color'],
+                vmin=vis_data['vmin'],
+                vmax=vis_data['vmax'],
+                ax=ax[i])
+            ax.flat[i].title.set_text(results[1][i][0])
+        plt.suptitle(self.descr)
