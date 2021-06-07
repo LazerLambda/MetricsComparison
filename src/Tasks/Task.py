@@ -75,7 +75,7 @@ class Task():
 
             self.dmgd_texts.append(ret_tuple)
 
-        self.dump(self.dmgd_texts, "dmgd")
+        # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
 
     def perturbate_2d(self, f : callable) -> None:
@@ -115,7 +115,7 @@ class Task():
                 ret_txt.append(ret_tuple_snt)
             self.dmgd_texts.append(ret_txt)
 
-        self.dump(self.dmgd_texts, "dmgd")
+        # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
 
     def perturbate(self) -> None:

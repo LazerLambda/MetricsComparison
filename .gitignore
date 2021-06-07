@@ -19,7 +19,12 @@ misc
 test_*
 test
 Comparison_*
+mock_dir_test
 
+
+# include mock_dir
+!tests/mock_dir_1/*p
+!tests/mock_dir_2/*p
 
 # yielded images
 *.png
