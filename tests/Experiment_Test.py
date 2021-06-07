@@ -106,6 +106,8 @@ class ExperimentTest(unittest.TestCase):
     #     exp.perturbate()
     #     self.assertEqual(len([f for f in os.listdir('mock_dir_test/') if os.path.isfile(os.path.join('mock_dir_test/', f))]), 6)
 
+    #     shutil.rmtree(dest)
+
     def test_exist_dir_2(self):
         src = 'tests/mock_dir_2'
         dest = 'mock_dir_test/'
@@ -122,8 +124,19 @@ class ExperimentTest(unittest.TestCase):
         exp.perturbate()
         exp.evaluate()
 
+        for t in exp.tasks:
+            
+            f_name = "." + t.name + "_results_data.p"
+            path = os.path.join("mock_dir_test", f_name)
+            f = open(path, 'rb')
+            data = pickle.load(f)
+            f.close()
+            metrics_measured = data['metric'].unique()
 
-    #     shutil.rmtree(dest)
+            for m in [m.name for m in metrics]:
+                self.assertTrue(m in metrics_measured)
+
+        shutil.rmtree(destination)
 
     def create_mock_dir(self):
         src = 'tests/mock_dir_1'
