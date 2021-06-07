@@ -33,6 +33,22 @@ class OneDim(Task):
             for j, (sentences, _) in enumerate(self.texts):
                 reference : list = sentences
                 candidate : list = self.dmgd_texts[i][0][j]
+
+                # TODO into method
+                # drop emtpy sentences
+                ref_checked : list = []
+                cand_checked : list = []
+
+                for ref, cand in zip(reference, candidate):
+                    if len(cand) != 0:
+                        ref_checked.append(ref)
+                        cand_checked.append(ref)
+                    else:
+                        continue
+                
+                reference = ref_checked
+                candidate = cand_checked
+
                 if self.step_arr[i] == 0:
                     assert candidate == reference
                 step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])

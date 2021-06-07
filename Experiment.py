@@ -78,7 +78,7 @@ class Experiment:
                 data : tuple = pickle.load(f)
                 self.data : list = data[1]
                 f.close()
-                print("Existing data loaded.")
+                print("Existing data loaded.") if self.verbose else None
             else:
                 self.__load_dataset(data_specs['name'], data_specs['version'], data_specs['n'])
 
@@ -137,9 +137,9 @@ class Experiment:
                 df_tmp = pickle.load(f)
                 # TODO consts
                 metrics_in_df : np.ndarray = df_tmp['metric'].unique()
-                print("Already computed: ", *(m for m in metrics_in_df))
+                print("Already computed: ", *(m for m in metrics_in_df)) if self.verbose else None
                 metrics = [m for m in metrics if m.name not in metrics_in_df]
-                print("New metrics to compute: ", *(m.name for m in metrics))
+                print("New metrics to compute: ", *(m.name for m in metrics)) if self.verbose else None
                 f.close()
 
             task.evaluate(metrics)
@@ -160,7 +160,6 @@ class Experiment:
                 df_tmp = df_tmp.append(df)
                 df = df_tmp
 
-            print(df)
             path : str = os.path.join(self.exp_wd, f_name)
             self.__dump(df, path)
             self.result_files.append(path)

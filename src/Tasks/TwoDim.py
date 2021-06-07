@@ -62,6 +62,20 @@ class TwoDim(Task):
                     else:     
                         candidate = self.dmgd_texts[i][j][0][k]
 
+                    # drop emtpy sentences
+                    ref_checked : list = []
+                    cand_checked : list = []
+
+                    for ref, cand in zip(reference, candidate):
+                        if len(cand) != 0:
+                            ref_checked.append(ref)
+                            cand_checked.append(ref)
+                        else:
+                            continue
+                    
+                    reference = ref_checked
+                    candidate = cand_checked
+
                     step_results_snt.append([*(res for res in self.__eval(reference, candidate, metrics))])
 
                     # if value for cand = ref doesn't exist, assign it to id value
