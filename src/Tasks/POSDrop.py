@@ -7,7 +7,7 @@ import spacy
 
 class POSDrop(OneDim):
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr", "pos"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "pos"]
 
     def __init__(self, params : dict):
         super(POSDrop, self).__init__(params=params)

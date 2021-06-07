@@ -12,14 +12,14 @@ import pickle
 import random
 import seaborn as sns
 
-
+from progress.bar import ShadyBar
 
 class TwoDim(Task):
 
     #TODO slots
     #TODO subclass for drop
     #TODO description
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
     
     def __init__(self, params : dict):
         super(TwoDim, self).__init__(params)
@@ -40,6 +40,7 @@ class TwoDim(Task):
     def evaluate(self, metrics : list) -> None:
 
         id_value : any = None
+        bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr[0]) * len(self.step_arr[1]) * len(self.texts))
 
         for i, _ in enumerate(self.step_arr[0]):
             step_results_txt : list = []
@@ -56,6 +57,7 @@ class TwoDim(Task):
                         else:
                             # if it exists, assign id value and continue
                             step_results_snt.append(id_value)
+                            bar.next()
                             continue
                     else:     
                         candidate = self.dmgd_texts[i][j][0][k]
@@ -65,9 +67,12 @@ class TwoDim(Task):
                     # if value for cand = ref doesn't exist, assign it to id value
                     if id_value == None:
                         id_value = step_results_snt[len(step_results_snt) - 1]
+                    
+                    bar.next()
 
                 step_results_txt.append(step_results_snt)
             self.results.append(step_results_txt)
+        bar.finish()
 
     def combine_results(self, metrics : list) -> None:
         for outer_run in self.results:
@@ -92,20 +97,20 @@ class TwoDim(Task):
                             scatter_struc : dict = {'metric': metric.name, 'submetric': submetric, 'degree_txt' : float(step_txt), 'degree_snt' : float(step_snt), 'value' : float(value)}
                             data.append(scatter_struc)
         
-        self.df_sct = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree_txt', 'degree_snt', 'value'])
+        self.df = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree_txt', 'degree_snt', 'value'])
 
         # TODO
         # f = open(self.path + self.name + "_results_table_data.p", 'wb')
-        # pickle.dump(self.df_sct, f)
+        # pickle.dump(self.df, f)
         # f.close()
 
     def get_results(self) -> None:
-        return self.df_sct.groupby(['metric', 'submetric', 'degree_txt', 'degree_snt']).mean()
+        return self.df.groupby(['metric', 'submetric', 'degree_txt', 'degree_snt']).mean()
 
     def plot(self, ax, title : str, metrics : list) -> None:
         submetric_list : list = reduce(lambda acc, elem: acc + list(zip(elem.submetrics, [elem.name for _ in elem.submetrics])), [metric for metric in metrics], [])
         metrics_dict : dict = dict(zip([metric.name for metric in metrics], metrics))
-        results = [(self.df_sct[self.df_sct['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean())
+        results = [(self.df[self.df['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean())
             .pivot(index="degree_txt", columns="degree_snt", values="value")\
                 for submetric, _ in submetric_list]
         results: tuple = results, submetric_list

@@ -18,7 +18,7 @@ from typing import IO
 
 class Task():
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "df_sct", "step_arr", "path", "name"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "df", "step_arr", "path", "name"]
 
     def __init__(self, params : dict):
 
@@ -28,7 +28,7 @@ class Task():
         self.step_arr : list = []
         self.dmgd_texts : list = []
         self.path : str = params['path']
-        self.df_sct : pd.DataFrame = None
+        self.df : pd.DataFrame = None
         self.name : str = ""
 
         data : list = params['data']
@@ -135,6 +135,8 @@ class Task():
     def plot(self, fig: plt.figure) -> None:
         pass
 
+
+        # OBSOLETE
     def dump(self, data : any, descr : str) -> None:
 
         f_name : str = "." + self.name + "_" + descr + "_data.p"

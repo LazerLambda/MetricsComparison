@@ -8,7 +8,7 @@ import spacy
 
 class SwapWordsTwoDim(TwoDim):
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
         super(SwapWordsTwoDim, self).__init__(params=params)

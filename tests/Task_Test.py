@@ -143,13 +143,13 @@ class Task_Test(unittest.TestCase):
     #     print(test.combined_results)
 
     #     test.create_table(metrics)
-    #     # print(test.df_sct)
+    #     # print(test.df)
 
     #     res = test.get_results()
 
     #     # # TODO test average
     #     # f = open("tests/dataframe_poc.p", 'wb')
-    #     # pickle.dump(test.df_sct, f)
+    #     # pickle.dump(test.df, f)
     #     # f.close()
 
     #     res = test.get_results()
@@ -176,7 +176,7 @@ class Task_Test(unittest.TestCase):
 
     #     metrics = [bm,bsm]
 
-    #     test.df_sct = df
+    #     test.df = df
     #     a4_dims = (11.7, 8.27)
     #     _, axes = plt.subplots(2, 2, figsize=a4_dims)
     #     test.plot(axes, "TEST", metrics)
@@ -207,14 +207,14 @@ class Task_Test(unittest.TestCase):
     #     # print(test.combined_results)
 
     #     test.create_table(metrics)
-    #     print(test.df_sct)
+    #     print(test.df)
 
     #     res = test.get_results()
     #     print(res)
 
     #     # TODO test average
     #     # f = open("tests/dataframe_poc.p", 'wb')
-    #     # pickle.dump(test.df_sct, f)
+    #     # pickle.dump(test.df, f)
     #     # f.close()
 
     #     res = test.get_results()
@@ -223,7 +223,7 @@ class Task_Test(unittest.TestCase):
     #     # pickle.dump(res, f)
     #     # f.close()
 
-    #     # est.df_sct = df
+    #     # est.df = df
     #     a4_dims = (11.7, 8.27)
     #     _, axes = plt.subplots(2, 2, figsize=a4_dims)
     #     test.plot(axes, "test_SwapWordsTwoDim", metrics)
@@ -253,14 +253,14 @@ class Task_Test(unittest.TestCase):
     #     print(test.combined_results)
 
     #     test.create_table(metrics)
-    #     print(test.df_sct)
+    #     print(test.df)
 
     #     res = test.get_results()
     #     print(res)
 
     #     # TODO test average
     #     # f = open("tests/dataframe_poc.p", 'wb')
-    #     # pickle.dump(test.df_sct, f)
+    #     # pickle.dump(test.df, f)
     #     # f.close()
 
     #     res = test.get_results()
@@ -310,15 +310,15 @@ class Task_Test(unittest.TestCase):
 
     #     # TODO test average
     #     f = open("tests/dataframe_rep_poc.p", 'wb')
-    #     pickle.dump(test_rep.df_sct, f)
+    #     pickle.dump(test_rep.df, f)
     #     f.close()
 
     #     f = open("tests/dataframe_swp_poc.p", 'wb')
-    #     pickle.dump(test_swp.df_sct, f)
+    #     pickle.dump(test_swp.df, f)
     #     f.close()
 
     #     f = open("tests/dataframe_drp_poc.p", 'wb')
-    #     pickle.dump(test_drp.df_sct, f)
+    #     pickle.dump(test_drp.df, f)
     #     f.close()
 
         # _, axes = plt.subplots(1, 3)
@@ -356,9 +356,9 @@ class Task_Test(unittest.TestCase):
     #     test_swp = SwapWordsTwoDim(data=text, nlp=self.nlp)
     #     test_drp = DropWordsTwoDim(data=text, nlp=self.nlp)
 
-    #     test_rep.df_sct = df_rep
-    #     test_swp.df_sct = df_swp
-    #     test_drp.df_sct = df_drp
+    #     test_rep.df = df_rep
+    #     test_swp.df = df_swp
+    #     test_drp.df = df_drp
 
     #     _, axes = plt.subplots(3, 4)
 

@@ -10,7 +10,7 @@ from progress.bar import ShadyBar
 
 class OneDim(Task):
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df_sct", "descr"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
         super(OneDim, self).__init__(params=params)
@@ -27,6 +27,7 @@ class OneDim(Task):
             yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
+        bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
         for i, _ in enumerate(self.step_arr):
             step_results : list = []
             for j, (sentences, _) in enumerate(self.texts):
@@ -35,7 +36,9 @@ class OneDim(Task):
                 if self.step_arr[i] == 0:
                     assert candidate == reference
                 step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
+                bar.next()
             self.results.append(step_results)
+        bar.finish()
 
     def combine_results(self, metrics : list) -> None:
         for run in self.results:
@@ -55,10 +58,10 @@ class OneDim(Task):
                         scatter_struc : dict = {'metric': metric.name, 'submetric': submetric, 'degree' : float(step), 'value' : float(value)}
                         data.append(scatter_struc)
         
-        self.df_sct = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree', 'value'])
+        self.df = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree', 'value'])
 
     def get_results(self) -> None:
-        ret = self.df_sct.groupby(['metric', 'submetric', 'degree']).mean()
+        ret = self.df.groupby(['metric', 'submetric', 'degree']).mean()
         return ret
 
     # TODO annotate
@@ -67,6 +70,6 @@ class OneDim(Task):
         sns.set_theme(style="ticks", palette="pastel")
         sns.boxplot(x="degree", y="value",
             hue="submetric", # palette=["m", "g"],
-            data=self.df_sct, ax=ax)
+            data=self.df, ax=ax)
         ax.set(ylim=(-1.5, 1.5))
         ax.title.set_text(title)
