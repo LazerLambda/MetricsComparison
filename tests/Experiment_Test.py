@@ -53,6 +53,9 @@ class ExperimentTest(unittest.TestCase):
 
         for t in exp.tasks:
             self.assertTrue(len(t.step_arr) > 1)
+        
+        path = exp.exp_wd
+        shutil.rmtree(path)
 
     def test_perturb(self):
         bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
