@@ -27,6 +27,10 @@ class OneDim(Task):
             yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
+        
+        if len(metrics) == 0:
+            return
+
         bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
         for i, _ in enumerate(self.step_arr):
             step_results : list = []

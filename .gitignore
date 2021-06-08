@@ -20,7 +20,7 @@ test_*
 test
 Comparison_*
 mock_dir_test
-
+.example*
 
 # include mock_dir
 !tests/mock_dir_1/*p

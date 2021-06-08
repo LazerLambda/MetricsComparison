@@ -39,6 +39,9 @@ class TwoDim(Task):
 
     def evaluate(self, metrics : list) -> None:
 
+        if len(metrics) == 0:
+            return
+
         id_value : any = None
         bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr[0]) * len(self.step_arr[1]) * len(self.texts))
 

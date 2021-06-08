@@ -33,8 +33,8 @@ class ExperimentTest(unittest.TestCase):
 
     def test_init(self):
 
-        bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
+        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
 
         metrics = [bm, bsm]
 
@@ -58,8 +58,8 @@ class ExperimentTest(unittest.TestCase):
         shutil.rmtree(path)
 
     def test_perturb(self):
-        bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
+        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
 
         metrics = [bm, bsm]
         tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (RepetitionTwoDim, )]
@@ -75,8 +75,8 @@ class ExperimentTest(unittest.TestCase):
         shutil.rmtree(path)
 
     def test_evaluate(self):
-        bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
+        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
 
         # metrics = [bm]#, bsm]
         metrics = [bm, bsm]
@@ -102,8 +102,8 @@ class ExperimentTest(unittest.TestCase):
         src = 'tests/mock_dir_1'
         dest = 'mock_dir_test/'
         destination = shutil.copytree(src, dest)
-        bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
+        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
 
         metrics = [bm, bsm]
         tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,)]
@@ -122,8 +122,8 @@ class ExperimentTest(unittest.TestCase):
         src = 'tests/mock_dir_2'
         dest = 'mock_dir_test/'
         destination = shutil.copytree(src, dest)
-        bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
+        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
 
         metrics = [bm, bsm]
         tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,)]
