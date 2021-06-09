@@ -35,7 +35,8 @@ class TwoDim(Task):
         return self
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        yield m.compute(cand=candidate, ref=reference)
+        for m in metrics:
+            yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
 
@@ -52,6 +53,8 @@ class TwoDim(Task):
                 for k, (sentences, _) in enumerate(self.texts):
                     reference : list = sentences
                     candidate : list = None
+
+                    # lookup the indices of the deteriorated text
                     if len(self.dmgd_texts[i][j][1][k]) == 0:
                         # Check if value for cand = ref already exists
                         if id_value == None:
@@ -105,7 +108,6 @@ class TwoDim(Task):
             self.combined_results.append(outer_acc)
 
     def create_table(self, metrics : list) -> None:
-
         data : list = []
         for i, step_txt in enumerate(self.step_arr[0]):
             for j, step_snt in enumerate(self.step_arr[1]):

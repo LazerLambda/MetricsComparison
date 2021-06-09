@@ -15,12 +15,12 @@ class Repetitions2(OneDim):
 
     def __init__(self, params : dict):
         super(Repetitions2, self).__init__(params=params)
-        self.name = "negation"
-        self.descr = "Negated sentences in the text."
+        self.name = "repetition 2"
+        self.descr = "Word repetitions added to sentences"
 
     @staticmethod
     def create_repetitions(\
-            sentence : list,\
+            sentence : str,\
             doc : spacy.tokens.doc.Doc,\
             step_snt : float,\
             phraseLength : int = 4) -> bool:
@@ -43,12 +43,14 @@ class Repetitions2(OneDim):
 
                     n_times : int = math.floor(step_snt * len(doc))
 
+                    if n_times == 0:
+                        return sentence, True
+
                     acc += [token for token in token_slice] * n_times + [token for token in doc[i:len(doc)]]
                     
                     sent : str = ""
 
                     for i in range(len(acc)):
-
 
                         # TODO annotate
                         token = acc[i]
@@ -82,8 +84,6 @@ class Repetitions2(OneDim):
                 sentences : list = copy.deepcopy(sentences)
                 indices : list = []
 
-                # sample : int = int(math.floor(step * len(sentences)))
-
                 for i in range(len(sentences)):
                     
                     if len(doc[i]) < 2:
@@ -106,47 +106,16 @@ class Repetitions2(OneDim):
         # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
 
-        self.step_arr = [ "Rep. len.: " + str(step) + " * len(sents)" for step in self.step_arr]
-
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
         for m in metrics:
-            yield m.compute(cand=candidate, ref=reference)
+            if m.id and candidate == reference:
+                yield m.get_id(cand=candidate, ref=reference)
+            else:
+                yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
-        if len(metrics) == 0:
-            return
-
-        bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
-        for i, _ in enumerate(self.step_arr):
-            step_results : list = []
-            for j, (sentences, _) in enumerate(self.texts):
-                reference : list = sentences
-                candidate : list = self.dmgd_texts[i][0][j]
-
-                # TODO into method
-                # drop emtpy sentences
-                ref_checked : list = []
-                cand_checked : list = []
-
-                # TODO
-                for ref, cand in zip(reference, candidate):
-                    if len(cand) != 0:
-                        ref_checked.append(ref)
-                        cand_checked.append(cand)
-                    else:
-                        continue
-                
-                reference = ref_checked
-                candidate = cand_checked
-
-                if self.step_arr[i] == 0:
-                    assert candidate == reference
-                    step_results.append([m.get_id() for m in metrics])
-                else:
-                    step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
-                bar.next()
-            self.results.append(step_results)
-        bar.finish()
+        super(Repetitions2, self).evaluate(metrics)
+        self.step_arr = [ "Rep. len.: " + str(step) + " * len(sents)" for step in self.step_arr]
 
     def create_table(self, metrics : list) -> None:
         data : list = []

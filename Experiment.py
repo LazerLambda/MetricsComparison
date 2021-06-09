@@ -61,7 +61,7 @@ class Experiment:
             metrics : list,
             data_specs : dict = {'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 2},
             steps : dict = {'steps': 1, 'txt': 1, 'snt' : 2},
-            visualizations : any = None) -> Experiment:
+            **kwargs) -> Experiment:
 
         # TODO check if results are already available
         # [(task, (param_name, value))]
@@ -85,8 +85,12 @@ class Experiment:
 
         assert len(self.data) != 0
 
+        pos_list : list = []
+        if 'pos_list' in kwargs:
+            pos_list = kwargs['pos_list']
+
         tasks = [(e[0], []) if len(e) == 1 else e for e in tasks]
-        tasks = [(task[0], {**{'data': self.data, 'nlp' : nlp, 'path' : self.exp_wd, 'steps' : steps}, **dict(task[1])}) for task in tasks]
+        tasks = [(task[0], {**{'data': self.data, 'nlp' : nlp, 'path' : self.exp_wd, 'steps' : steps, 'pos list': pos_list}, **dict(task[1])}) for task in tasks]
         
         # TODO sentence tokenization here
         # TODO spacy parsing here

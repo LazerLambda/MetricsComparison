@@ -25,7 +25,13 @@ class OneDim(Task):
         return self
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        yield m.compute(cand=candidate, ref=reference)
+        for m in metrics:
+            if m.id and candidate == reference:
+                yield m.get_id(cand=candidate, ref=reference)
+            else:
+                yield m.compute(cand=candidate, ref=reference)
+        # for m in metrics:
+        #     yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
 

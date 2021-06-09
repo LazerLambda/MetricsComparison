@@ -32,6 +32,7 @@ class BleurtMetric(Metric):
 
     def get_id(self, ref :list, cand : list):
         assert len(ref) == len(cand)
+        print("HIER")
         return [[1] * len(ref)]
 
 

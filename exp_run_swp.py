@@ -1,7 +1,7 @@
 from src.metrics.BERTScoreMetric import BERTScoreMetric
 from src.metrics.BleurtMetric import BleurtMetric
 from Experiment import Experiment
-from src.Tasks.Repetitions_2 import Repetitions2
+from src.Tasks.SwapWordsOneDim import SwapWordsOneDim
 
 from src.Plot import Plot
 from src.PlotByMetric import PlotByMetric
@@ -13,11 +13,11 @@ bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'
 bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
 
 metrics : list = [bm, bsm]
-tasks : list = [(Repetitions2, )]
+tasks : list = [(SwapWordsOneDim, )]
 
-loc : str = ".rep_2021-06-09_21-31-05"
-exp = Experiment(loc=loc, name="rep")
-exp.setup(tasks, metrics, data_specs={'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 10},steps={'steps': 2, 'txt': 1, 'snt' : 2})
+loc : str = ".das_2021-06-09_20-57-28"
+exp = Experiment(name="das")
+exp.setup(tasks, metrics, data_specs={'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 10},steps={'steps': 1, 'txt': 2, 'snt' : 2})
 
 start_time = time.time()
 exp.perturbate()

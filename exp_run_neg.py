@@ -15,9 +15,9 @@ bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filterin
 metrics : list = [bm, bsm]
 tasks : list = [(Negate2, )]
 
-loc : str = ".test_2021-06-09_18-05-02"
-exp = Experiment(loc=loc)
-exp.setup(tasks, metrics, data_specs={'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 10},steps={'steps': 1, 'txt': 1, 'snt' : 2})
+loc : str = ".neg_2021-06-09_20-22-19"
+exp = Experiment(name="neg")
+exp.setup(tasks, metrics, data_specs={'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 2},steps={'steps': 1, 'txt': 1, 'snt' : 2})
 
 start_time = time.time()
 exp.perturbate()

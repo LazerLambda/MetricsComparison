@@ -1,50 +1,82 @@
 from .OneDim import OneDim
-from .Task import Task
 
 import copy
 import math
 import numpy as np
 import pandas as pd
+import random
 import spacy
 
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
+class DropWordsOneDim(OneDim):
 
-class Negate2(OneDim, Task):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
-        super(Negate2, self).__init__(params=params)
-        self.name = "negation 2"
-        self.descr = "Negated sentences in the text."
+        super(DropWordsOneDim, self).__init__(params=params)
+        self.name = "Dropped words"
+        self.descr = "Dropped words"
 
     @staticmethod
-    def negate(sentence : str, doc : spacy.tokens.doc.Doc, **kwargs) -> tuple:
-        success : bool = False
-        try:
-            ret = Perturb.perturb([doc], Perturb.add_negation, keep_original=False)
-            if len(ret.data) > 0:
-                sentence = ret.data[0][0]
-                success = True
-        except Exception:
-            pass
+    def drop_single(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:
+        # TODO add upper bound for dropping
 
-        if len(sentence) == 0:
-            print("Sentence empty! Negation.")
+        bound : float = 1 - 1 / len(doc)
+        if len(doc) == 0:
             return sentence, False
 
-        return sentence, success
+        if step == 0:
+            return sentence, True
 
+        candidates : list = []
+        for i in range(len(doc)):
+            if doc[i].pos_ != "PUNCT":
+                candidates.append(i)
+            else:
+                continue
+
+        # one word must be in the sentence at least
+        if step > bound:
+            step = bound
+
+        prop : float = int(math.floor(step * len(candidates)))
+        drop_list : list = random.sample(candidates, k=prop)
+
+        sent : str = ""
+
+        for i in range(len(doc)):
+
+            # exclude words to be dropped
+            if i in drop_list:
+                continue
+
+            # TODO annotate
+            token = doc[i]
+
+            word = ""
+            if i == 0:
+                word = token.text
+            else:
+                if token.pos_ == "PUNCT":
+                    word = token.text
+                else:
+                    word = " " + token.text
+            sent += word
+
+        if len(sent) == 0:
+            print("Sentence empty! Word drop")
+            return sent, False
+
+        return sent, True
+    
     def perturbate(self) -> None:
-        # [(degree of deterioration, deteriorated text, indices)]
-
-        # super(Negate2, self).perturbate()
 
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
-        self.step_arr = ['original', 'negated']
+
         for step in range(len(self.step_arr)):
             ret_tuple : tuple = ([], []) 
             for _, (sentences, doc) in enumerate(self.texts):
@@ -52,13 +84,13 @@ class Negate2(OneDim, Task):
                 sentences : list = copy.deepcopy(sentences)
                 indices : list = []
 
-                for i in range(step * len(sentences)):
+                for i in range(len(sentences)):
                     
                     if len(doc[i]) < 2:
                         continue
 
                     new_sentence = sentences[i]
-                    new_sentence, success = self.negate(sentence=sentences[i], doc=doc[i], step=None)
+                    new_sentence, success = self.drop_single(sentence=sentences[i], doc=doc[i], step=step)
 
                     if success:
                         indices.append(i)
@@ -76,8 +108,11 @@ class Negate2(OneDim, Task):
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
         for m in metrics:
+            # if m.id and candidate == reference:
+            #     print("HIER2")
+            #     yield m.get_id(cand=candidate, ref=reference)
+            # else:
             yield m.compute(cand=candidate, ref=reference)
-
 
     def evaluate(self, metrics : list) -> None:
         if len(metrics) == 0:
@@ -106,25 +141,12 @@ class Negate2(OneDim, Task):
                 reference = ref_checked
                 candidate = cand_checked
 
-                if self.step_arr[i] == 0:
-                    assert candidate == reference
-                    # step_results.append([m.get_id() for m in metrics])
-                else:
-                    step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
+                # if self.step_arr[i] == 0:
+                #     # avoid computation for identity if identity is defined
+                #     assert candidate == reference
+                #     step_results.append([m.get_id(candidate, reference) for m in metrics])
+                # else:
+                step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
                 bar.next()
-            print(step_results)
             self.results.append(step_results)
         bar.finish()
-
-    def create_table(self, metrics : list) -> None:
-        data : list = []
-        for i, step in enumerate(self.step_arr):
-            for metric in metrics:
-                for submetric in metric.submetrics:
-                    for value in self.combined_results[i][metric.name][submetric]:
-                        scatter_struc : dict = {'metric': metric.name, 'submetric': submetric, 'degree' : str(step), 'value' : float(value)}
-                        data.append(scatter_struc)
-        
-        self.df = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree', 'value'])
-
-    
