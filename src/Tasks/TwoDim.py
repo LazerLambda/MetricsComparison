@@ -1,4 +1,5 @@
 from .Task import Task
+# from ..metrics.Metric import Metric
 
 from functools import reduce
 
@@ -69,10 +70,11 @@ class TwoDim(Task):
                     ref_checked : list = []
                     cand_checked : list = []
 
+                    # TODO
                     for ref, cand in zip(reference, candidate):
                         if len(cand) != 0:
                             ref_checked.append(ref)
-                            cand_checked.append(ref)
+                            cand_checked.append(cand)
                         else:
                             continue
                     
@@ -124,23 +126,42 @@ class TwoDim(Task):
     def get_results(self) -> None:
         return self.df.groupby(['metric', 'submetric', 'degree_txt', 'degree_snt']).mean()
 
-    def plot(self, ax, title : str, metrics : list) -> None:
-        submetric_list : list = reduce(lambda acc, elem: acc + list(zip(elem.submetrics, [elem.name for _ in elem.submetrics])), [metric for metric in metrics], [])
-        metrics_dict : dict = dict(zip([metric.name for metric in metrics], metrics))
-        results = [(self.df[self.df['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean())
-            .pivot(index="degree_txt", columns="degree_snt", values="value")\
-                for submetric, _ in submetric_list]
-        results: tuple = results, submetric_list
-        for i, result in enumerate(results[0]):
-            metric = results[1][i][1]
-            vis_data = metrics_dict[metric].get_vis_info(self)
-            sns.heatmap(
-                result,
-                annot=True,
-                fmt="g",
-                cmap=vis_data['color'],
-                vmin=vis_data['vmin'],
-                vmax=vis_data['vmax'],
-                ax=ax[i])
-            ax.flat[i].title.set_text(results[1][i][0])
-        plt.suptitle(self.descr)
+    # def plot(self, ax : np.ndarray, title : str, metrics : list) -> None:
+    #     print(type(ax))
+    #     submetric_list : list = reduce(lambda acc, elem: acc + list(zip(elem.submetrics, [elem.name for _ in elem.submetrics])), [metric for metric in metrics], [])
+    #     metrics_dict : dict = dict(zip([metric.name for metric in metrics], metrics))
+    #     results = [(self.df[self.df['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False).mean())
+    #         .pivot(index="degree_txt", columns="degree_snt", values="value")\
+    #             for submetric, _ in submetric_list]
+    #     results: tuple = results, submetric_list
+    #     for i, result in enumerate(results[0]):
+    #         metric = results[1][i][1]
+    #         vis_data = metrics_dict[metric].get_vis_info(self)
+    #         sns.heatmap(
+    #             result,
+    #             annot=True,
+    #             fmt="g",
+    #             cmap=vis_data['color'],
+    #             vmin=vis_data['vmin'],
+    #             vmax=vis_data['vmax'],
+    #             ax=ax)
+    #         ax.flat[i].title.set_text(results[1][i][0])
+    #     plt.suptitle(self.descr)
+
+    def plot(self, ax : any, metric : any, submetric : str, **kwargs) -> None:
+        result = self.df[self.df['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_txt', 'degree_snt'], as_index=False)\
+            .mean()\
+            .pivot(index="degree_txt", columns="degree_snt", values="value")
+        vis_data : dict = metric.get_vis_info(self)
+        sns.heatmap(
+            result,
+            annot=True,
+            fmt="g",
+            cmap=vis_data['color'],
+            vmin=vis_data['vmin'],
+            vmax=vis_data['vmax'],
+            cbar_kws={"shrink": 0.25},
+            ax=ax)
+        # ax.legend(bbox_to_anchor=(1,0), loc="lower left")#,  bbox_transform=fig.transFigure)
+        ax.set_ylabel("Degree of deterioration at text level", fontsize=10)
+        ax.set_xlabel("Degree of deterioration at sentence level", fontsize=10)

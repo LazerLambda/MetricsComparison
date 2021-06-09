@@ -9,6 +9,7 @@ import spacy
 
 from datasets import load_dataset, dataset_dict
 from pathlib import Path
+from src.Plot import Plot
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
@@ -122,8 +123,6 @@ class Experiment:
 
     def evaluate(self, overwrite : bool = False) -> Experiment:
 
-        # TODO check if results are already existing
-
         for task in self.tasks:
 
             f_name : str = "." + task.name + "_results_data.p"
@@ -146,26 +145,28 @@ class Experiment:
             task.combine_results(metrics)
             task.create_table(metrics)
 
-            # TODO no metrics in name
-            # TODO check if file exists
-            # TODO if file exists, load it
-            # TODO check which metrics are computed
-            # TODO compute only missing metrics
-            # TODO merge tables
-
-            # TODO update to task.metrics
             
             df : pd.DataFrame = task.df
             if df_tmp.size != 0:
                 df_tmp = df_tmp.append(df)
                 df = df_tmp
 
+                # assign all computed values to task
+                task.df = df
+
             path : str = os.path.join(self.exp_wd, f_name)
             self.__dump(df, path)
             self.result_files.append(path)
 
-    def plot(self) -> Experiment:
+            assert task.df.size != 0
 
+    def plot(self, p_list : list, metrics : list) -> Experiment:
+
+        assert isinstance(p_list, list) and isinstance(metrics, list)
+        
+        for p_class in p_list:
+            p : Plot = p_class([(t, t.df, t.name, t.descr) for t in self.tasks])
+            p.plot(metrics)
         pass
 
         

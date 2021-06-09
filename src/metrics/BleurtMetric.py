@@ -4,13 +4,18 @@ from ..Tasks.OneDim import OneDim
 from ..Tasks.TwoDim import TwoDim 
 from bleurt import score
 
+
 import cmasher as cmr
 import os
+import seaborn as sns
 
 class BleurtMetric(Metric):
 
+    limits : tuple = (-1.5,1.5)
+
     def __init__(self, name : str, description : str, submetric : list):
         
+        super(BleurtMetric, self).__init__(name, description, submetric)
         
         # path : str = "src/bleurt/bleurt/test_checkpoint" + os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         path : str = "src/bleurt/bleurt/test_checkpoint"
@@ -19,7 +24,11 @@ class BleurtMetric(Metric):
         self.scorer_bleurt: score.BleurtScorer = score.BleurtScorer(
             checkpoint=path)
 
-        super(BleurtMetric, self).__init__(name, description, submetric)
+        palette = sns.color_palette(None, 1)
+        self.color : dict = {
+            'BLEURT' : palette[0]
+        }
+
 
     def compute(self, ref : list, cand : list):
         super(BleurtMetric, self).check_input(ref, cand)

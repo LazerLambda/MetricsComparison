@@ -35,6 +35,9 @@ class POSDrop(OneDim):
             sentence = sentence[0:bounds[0]] + sentence[(bounds[1] + 1)::]
             diff += len(doc[i].text) + 1
         
+        if len(sentence) == 0:
+            print("Sentence empty! POS drop")
+            return sentence, False
 
         return sentence, True
 

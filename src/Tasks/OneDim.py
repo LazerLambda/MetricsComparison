@@ -1,4 +1,5 @@
 from .Task import Task
+# from ..metrics import Metric
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -6,6 +7,7 @@ import pandas as pd
 import seaborn as sns
 
 from checklist.perturb import Perturb
+from functools import reduce
 from progress.bar import ShadyBar
 
 class OneDim(Task):
@@ -27,7 +29,7 @@ class OneDim(Task):
             yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
-        
+
         if len(metrics) == 0:
             return
 
@@ -43,10 +45,11 @@ class OneDim(Task):
                 ref_checked : list = []
                 cand_checked : list = []
 
+                # TODO
                 for ref, cand in zip(reference, candidate):
                     if len(cand) != 0:
                         ref_checked.append(ref)
-                        cand_checked.append(ref)
+                        cand_checked.append(cand)
                     else:
                         continue
                 
@@ -86,10 +89,40 @@ class OneDim(Task):
 
     # TODO annotate
     # TODO maybe different plots due to different scaling
-    def plot(self, ax, title : str) -> None:
+    # def plot(self, ax : np.ndarray, title : str, metrics : list) -> None:
+    #     submetric_list : list = reduce(lambda acc, elem: acc + list(zip(elem.submetrics, [elem.name for _ in elem.submetrics])), [metric for metric in metrics], [])
+    #     results : list = [(self.df[self.df['submetric'] == submetric]) for submetric in submetric_list]
+    #     results: tuple = results, submetric_list
+    #     sns.set_theme(style="ticks", palette="pastel")
+    #     print(ax)
+    #     for i, result in enumerate(results[0]):
+    #         sns.boxplot(x="degree", y="value",
+    #             hue="submetric", # palette=["m", "g"],
+    #             data=result, ax=ax[i])
+    #         ax.set(ylim=(-1.5, 1.5))
+    #         ax.title.set_text(title)
+
+    def plot(self, ax : any, metric : any, submetric : str, **kwargs) -> None:
+
+        # palette = ["m", "g"]
+
+        # if 'color' in kwargs.keys():
+        #     palette = [kwargs['color']]
+
+        palette : list = [metric.color[submetric]]
+
+        result = self.df[self.df['submetric'] == submetric]
+
         sns.set_theme(style="ticks", palette="pastel")
-        sns.boxplot(x="degree", y="value",
-            hue="submetric", # palette=["m", "g"],
-            data=self.df, ax=ax)
-        ax.set(ylim=(-1.5, 1.5))
-        ax.title.set_text(title)
+        sns.boxplot(
+            x="degree",
+            y="value",
+            hue="submetric",
+            palette=palette,
+            data=result,
+            ax=ax)
+        ax.set(ylim=metric.limits)
+        # ax.legend(bbox_to_anchor=(1,0), loc="lower right")#,  bbox_transform=fig.transFigure)
+        ax.set_ylabel("Results")
+        ax.set_xlabel("Degree of deterioration.")
+        

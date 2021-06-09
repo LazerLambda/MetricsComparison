@@ -5,10 +5,16 @@ import numpy as np
 
 class Metric:
 
+    # TODO slots
+
+    limits : tuple = (0,0)
+
     def __init__(self, name : str, description : str, submetrics : list):
         self.name : str = name
         self.description : str = description
         self.submetrics : list = submetrics
+
+        self.color = dict()
 
     def compute(self):
         pass

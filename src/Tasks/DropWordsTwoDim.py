@@ -56,6 +56,11 @@ class DropWordsTwoDim(TwoDim):
                 else:
                     word = " " + token.text
             sent += word
+
+        if len(sent) == 0:
+            print("Sentence empty! Word drop")
+            return sent, False
+
         return sent, True
     
     def perturbate(self) -> None:

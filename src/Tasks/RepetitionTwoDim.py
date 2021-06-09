@@ -57,6 +57,10 @@ class RepetitionTwoDim(TwoDim):
                             word = " " + token.text
                         sent += word
 
+                    if len(sent) == 0:
+                        print("Sentence empty! Repetition.")
+                        return sent, False
+
                     return sent, True
         
         return None, False

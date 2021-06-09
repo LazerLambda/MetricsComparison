@@ -31,6 +31,10 @@ class Negation_Sent(OneDim, Task):
             #     print("Failed to negate sentence {}".format(i))
             pass
 
+        if len(sentence) == 0:
+            print("Sentence empty! Negation.")
+            return sentence, False
+
         return sentence, success
 
     def perturbate(self) -> None:

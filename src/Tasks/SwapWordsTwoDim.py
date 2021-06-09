@@ -69,6 +69,10 @@ class SwapWordsTwoDim(TwoDim):
                     word = " " + token.text
             sent += word
 
+        if len(sent) == 0:
+            print("Sentence empty! Word swap")
+            return sent, False
+
         return sent, True
 
     def perturbate(self) -> None:

@@ -18,18 +18,19 @@ from typing import IO
 
 class Task():
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "df", "step_arr", "path", "name"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
 
         self.texts: list = []
         self.results : list = []
+        self.dmgd_texts : list = []
         self.combined_results : list = []
         self.step_arr : list = []
-        self.dmgd_texts : list = []
         self.path : str = params['path']
-        self.df : pd.DataFrame = None
-        self.name : str = ""
+        self.name : str = "To name the task, add a description instance to the __init__ method of the derived class."
+        self.df : pd.DataFrame = pd.DataFrame()
+        self.descr : str = "To describe the task, add a description instance to the __init__ method of the derived class."
 
         data : list = params['data']
         nlp : spacy.lang = params['nlp']
@@ -132,7 +133,7 @@ class Task():
     def combine_results(self, metrics : list) -> None:
         pass
 
-    def plot(self, fig: plt.figure) -> None:
+    def plot(self, ax : any, metric : any, submetric : str, **kwargs) -> None:
         pass
 
 
