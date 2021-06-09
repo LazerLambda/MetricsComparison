@@ -123,9 +123,12 @@ class Task():
         pass
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        # TODO
         for m in metrics:
-            yield m.compute(cand=candidate, ref=reference)
+            id_b, id_v = m.id
+            if id_b:
+                yield id_v
+            else:
+                yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics: list) -> None:
         pass

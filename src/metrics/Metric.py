@@ -13,6 +13,7 @@ class Metric:
         self.name : str = name
         self.description : str = description
         self.submetrics : list = submetrics
+        self.id : tuple = False, None
 
         self.color = dict()
 

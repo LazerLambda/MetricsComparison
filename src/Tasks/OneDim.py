@@ -26,7 +26,11 @@ class OneDim(Task):
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
         for m in metrics:
-            yield m.compute(cand=candidate, ref=reference)
+            id_b, id_v = m.id
+            if id_b:
+                yield id_v
+            else:
+                yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
 
@@ -69,6 +73,7 @@ class OneDim(Task):
             for result in run:
                 for i, metric in enumerate(metrics):
                     for j, submetric in enumerate(metric.submetrics):
+                        print(result)
                         acc[metric.name][submetric] += result[i][j]
             self.combined_results.append(acc)
 

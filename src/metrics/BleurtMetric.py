@@ -28,6 +28,7 @@ class BleurtMetric(Metric):
         self.color : dict = {
             'BLEURT' : palette[0]
         }
+        self.id : tuple = False, None
 
 
     def compute(self, ref : list, cand : list):

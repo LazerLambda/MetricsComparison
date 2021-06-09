@@ -23,6 +23,7 @@ class BERTScoreMetric(Metric):
             'P' : palette[1],
             'F1' : palette[2]
         }
+        self.id : tuple = True, 1
 
 
     def compute(self, ref : list, cand : list):
