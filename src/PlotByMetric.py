@@ -27,6 +27,13 @@ class PlotByMetric(Plot):
             x, y = Plot.find_square(len(self.task_list))
             _, axes = plt.subplots(nrows=y, ncols=x, figsize=(20, 10))
 
+            if y == 1:
+                if x == 1:
+                    axes = [[axes]]
+                else:
+                    axes = [axes]
+                
+
             for j, (task, df, name, descr) in enumerate(self.task_list):
 
                 x_i = j % x

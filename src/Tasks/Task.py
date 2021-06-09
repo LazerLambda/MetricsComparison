@@ -122,14 +122,6 @@ class Task():
     def perturbate(self) -> None:
         pass
 
-    def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        for m in metrics:
-            id_b, id_v = m.id
-            if id_b:
-                yield id_v
-            else:
-                yield m.compute(cand=candidate, ref=reference)
-
     def evaluate(self, metrics: list) -> None:
         pass
 

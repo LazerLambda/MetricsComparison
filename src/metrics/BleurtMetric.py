@@ -28,7 +28,11 @@ class BleurtMetric(Metric):
         self.color : dict = {
             'BLEURT' : palette[0]
         }
-        self.id : tuple = False, None
+        self.id : bool = False
+
+    def get_id(self, ref :list, cand : list):
+        assert len(ref) == len(cand)
+        return [[1] * len(ref)]
 
 
     def compute(self, ref : list, cand : list):

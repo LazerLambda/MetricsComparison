@@ -1,5 +1,4 @@
 from .OneDim import OneDim
-from .Task import Task
 
 import copy
 import math
@@ -10,46 +9,80 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
-
-class Negate2(OneDim, Task):
+class Repetitions2(OneDim):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
-        super(Negate2, self).__init__(params=params)
+        super(Repetitions2, self).__init__(params=params)
         self.name = "negation"
         self.descr = "Negated sentences in the text."
 
     @staticmethod
-    def negate(sentence : str, doc : spacy.tokens.doc.Doc) -> tuple:
-        success : bool = False
-        try:
-            ret = Perturb.perturb([doc], Perturb.add_negation, keep_original=False)
-            if len(ret.data) > 0:
-                sentence = ret.data[0][0]
-                success = True
-        except Exception:
-            pass
+    def create_repetitions(\
+            sentence : list,\
+            doc : spacy.tokens.doc.Doc,\
+            step_snt : float,\
+            phraseLength : int = 4) -> bool:
 
-        if len(sentence) == 0:
-            print("Sentence empty! Negation.")
-            return sentence, False
+        for i in reversed(range(0, len(doc))):
 
-        return sentence, success
+            # find phrase at the end of the sentence without punctuation in it incrementally
+            token_slice = doc[(i - phraseLength):i]
+            for j in reversed(range(phraseLength)):
+                j += 1
+                token_slice = doc[(i - j):i]
+                if not True in [token.pos_ == 'PUNCT' for token in token_slice]:
+                    phraseLength = j
+                    # break
+                    token_slice = doc[(i - phraseLength):i]
+
+                    acc : list = []
+                    for k in range(i - phraseLength):
+                        acc.append(doc[k])
+
+                    n_times : int = math.floor(step_snt * len(doc))
+
+                    acc += [token for token in token_slice] * n_times + [token for token in doc[i:len(doc)]]
+                    
+                    sent : str = ""
+
+                    for i in range(len(acc)):
+
+
+                        # TODO annotate
+                        token = acc[i]
+
+                        word = ""
+                        if i == 0 or token.pos_ == "PUNCT":
+                            word = token.text
+                        else:
+                            word = " " + token.text
+                        sent += word
+
+                    if len(sent) == 0:
+                        print("Sentence empty! Repetition.")
+                        return sent, False
+
+                    return sent, True
+        
+        return None, False
+
 
     def perturbate(self) -> None:
         # [(degree of deterioration, deteriorated text, indices)]
 
-        self.step_arr = ['original', 'negated']
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
 
-        for step in [0, 1]:
+        for step in self.step_arr:
             ret_tuple : tuple = ([], []) 
             for _, (sentences, doc) in enumerate(self.texts):
                 
                 sentences : list = copy.deepcopy(sentences)
                 indices : list = []
+
+                # sample : int = int(math.floor(step * len(sentences)))
 
                 for i in range(len(sentences)):
                     
@@ -57,7 +90,7 @@ class Negate2(OneDim, Task):
                         continue
 
                     new_sentence = sentences[i]
-                    new_sentence, success = self.negate(sentence=sentences[i], doc=doc[i])
+                    new_sentence, success = self.create_repetitions(sentence=sentences[i], doc=doc[i], step_snt=step)
 
                     if success:
                         indices.append(i)
@@ -72,6 +105,8 @@ class Negate2(OneDim, Task):
 
         # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
+
+        self.step_arr = [ "Rep. len.: " + str(step) + " * len(sents)" for step in self.step_arr]
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
         for m in metrics:
@@ -123,5 +158,3 @@ class Negate2(OneDim, Task):
                         data.append(scatter_struc)
         
         self.df = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree', 'value'])
-
-    

@@ -23,11 +23,16 @@ class BERTScoreMetric(Metric):
             'P' : palette[1],
             'F1' : palette[2]
         }
-        self.id : tuple = True, 1
+        self.id : bool = True
+
+
+    def get_id(self, ref :list, cand : list):
+        assert len(ref) == len(cand)
+        return ([1] * len(ref), [1] * len(ref), [1] * len(ref))
 
 
     def compute(self, ref : list, cand : list):
-        #TODO check for symmetrie
+        assert len(ref) == len(cand)
         return self.scorer_bertscore.score(cand, ref)
 
 

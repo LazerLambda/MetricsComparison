@@ -13,11 +13,14 @@ class Metric:
         self.name : str = name
         self.description : str = description
         self.submetrics : list = submetrics
-        self.id : tuple = False, None
+        self.id : bool = False
 
         self.color = dict()
 
     def compute(self):
+        pass
+
+    def get_id(self, ref :list, cand : list):
         pass
 
     @staticmethod
