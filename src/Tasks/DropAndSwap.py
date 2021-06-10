@@ -15,13 +15,14 @@ from checklist.perturb import Perturb
 
 class DropAndSwap(TwoDim):
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "nlp"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "nlp", "verbose"]
 
     def __init__(self, params : dict):
         super(DropAndSwap, self).__init__(params=params)
-        self.name = "drop_and_swap"
-        self.descr = "Dropped and swapped words"
-        self.nlp = spacy.load('en_core_web_sm')
+        self.name : str = "drop_and_swap"
+        self.descr : str = "Dropped and swapped words"
+        self.nlp : str = spacy.load('en_core_web_sm')
+        self.verbose : bool = False
 
     @staticmethod
     def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step_swp : float) -> tuple:
@@ -165,7 +166,7 @@ class DropAndSwap(TwoDim):
                             if success:
                                 sentences[i] = new_sentence_swapped
                             else:
-                                print("Sentence:\n'%s'\ncan't be deteriorated further." % new_sentence)
+                                print("Sentence:\n'%s'\ncan't be deteriorated further." % new_sentence) if self.verbose else None
                                 sentences[i] = new_sentence
                             indices.append(i)
 
