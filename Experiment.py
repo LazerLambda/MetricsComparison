@@ -169,7 +169,7 @@ class Experiment:
         assert isinstance(p_list, list) and isinstance(metrics, list)
         
         for p_class in p_list:
-            p : Plot = p_class([(t, t.df, t.name, t.descr) for t in self.tasks])
+            p : Plot = p_class([(t, t.df, t.name, t.descr) for t in self.tasks], self.exp_wd)
             p.plot(metrics)
         pass
 

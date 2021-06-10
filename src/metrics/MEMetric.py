@@ -1,6 +1,7 @@
 from .Metric import Metric
 
-from ..ME.markevaluate import MarkEvaluate as ME
+from ..ME.markevaluate.MarkEvaluate import MarkEvaluate as ME
+from ..Tasks.Task import Task
 
 import seaborn as sns
 
@@ -12,17 +13,31 @@ class MEMetric(Metric):
         
         super(MEMetric, self).__init__(name, description, submetric)
 
-        self.ME : ME = ME(orig=False)
+        self.ME_scorer : ME = ME(orig=False)
+        self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
 
-        palette = sns.color_palette(None, 3)
+        palette = sns.color_palette(None, 4)
 
         self.color : dict = {
             'Petersen' : palette[0],
-            'Schnabel' : palette[1],
-            'CAPTURE' : palette[2]
+            'Schnabel_qul' : palette[1],
+            'Schnabel_div' : palette[2],
+            'CAPTURE' : palette[3]
         }
         self.id : bool = False
 
     def get_id(self, ref :list, cand : list):
         assert len(ref) == len(cand)
-        return ([1] * len(ref), [1] * len(ref), [1] * len(ref))
+        return ([1] * len(ref), [1] * len(ref), [1] * len(ref)), [1] * len(ref)
+
+    def compute(self, ref : list, cand : list):
+        super(MEMetric, self).check_input(ref, cand)
+        score : dict = self.ME_scorer.estimate(cand=cand, ref=ref)
+        return ([score['Petersen']], [score['Schnabel_qul']], [score['Schnabel_div']], [score['CAPTURE']])
+
+    @staticmethod
+    def concat(acc, elem):
+        pass
+
+    def init_dict(self):
+        return dict(zip(self._submetrics, [[] for _ in self._submetrics]))

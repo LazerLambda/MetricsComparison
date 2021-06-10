@@ -79,6 +79,9 @@ class OneDim2(Task):
             acc = dict(zip([metric.name for metric in metrics], [dict(zip(metric.submetrics, [[] for _ in metric.submetrics])) for metric in metrics]))
             for result in run:
                 for i, metric in enumerate(metrics):
+                    print(acc)
+                    print(metric.submetrics)
+                    print(result)
                     for j, submetric in enumerate(metric.submetrics):
                         acc[metric.name][submetric] += result[i][j]
             self.combined_results.append(acc)

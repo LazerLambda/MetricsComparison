@@ -31,15 +31,14 @@ class BleurtMetric(Metric):
         self.id : bool = False
 
     def get_id(self, ref :list, cand : list):
-        assert len(ref) == len(cand)
-        print("HIER")
-        return [[1] * len(ref)]
+        raise Exception("ERROR:\n\t'-> BLEURT has to be computed.")
 
 
     def compute(self, ref : list, cand : list):
         super(BleurtMetric, self).check_input(ref, cand)
         return [self.scorer_bleurt.score(references=ref, candidates=cand)]
 
+    # TODO remove
     @staticmethod
     def concat(acc, elem):
         for e in elem:
