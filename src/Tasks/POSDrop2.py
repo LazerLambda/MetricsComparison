@@ -1,4 +1,4 @@
-from .OneDim import OneDim
+from .OneDim2 import OneDim2
 from .Task import Task
 
 import copy
@@ -11,14 +11,14 @@ from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
 
-class POSDrop2(OneDim):
+class POSDrop2(OneDim2):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
         super(POSDrop2, self).__init__(params=params)
         self.name = "POSdrop2"
-        self.descr = "DROP of POS words in sentences"
+        self.descr = "DROP of words with specific POS tag"
 
         assert isinstance(params['pos list'], list)
         self.step_arr : list = ['Original'] + params['pos list']

@@ -5,6 +5,7 @@ import math
 import numpy as np
 import pandas as pd
 import random
+import seaborn as sns
 import spacy
 
 from progress.bar import ShadyBar
@@ -14,15 +15,16 @@ from checklist.perturb import Perturb
 
 class DropAndSwap(TwoDim):
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
+    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "nlp"]
 
     def __init__(self, params : dict):
         super(DropAndSwap, self).__init__(params=params)
         self.name = "drop_and_swap"
         self.descr = "Dropped and swapped words"
+        self.nlp = spacy.load('en_core_web_sm')
 
     @staticmethod
-    def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step_snt : float) -> tuple:
+    def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step_swp : float) -> tuple:
 
         candidates : list = []
         candidates_text : list = []
@@ -42,8 +44,8 @@ class DropAndSwap(TwoDim):
         if len(candidates) < 3:
             return sentence, False
 
-        step_snt = 0.999999 if step_snt == 1.0 else step_snt
-        upper : int = math.floor(step_snt * len(candidates))
+        step_swp = 0.999999 if step_swp == 1.0 else step_swp
+        upper : int = math.floor(step_swp * len(candidates))
         if upper % 2 == 1:
             upper += 1
 
@@ -82,7 +84,7 @@ class DropAndSwap(TwoDim):
         return sent, True
 
     @staticmethod
-    def drop_single(sentence : str, doc : spacy.tokens.doc.Doc, step_snt : float) -> tuple:
+    def drop_single(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:
         # TODO add upper bound for dropping
 
         bound : float = 1 - 1 / len(doc)
@@ -97,10 +99,10 @@ class DropAndSwap(TwoDim):
                 continue
 
         # one word must be in the sentence at least
-        if step_snt > bound:
-            step_snt = bound
+        if step > bound:
+            step = bound
 
-        prop : float = int(math.floor(step_snt * len(candidates)))
+        prop : float = int(math.floor(step * len(candidates)))
         drop_list : list = random.sample(candidates, k=prop)
 
         sent : str = ""
@@ -135,9 +137,9 @@ class DropAndSwap(TwoDim):
 
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr[0]) * len(self.step_arr[1]) * len(self.texts))
     
-        for step_txt in self.step_arr[0]:
+        for step_drop in self.step_arr[0]:
             ret_txt : list = []
-            for step_snt in self.step_arr[1]:
+            for step_swp in self.step_arr[1]:
                 ret_tuple_snt : tuple = ([], [])
                 for _, (sentences, doc) in enumerate(self.texts):
                     # sample : int = int(math.floor(step_txt * len(sentences)))
@@ -145,7 +147,7 @@ class DropAndSwap(TwoDim):
                     sentences : list = copy.deepcopy(sentences)
                     indices : list = []
 
-                    if step_txt == 0.0 or step_snt == 0.0:
+                    if step_swp == 0.0 or step_drop == 0.0:
                         ret_tuple_snt[0].append([])
                         ret_tuple_snt[1].append([])
                         bar.next()
@@ -157,9 +159,9 @@ class DropAndSwap(TwoDim):
                             continue
 
                         new_sentence = sentences[i]
-                        new_sentence, success = self.drop_single(sentence=new_sentence, doc=doc[i], step_snt=step_txt)
+                        new_sentence, success = self.drop_single(sentence=new_sentence, doc=doc[i], step=step_drop)
                         if success:
-                            new_sentence_swapped, success = self.swap_pairs(sentence=new_sentence, doc=doc[i], step_snt=step_snt)
+                            new_sentence_swapped, success = self.swap_pairs(sentence=new_sentence, doc=self.nlp(new_sentence), step_swp=step_swp)
                             if success:
                                 sentences[i] = new_sentence_swapped
                             else:
@@ -175,3 +177,105 @@ class DropAndSwap(TwoDim):
 
         # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
+
+    def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
+        for m in metrics:
+            yield m.compute(cand=candidate, ref=reference)
+
+    def evaluate(self, metrics : list) -> None:
+
+        if len(metrics) == 0:
+            return
+
+        id_value : any = None
+        bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr[0]) * len(self.step_arr[1]) * len(self.texts))
+
+        for i, _ in enumerate(self.step_arr[0]):
+            step_results_txt : list = []
+            for j, _ in enumerate(self.step_arr[1]):
+                step_results_snt : list = []
+                for k, (sentences, _) in enumerate(self.texts):
+
+                    
+                    reference : list = []
+                    candidate : list = []
+
+                    if i == 0 or j == 0 or len(self.dmgd_texts[i][j][1][k]) == 0:
+                        reference = sentences
+                        candidate = self.dmgd_texts[i][j][0][k]
+                    else:
+                        indices : np.ndarray = np.asarray(self.dmgd_texts[i][j][1][k])
+
+                        reference : list = np.asarray(sentences)[indices]
+                        candidate : list = np.asarray(self.dmgd_texts[i][j][0][k])[indices]
+
+                    # lookup the indices of the deteriorated text
+                    if len(self.dmgd_texts[i][j][1][k]) == 0:
+                        # Check if value for cand = ref already exists
+                        if id_value == None:
+                            # if it doesn't exist, assign cand = ref
+                            candidate = sentences
+                        else:
+                            # if it exists, assign id value and continue
+                            step_results_snt.append(id_value)
+                            bar.next()
+                            continue
+                    else:     
+                        candidate = self.dmgd_texts[i][j][0][k]
+
+                    # drop emtpy sentences
+                    ref_checked : list = []
+                    cand_checked : list = []
+
+                    # TODO
+                    for ref, cand in zip(reference, candidate):
+                        if len(cand) != 0:
+                            ref_checked.append(ref)
+                            cand_checked.append(cand)
+                        else:
+                            continue
+                    
+                    reference = ref_checked
+                    candidate = cand_checked
+
+                    step_results_snt.append([*(res for res in self.__eval(reference, candidate, metrics))])
+
+                    # if value for cand = ref doesn't exist, assign it to id value
+                    if id_value == None:
+                        id_value = step_results_snt[len(step_results_snt) - 1]
+                    
+                    bar.next()
+
+                step_results_txt.append(step_results_snt)
+            self.results.append(step_results_txt)
+        bar.finish()
+
+    def create_table(self, metrics : list) -> None:
+        data : list = []
+        for i, step_drp in enumerate(self.step_arr[0]):
+            for j, step_swp in enumerate(self.step_arr[1]):
+                for metric in metrics:
+                    for submetric in metric.submetrics:
+                        for value in self.combined_results[i][j][metric.name][submetric]:
+                            scatter_struc : dict = {'metric': metric.name, 'submetric': submetric, 'degree_drp' : float(step_drp), 'degree_swp' : float(step_swp), 'value' : float(value)}
+                            data.append(scatter_struc)
+        
+        self.df = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree_drp', 'degree_swp', 'value'])
+
+    def plot(self, ax : any, metric : any, submetric : str, **kwargs) -> None:
+        result = self.df[self.df['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_drp', 'degree_swp'], as_index=False)\
+            .mean()\
+            .pivot(index="degree_drp", columns="degree_swp", values="value")
+        vis_data : dict = metric.get_vis_info(self)
+        sns.heatmap(
+            result,
+            annot=True,
+            fmt="g",
+            cmap=vis_data['color'],
+            vmin=vis_data['vmin'],
+            vmax=vis_data['vmax'],
+            cbar_kws={"shrink": 0.25},
+            ax=ax)
+        # ax.legend(bbox_to_anchor=(1,0), loc="lower left")#,  bbox_transform=fig.transFigure)
+        # ax.set_ylabel("Degree of deterioration at text level", fontsize=10)
+        # ax.set_xlabel("Degree of deterioration at sentence level", fontsize=10)

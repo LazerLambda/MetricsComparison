@@ -1,6 +1,7 @@
 from .Plot import Plot
 
 import matplotlib.pyplot as plt
+import os
 import seaborn as sns
 
 from functools import reduce
@@ -9,8 +10,8 @@ from functools import reduce
 class PlotByMetric(Plot):
 
 
-    def __init__(self, task_list : list):
-        super(PlotByMetric, self).__init__(task_list=task_list)
+    def __init__(self, task_list : list, wd : str):
+        super(PlotByMetric, self).__init__(task_list=task_list, wd=wd)
 
 
     def plot(self, metrics : list) -> None:
@@ -47,4 +48,6 @@ class PlotByMetric(Plot):
 
             plt.suptitle(metric.name)
             plt.tight_layout()
+            path : str = os.path.join(self.wd, name + "_plot_by_metric.png")
+            plt.savefig(path)
             plt.show()

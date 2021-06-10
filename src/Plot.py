@@ -1,5 +1,6 @@
 import math
 import matplotlib.pyplot as plt
+import os
 import seaborn as sns
 
 from functools import reduce
@@ -7,15 +8,16 @@ from functools import reduce
 
 class Plot:
 
-    __slots__ = ["task_list"]
+    __slots__ = ["task_list", "wd"]
 
-    def __init__(self, task_list : list):
+    def __init__(self, task_list : list, wd : str):
 
         assert isinstance(task_list, list)
         assert False not in [len(e) == 4 for e in task_list]
         # TODO print specific error
 
         self.task_list : list = task_list
+        self.wd : str = wd
         pass
 
     @staticmethod
@@ -52,10 +54,12 @@ class Plot:
                 ax = axes[y_i][x_i]
 
                 task.plot(ax, metric, submetric)
-                ax.legend(bbox_to_anchor=(1,0), loc="lower left")
                 ax.title.set_text(metric.name + ": " + submetric if metric.name != submetric else metric.name)
+                ax.tick_params(axis='both', which='major', labelsize=8)
                 # ax.set_aspect('equal')
             
             plt.suptitle(descr)
             # plt.tight_layout()
+            path : str = os.path.join(self.wd, name + "_plot.png")
+            plt.savefig(path)
             plt.show()

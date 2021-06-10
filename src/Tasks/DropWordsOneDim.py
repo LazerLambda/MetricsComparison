@@ -1,4 +1,4 @@
-from .OneDim import OneDim
+from .OneDim2 import OneDim2
 
 import copy
 import math
@@ -10,7 +10,7 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
-class DropWordsOneDim(OneDim):
+class DropWordsOneDim(OneDim2):
 
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
@@ -75,7 +75,6 @@ class DropWordsOneDim(OneDim):
     def perturbate(self) -> None:
 
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
-
 
         for step in range(len(self.step_arr)):
             ret_tuple : tuple = ([], []) 

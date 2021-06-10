@@ -1,4 +1,4 @@
-from .OneDim import OneDim
+from .OneDim2 import OneDim2
 
 import copy
 import math
@@ -10,7 +10,7 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
-class SwapWordsOneDim(OneDim):
+class SwapWordsOneDim(OneDim2):
 
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
@@ -22,6 +22,10 @@ class SwapWordsOneDim(OneDim):
 
     @staticmethod
     def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:
+
+        # identity category
+        if step == 0:
+            return sentence, True
 
         candidates : list = []
         candidates_text : list = []
@@ -84,8 +88,8 @@ class SwapWordsOneDim(OneDim):
 
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
-
-        for step in range(len(self.step_arr)):
+        print(self.step_arr)
+        for step in self.step_arr:
             ret_tuple : tuple = ([], []) 
             for _, (sentences, doc) in enumerate(self.texts):
                 

@@ -1,4 +1,4 @@
-from .OneDim import OneDim
+from .OneDim2 import OneDim2
 from .Task import Task
 
 import copy
@@ -11,7 +11,7 @@ from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
 
-class Negate2(OneDim, Task):
+class Negate2(OneDim2, Task):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 

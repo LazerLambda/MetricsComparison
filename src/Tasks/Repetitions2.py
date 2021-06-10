@@ -1,4 +1,4 @@
-from .OneDim import OneDim
+from .OneDim2 import OneDim2
 
 import copy
 import math
@@ -9,7 +9,7 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
-class Repetitions2(OneDim):
+class Repetitions2(OneDim2):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
