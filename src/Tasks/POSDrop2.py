@@ -17,8 +17,8 @@ class POSDrop2(OneDim2):
 
     def __init__(self, params : dict):
         super(POSDrop2, self).__init__(params=params)
-        self.name = "POSdrop2"
-        self.descr = "DROP of words with specific POS tag"
+        self.name : str = "POSdrop2"
+        self.descr : str = "DROP of words with specific POS tag"
 
         assert isinstance(params['pos list'], list)
         self.step_arr : list = ['Original'] + params['pos list']
@@ -44,12 +44,11 @@ class POSDrop2(OneDim2):
         
         diff : int = 0
         for i in candidates:
-            bounds = doc[i].idx - diff, doc[i].idx + len(doc[i].text) - diff
-            sentence = sentence[0:bounds[0]] + sentence[(bounds[1] + 1)::]
+            bounds : tuple = doc[i].idx - diff, doc[i].idx + len(doc[i].text) - diff
+            sentence : str = sentence[0:bounds[0]] + sentence[(bounds[1] + 1)::]
             diff += len(doc[i].text) + 1
         
         if len(sentence) == 0:
-            print("Sentence empty! POS drop")
             return sentence, False
 
         return sentence, True
