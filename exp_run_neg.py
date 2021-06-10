@@ -1,7 +1,7 @@
 from src.metrics.BERTScoreMetric import BERTScoreMetric
 from src.metrics.BleurtMetric import BleurtMetric
 from Experiment import Experiment
-from src.Tasks.Negate_2 import Negate2
+from src.Tasks.Negate2 import Negate2
 
 from src.Plot import Plot
 from src.PlotByMetric import PlotByMetric

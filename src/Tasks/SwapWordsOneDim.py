@@ -17,8 +17,8 @@ class SwapWordsOneDim(OneDim):
 
     def __init__(self, params : dict):
         super(SwapWordsOneDim, self).__init__(params=params)
-        self.name = "Dropped words"
-        self.descr = "Dropped words"
+        self.name = "swapped_words"
+        self.descr = "Swapped words"
 
     @staticmethod
     def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:

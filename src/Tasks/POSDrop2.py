@@ -95,12 +95,14 @@ class POSDrop2(OneDim):
         # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
 
+    # override
     def create_table(self, metrics : list) -> None:
         data : list = []
         for i, pos in enumerate(self.step_arr):
             for metric in metrics:
                 for submetric in metric.submetrics:
                     for value in self.combined_results[i][metric.name][submetric]:
+                        # degree is a string here
                         scatter_struc : dict = {'metric': metric.name, 'submetric': submetric, 'degree' : str(pos), 'value' : float(value)}
                         data.append(scatter_struc)
         

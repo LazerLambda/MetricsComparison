@@ -1,7 +1,7 @@
 from src.metrics.BERTScoreMetric import BERTScoreMetric
 from src.metrics.BleurtMetric import BleurtMetric
 from Experiment import Experiment
-from src.Tasks.Repetitions_2 import Repetitions2
+from src.Tasks.Repettions2 import Repetitions2
 
 from src.Plot import Plot
 from src.PlotByMetric import PlotByMetric

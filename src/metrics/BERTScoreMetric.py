@@ -9,7 +9,7 @@ import seaborn as sns
 
 class BERTScoreMetric(Metric):
 
-    limits : tuple = (0,1)
+    limits : tuple = (0,1.05)
 
     def __init__(self, name : str, description : str, submetric : list):
         super(BERTScoreMetric, self).__init__(name, description, submetric)

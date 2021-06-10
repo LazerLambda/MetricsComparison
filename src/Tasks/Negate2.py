@@ -17,7 +17,7 @@ class Negate2(OneDim, Task):
 
     def __init__(self, params : dict):
         super(Negate2, self).__init__(params=params)
-        self.name = "negation 2"
+        self.name = "negation_2"
         self.descr = "Negated sentences in the text."
 
     @staticmethod
@@ -42,9 +42,9 @@ class Negate2(OneDim, Task):
 
         # super(Negate2, self).perturbate()
 
+        self.step_arr = ['original', 'negated']
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
-        self.step_arr = ['original', 'negated']
         for step in range(len(self.step_arr)):
             ret_tuple : tuple = ([], []) 
             for _, (sentences, doc) in enumerate(self.texts):
@@ -74,54 +74,56 @@ class Negate2(OneDim, Task):
         # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
 
-    def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        for m in metrics:
-            yield m.compute(cand=candidate, ref=reference)
+    # def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
+    #     for m in metrics:
+    #         yield m.compute(cand=candidate, ref=reference)
 
 
-    def evaluate(self, metrics : list) -> None:
-        if len(metrics) == 0:
-            return
+    # def evaluate(self, metrics : list) -> None:
+    #     if len(metrics) == 0:
+    #         return
 
-        bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
-        for i, _ in enumerate(self.step_arr):
-            step_results : list = []
-            for j, (sentences, _) in enumerate(self.texts):
-                reference : list = sentences
-                candidate : list = self.dmgd_texts[i][0][j]
+    #     bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
+    #     for i, _ in enumerate(self.step_arr):
+    #         step_results : list = []
+    #         for j, (sentences, _) in enumerate(self.texts):
+    #             reference : list = sentences
+    #             candidate : list = self.dmgd_texts[i][0][j]
 
-                # TODO into method
-                # drop emtpy sentences
-                ref_checked : list = []
-                cand_checked : list = []
+    #             # TODO into method
+    #             # drop emtpy sentences
+    #             ref_checked : list = []
+    #             cand_checked : list = []
 
-                # TODO
-                for ref, cand in zip(reference, candidate):
-                    if len(cand) != 0:
-                        ref_checked.append(ref)
-                        cand_checked.append(cand)
-                    else:
-                        continue
+    #             # TODO
+    #             for ref, cand in zip(reference, candidate):
+    #                 if len(cand) != 0:
+    #                     ref_checked.append(ref)
+    #                     cand_checked.append(cand)
+    #                 else:
+    #                     continue
                 
-                reference = ref_checked
-                candidate = cand_checked
+    #             reference = ref_checked
+    #             candidate = cand_checked
 
-                if self.step_arr[i] == 0:
-                    assert candidate == reference
-                    # step_results.append([m.get_id() for m in metrics])
-                else:
-                    step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
-                bar.next()
-            print(step_results)
-            self.results.append(step_results)
-        bar.finish()
+    #             if self.step_arr[i] == 0:
+    #                 assert candidate == reference
+    #                 # step_results.append([m.get_id() for m in metrics])
+    #             else:
+    #                 step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
+    #             bar.next()
+    #         print(step_results)
+    #         self.results.append(step_results)
+    #     bar.finish()
 
+    # override
     def create_table(self, metrics : list) -> None:
         data : list = []
         for i, step in enumerate(self.step_arr):
             for metric in metrics:
                 for submetric in metric.submetrics:
                     for value in self.combined_results[i][metric.name][submetric]:
+                        # 'degree' is a string here
                         scatter_struc : dict = {'metric': metric.name, 'submetric': submetric, 'degree' : str(step), 'value' : float(value)}
                         data.append(scatter_struc)
         

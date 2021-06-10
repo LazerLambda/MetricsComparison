@@ -18,7 +18,7 @@ class DropAndSwap(TwoDim):
 
     def __init__(self, params : dict):
         super(DropAndSwap, self).__init__(params=params)
-        self.name = "Drop and Swap"
+        self.name = "drop_and_swap"
         self.descr = "Dropped and swapped words"
 
     @staticmethod

@@ -15,7 +15,7 @@ class Repetitions2(OneDim):
 
     def __init__(self, params : dict):
         super(Repetitions2, self).__init__(params=params)
-        self.name = "repetition 2"
+        self.name = "repetition_2"
         self.descr = "Word repetitions added to sentences"
 
     @staticmethod

@@ -17,7 +17,7 @@ class DropWordsOneDim(OneDim):
 
     def __init__(self, params : dict):
         super(DropWordsOneDim, self).__init__(params=params)
-        self.name = "Dropped words"
+        self.name = "dropped_words"
         self.descr = "Dropped words"
 
     @staticmethod
@@ -106,47 +106,47 @@ class DropWordsOneDim(OneDim):
         # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
 
-    def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
-        for m in metrics:
-            # if m.id and candidate == reference:
-            #     print("HIER2")
-            #     yield m.get_id(cand=candidate, ref=reference)
-            # else:
-            yield m.compute(cand=candidate, ref=reference)
+    # def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
+    #     for m in metrics:
+    #         # if m.id and candidate == reference:
+    #         #     print("HIER2")
+    #         #     yield m.get_id(cand=candidate, ref=reference)
+    #         # else:
+    #         yield m.compute(cand=candidate, ref=reference)
 
-    def evaluate(self, metrics : list) -> None:
-        if len(metrics) == 0:
-            return
+    # def evaluate(self, metrics : list) -> None:
+    #     if len(metrics) == 0:
+    #         return
 
-        bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
-        for i, _ in enumerate(self.step_arr):
-            step_results : list = []
-            for j, (sentences, _) in enumerate(self.texts):
-                reference : list = sentences
-                candidate : list = self.dmgd_texts[i][0][j]
+    #     bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
+    #     for i, _ in enumerate(self.step_arr):
+    #         step_results : list = []
+    #         for j, (sentences, _) in enumerate(self.texts):
+    #             reference : list = sentences
+    #             candidate : list = self.dmgd_texts[i][0][j]
 
-                # TODO into method
-                # drop emtpy sentences
-                ref_checked : list = []
-                cand_checked : list = []
+    #             # TODO into method
+    #             # drop emtpy sentences
+    #             ref_checked : list = []
+    #             cand_checked : list = []
 
-                # TODO
-                for ref, cand in zip(reference, candidate):
-                    if len(cand) != 0:
-                        ref_checked.append(ref)
-                        cand_checked.append(cand)
-                    else:
-                        continue
+    #             # TODO
+    #             for ref, cand in zip(reference, candidate):
+    #                 if len(cand) != 0:
+    #                     ref_checked.append(ref)
+    #                     cand_checked.append(cand)
+    #                 else:
+    #                     continue
                 
-                reference = ref_checked
-                candidate = cand_checked
+    #             reference = ref_checked
+    #             candidate = cand_checked
 
-                # if self.step_arr[i] == 0:
-                #     # avoid computation for identity if identity is defined
-                #     assert candidate == reference
-                #     step_results.append([m.get_id(candidate, reference) for m in metrics])
-                # else:
-                step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
-                bar.next()
-            self.results.append(step_results)
-        bar.finish()
+    #             # if self.step_arr[i] == 0:
+    #             #     # avoid computation for identity if identity is defined
+    #             #     assert candidate == reference
+    #             #     step_results.append([m.get_id(candidate, reference) for m in metrics])
+    #             # else:
+    #             step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
+    #             bar.next()
+    #         self.results.append(step_results)
+    #     bar.finish()
