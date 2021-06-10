@@ -43,9 +43,6 @@ class OneDim2(Task):
         for i, _ in enumerate(self.step_arr):
             step_results : list = []
             for j, (sentences, _) in enumerate(self.texts):
-                
-                print(i)
-                print(j)
                 if i == 0 or len(self.dmgd_texts[i][1][j]) == 0:
                     reference : list = sentences
                     candidate : list = self.dmgd_texts[i][0][j]
