@@ -39,7 +39,7 @@ class Plot:
 
         metric_list : list = reduce(lambda acc, metric: acc + list(zip(metric.submetrics, [metric for _ in metric.submetrics])), [metric for metric in metrics], [])
 
-        palette = sns.color_palette(None, len(metric_list))
+        # palette = sns.color_palette(None, len(metric_list))
 
         for i, (task, df, name, descr) in enumerate(self.task_list):
 
@@ -49,17 +49,17 @@ class Plot:
             for j, (submetric, metric) in enumerate(metric_list):
 
                 x_i = j % x
-                y_i = j // y
+                y_i = j // x
 
                 ax = axes[y_i][x_i]
 
                 task.plot(ax, metric, submetric)
                 ax.title.set_text(metric.name + ": " + submetric if metric.name != submetric else metric.name)
                 ax.tick_params(axis='both', which='major', labelsize=8)
-                # ax.set_aspect('equal')
+                
             
             plt.suptitle(descr)
-            # plt.tight_layout()
+            plt.tight_layout()
             path : str = os.path.join(self.wd, name + "_plot.png")
             plt.savefig(path)
             plt.show()

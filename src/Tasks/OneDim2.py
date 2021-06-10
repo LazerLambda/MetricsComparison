@@ -39,10 +39,13 @@ class OneDim2(Task):
             return
 
         bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
+
         for i, _ in enumerate(self.step_arr):
             step_results : list = []
             for j, (sentences, _) in enumerate(self.texts):
                 
+                print(i)
+                print(j)
                 if i == 0 or len(self.dmgd_texts[i][1][j]) == 0:
                     reference : list = sentences
                     candidate : list = self.dmgd_texts[i][0][j]
@@ -79,9 +82,6 @@ class OneDim2(Task):
             acc = dict(zip([metric.name for metric in metrics], [dict(zip(metric.submetrics, [[] for _ in metric.submetrics])) for metric in metrics]))
             for result in run:
                 for i, metric in enumerate(metrics):
-                    print(acc)
-                    print(metric.submetrics)
-                    print(result)
                     for j, submetric in enumerate(metric.submetrics):
                         acc[metric.name][submetric] += result[i][j]
             self.combined_results.append(acc)
@@ -136,8 +136,10 @@ class OneDim2(Task):
             data=result,
             ax=ax)
         ax.set(ylim=metric.limits)
+        ax.set_aspect('equal')
         # ax.legend(bbox_to_anchor=(1,0), loc="lower right")#,  bbox_transform=fig.transFigure)
         ax.set_ylabel("Results")
         ax.set_xlabel("Degree of deterioration.", fontsize=10)
-        ax.legend(bbox_to_anchor=(0,0), loc="lower left")
+        # ax.legend(bbox_to_anchor=(0,0), loc="lower left")
+        ax.legend().set_visible(False)
         

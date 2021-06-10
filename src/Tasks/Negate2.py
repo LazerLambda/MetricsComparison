@@ -19,6 +19,7 @@ class Negate2(OneDim2, Task):
         super(Negate2, self).__init__(params=params)
         self.name = "negation_2"
         self.descr = "Negated sentences in the text."
+        self.step_arr = ['original', 'negated']
 
     @staticmethod
     def negate(sentence : str, doc : spacy.tokens.doc.Doc, **kwargs) -> tuple:
@@ -42,6 +43,7 @@ class Negate2(OneDim2, Task):
 
         # super(Negate2, self).perturbate()
 
+        # TODO remove
         self.step_arr = ['original', 'negated']
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
