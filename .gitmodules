@@ -1,3 +1,6 @@
 [submodule "ME"]
-	path = ME
+	path = src/ME
+	url = https://github.com/LazerLambda/ME
+[submodule "src/ME"]
+	path = src/ME
 	url = https://github.com/LazerLambda/ME

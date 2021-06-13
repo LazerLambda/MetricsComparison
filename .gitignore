@@ -2,7 +2,7 @@ GRUEN
 bert_score
 markevaluate
 bleurt
-ME
+
 .vscode
 .ipynb_checkpoints
 default*
@@ -15,6 +15,16 @@ output_*
 misc
 
 # created folders
+.test_*
 test_*
 test
 Comparison_*
+mock_dir_test
+.example*
+
+# include mock_dir
+!tests/mock_dir_1/*p
+!tests/mock_dir_2/*p
+
+# yielded images
+*.png
