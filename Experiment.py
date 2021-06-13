@@ -61,6 +61,7 @@ class Experiment:
             metrics : list,
             data_specs : dict = {'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 2},
             steps : dict = {'steps': 1, 'txt': 1, 'snt' : 2},
+            seed : tuple = (None, False),
             **kwargs) -> Experiment:
 
         # TODO check if results are already available

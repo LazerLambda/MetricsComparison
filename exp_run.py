@@ -28,10 +28,10 @@ mem : MEMetric = MEMetric('Mark-Evaluate', "", ['Petersen', 'Schnabel', 'CAPTURE
 metrics : list = [bm, bsm, mem]
 tasks : list = [(DropWordsOneDim, ), (SwapWordsOneDim, ), (DropAndSwap, ), (Repetitions2,), (Negate2, ), (POSDrop2,), (Mix, )]
 
-# loc : str = ".all_2021-06-10_16-17-08"
-loc : str = ".all_ME"
-exp = Experiment(loc=loc, name="all")
-exp.setup(tasks, metrics, data_specs={'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 4},steps={'steps': 2, 'txt': 2, 'snt' : 2}, pos_list=['ADJ', 'DET', 'VERB', 'NOUN'])
+# loc : str = ".test_run_1_2021-06-10_20-07-50"
+
+exp = Experiment(name="test_run_n_5000")
+exp.setup(tasks, metrics, data_specs={'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 5000},steps={'steps': 2, 'txt': 2, 'snt' : 2}, pos_list=['ADJ', 'DET', 'VERB', 'NOUN'])
 
 start_time = time.time()
 exp.perturbate()
