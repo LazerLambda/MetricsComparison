@@ -164,5 +164,7 @@ class TwoDim(Task):
             cbar_kws={"shrink": 0.25},
             ax=ax)
         # ax.legend(bbox_to_anchor=(1,0), loc="lower left")#,  bbox_transform=fig.transFigure)
+        # ax.set_aspect('equal')
+        ax.set_aspect('auto')
         ax.set_ylabel("Degree of deterioration at text level", fontsize=10)
         ax.set_xlabel("Degree of deterioration at sentence level", fontsize=10)
