@@ -134,6 +134,7 @@ class OneDim2(Task):
             ax=ax)
         ax.set(ylim=metric.limits)
         ax.set_aspect('equal')
+        ax.set_aspect('auto')
         # ax.legend(bbox_to_anchor=(1,0), loc="lower right")#,  bbox_transform=fig.transFigure)
         ax.set_ylabel("Results")
         ax.set_xlabel("Degree of deterioration.", fontsize=10)

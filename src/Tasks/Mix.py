@@ -24,6 +24,14 @@ class Mix(OneDim2):
         self.name : str = "mix"
         self.descr : str = "Different deteriorations applied sequentally"
         self.nlp = spacy.load('en_core_web_sm')
+        self.step_arr : list = [
+            'Original',
+            'Neg + Swap',
+            "Neg - POS 'ADJ'",
+            "Neg - POS 'DET'",
+            "Neg - POS 'VERB'",
+            "Neg - POS 'NOUN'",
+            'Neg + Drop'] 
 
 
 

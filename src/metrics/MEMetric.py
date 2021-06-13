@@ -2,6 +2,9 @@ from .Metric import Metric
 
 from ..ME.markevaluate.MarkEvaluate import MarkEvaluate as ME
 from ..Tasks.Task import Task
+from ..Tasks.OneDim2 import OneDim2
+from ..Tasks.OneDim import OneDim
+from ..Tasks.TwoDim import TwoDim
 
 import seaborn as sns
 
@@ -41,3 +44,16 @@ class MEMetric(Metric):
 
     def init_dict(self):
         return dict(zip(self._submetrics, [[] for _ in self._submetrics]))
+
+    def get_vis_info(self, t : Task) -> dict():
+        if isinstance(t, OneDim):
+            return dict()
+
+        if isinstance(t, TwoDim):
+            return {
+                'color': None,
+                'vmin' : 0,
+                'vmax' : 1
+            }
+        
+        return None

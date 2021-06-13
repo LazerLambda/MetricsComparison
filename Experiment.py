@@ -42,7 +42,10 @@ class Experiment:
             else:
                 raise Exception("ERROR:\n\t'-> Specified location does not exist.")
 
-    def __load_dataset(self, name : str, vers : str, n : int) -> None:
+    def __load_dataset(self, name : str, vers : str, n : int, seed : int = None) -> None:
+
+        np.random.seed(seed=seed)
+
         data : dataset_dict.DatasetDict = load_dataset(name, vers)
         sample : np.ndarray = np.random.choice(np.arange(len(data['train'])), n)
         self.data : list = data['train'][sample]['article'] # TODO make property generics
@@ -59,7 +62,7 @@ class Experiment:
             self,
             tasks : list,
             metrics : list,
-            data_specs : dict = {'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 2},
+            data_specs : dict = {'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : 2, 'seed' : None},
             steps : dict = {'steps': 1, 'txt': 1, 'snt' : 2},
             **kwargs) -> Experiment:
 
@@ -81,7 +84,7 @@ class Experiment:
                 f.close()
                 print("Existing data loaded.") if self.verbose else None
             else:
-                self.__load_dataset(data_specs['name'], data_specs['version'], data_specs['n'])
+                self.__load_dataset(data_specs['name'], data_specs['version'], data_specs['n'], data_specs['seed'])
 
         assert len(self.data) != 0
 
@@ -174,6 +177,3 @@ class Experiment:
         pass
 
         
-
-        
-    

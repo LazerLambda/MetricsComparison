@@ -44,7 +44,7 @@ class Plot:
         for i, (task, df, name, descr) in enumerate(self.task_list):
 
             x, y = self.find_square(len(metric_list))
-            _, axes = plt.subplots(nrows=y, ncols=x, figsize=(20, 10))
+            _, axes = plt.subplots(nrows=y, ncols=x, figsize=(20, 20),subplot_kw={'aspect': 1})
 
             for j, (submetric, metric) in enumerate(metric_list):
 

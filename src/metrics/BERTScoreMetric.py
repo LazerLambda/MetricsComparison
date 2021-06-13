@@ -35,7 +35,6 @@ class BERTScoreMetric(Metric):
         assert len(ref) == len(cand)
         return self.scorer_bertscore.score(cand, ref)
 
-    # TODO remove
     def get_vis_info(self, t : Task) -> dict():
         if isinstance(t, OneDim):
             return dict()
