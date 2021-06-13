@@ -176,11 +176,3 @@ class Experiment:
             p : Plot = p_class([(t, t.df, t.name, t.descr) for t in self.tasks], self.exp_wd)
             p.plot(metrics)
         pass
-
-        
-<<<<<<< HEAD
-
-        
-    
-=======
->>>>>>> 9ddb7e7197e0493ccebb9380dfbdd4f3f7f067ea
