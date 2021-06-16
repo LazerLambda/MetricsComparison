@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     # loc : str = ".all_2021-06-10_16-17-08"
     # loc : str = ".all_ME"
-    exp = Experiment(loc=args['dir'], name=args['title'])
+    exp = Experiment(loc=args['dir'], name=args['title'], verbose=True)
     exp.setup(
         tasks,
         metrics,
