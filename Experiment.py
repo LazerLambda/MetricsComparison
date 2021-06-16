@@ -131,6 +131,10 @@ class Experiment:
 
     def evaluate(self, overwrite : bool = False) -> Experiment:
 
+        try:
+            mp.set_start_method('spawn')
+        except RuntimeError:
+            pass
         pool = mp.Pool(len(self.tasks))
         metrics : list = self.metrics
 

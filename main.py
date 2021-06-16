@@ -67,7 +67,7 @@ if __name__ == "__main__":
     mem : MEMetric = MEMetric('Mark-Evaluate', "", ['Petersen', 'Schnabel', 'CAPTURE'])
 
     # metrics : list = [bm, bsm, mem]
-    metrics : list = [bsm, mem]
+    metrics : list = [mem]
     tasks : list = [(DropWordsOneDim, ), (SwapWordsOneDim, ), (DropAndSwap, ), (Repetitions2,), (Negate2, ), (POSDrop2,), (Mix, )]
 
     # loc : str = ".all_2021-06-10_16-17-08"
