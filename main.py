@@ -1,3 +1,6 @@
+"""Main.py script."""
+
+
 from argparse import ArgumentParser
 
 import time
@@ -19,9 +22,17 @@ from src.Tasks.Mix import Mix
 from src.Plot import Plot
 from src.PlotByMetric import PlotByMetric
 
-
-
 if __name__ == "__main__":
+    """ Main script
+
+    Main script to run experiments.
+    Passing of different command line arguments is supported:
+        -n / --number : number of samples, int
+        -s / --steps : number of steps, int
+        -d / --dir : path to directory, str
+        -t / --title : title of the experiment, str
+        -sd / --seed : seed for sampling : int
+    """
     parser = ArgumentParser()
     parser.add_argument(
         "-n",
@@ -62,12 +73,28 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args = vars(args)
 
-    bm : BleurtMetric = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-    bsm : BERTScoreMetric = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
-    mem : MEMetric = MEMetric('Mark-Evaluate', "", ['Petersen', 'Schnabel', 'CAPTURE'])
+    bm: BleurtMetric = BleurtMetric(
+        "BLEURT",
+        "BLEURT without filtering",
+        ['BLEURT'])
+    bsm: BERTScoreMetric = BERTScoreMetric(
+        "BERTScore",
+        "BERTScore without filtering",
+        ['P', 'R', 'F1'])
+    mem: MEMetric = MEMetric(
+        'Mark-Evaluate',
+        "",
+        ['Petersen', 'Schnabel', 'CAPTURE'])
 
-    metrics : list = [bm, bsm, mem]
-    tasks : list = [(DropWordsOneDim, ), (SwapWordsOneDim, ), (DropAndSwap, ), (Repetitions2,), (Negate2, ), (POSDrop2,), (Mix, )]
+    metrics: list = [bm, bsm, mem]
+    tasks: list = [
+        (DropWordsOneDim, ),
+        (SwapWordsOneDim, ),
+        (DropAndSwap, ),
+        (Repetitions2,),
+        (Negate2, ),
+        (POSDrop2,),
+        (Mix, )]
 
     # loc : str = ".all_2021-06-10_16-17-08"
     # loc : str = ".all_ME"
@@ -77,14 +104,14 @@ if __name__ == "__main__":
         metrics,
         data_specs={
             'name': 'cnn_dailymail',
-            'version' : '3.0.0',
-            'n' : args['n'],
+            'version': '3.0.0',
+            'n': args['n'],
             'seed': args['seed']},
         steps={
             'steps': args['steps'],
             'txt': args['steps'],
-            'snt' : args['steps']},
-            pos_list=['ADJ', 'DET', 'VERB', 'NOUN'])
+            'snt': args['steps']},
+        pos_list=['ADJ', 'DET', 'VERB', 'NOUN'])
 
     start_time = time.time()
     exp.perturbate()
