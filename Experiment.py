@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import multiprocessing as mp
 import numpy as np
 import pandas as pd
 import pickle
@@ -130,11 +131,13 @@ class Experiment:
 
     def evaluate(self, overwrite : bool = False) -> Experiment:
 
+        pool = mp.Pool(len(self.tasks))
+        metrics : list = self.metrics
+
         for task in self.tasks:
 
             f_name : str = "." + task.name + "_results_data.p"
 
-            metrics : list = self.metrics
 
             df_tmp : pd.DataFrame = pd.DataFrame()
 
@@ -148,9 +151,20 @@ class Experiment:
                 print("New metrics to compute: ", *(m.name for m in metrics)) if self.verbose else None
                 f.close()
 
-            task.evaluate(metrics)
-            task.combine_results(metrics)
-            task.create_table(metrics)
+
+            pool.apply(task.evaluate, args=[metrics])
+            # task.evaluate(metrics)
+
+        pool.close()
+        pool.join()
+
+        # added
+        for task in self.tasks:
+
+            f_name : str = "." + task.name + "_results_data.p"
+
+            task.combine_results(self.metrics)
+            task.create_table(self.metrics)
 
             
             df : pd.DataFrame = task.df

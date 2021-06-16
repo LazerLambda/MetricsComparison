@@ -34,11 +34,12 @@ class OneDim2(Task):
         #     yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
+        print("HIER")
 
         if len(metrics) == 0:
             return
 
-        bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
+        # bar : ShadyBar = ShadyBar(message="Evaluating " + self.name, max=len(self.step_arr) * len(self.texts))
 
         for i, _ in enumerate(self.step_arr):
             step_results : list = []
@@ -70,9 +71,11 @@ class OneDim2(Task):
                 if self.step_arr[i] == 0:
                     assert candidate == reference
                 step_results.append([*(res for res in self.__eval(reference, candidate, metrics))])
-                bar.next()
+                # bar.next()
+                print("STEP")
             self.results.append(step_results)
-        bar.finish()
+        # bar.finish()
+        print("DONE")
 
     def combine_results(self, metrics : list) -> None:
         for run in self.results:

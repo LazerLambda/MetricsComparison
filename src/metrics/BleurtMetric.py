@@ -9,7 +9,7 @@ import cmasher as cmr
 import os
 import seaborn as sns
 
-class BleurtMetric(Metric):
+class BleurtMetric(Metric, object):
 
     limits : tuple = (-1.5,1.5)
 
@@ -21,7 +21,7 @@ class BleurtMetric(Metric):
         path : str = "src/bleurt/bleurt/test_checkpoint"
 
         # path from parent folder of src
-        self.scorer_bleurt: score.BleurtScorer = score.BleurtScorer(
+        self.scorer_bleurt : score.BleurtScorer = score.BleurtScorer(
             checkpoint=path)
 
         palette = sns.color_palette(None, 1)
@@ -64,5 +64,16 @@ class BleurtMetric(Metric):
             }
         
         return None
+
+    # methods to make Metric pickable for multiprocessing
+    def __getstate__(self):
+        self.scorer_bleurt = None
+        return self.__dict__
+
+    def __setstate__(self, state):
+        self.__dict__ = state
+
+        self.scorer_bleurt : score.BleurtScorer = score.BleurtScorer(
+            checkpoint="src/bleurt/bleurt/test_checkpoint")
 
         
