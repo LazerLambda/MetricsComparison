@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import multiprocessing as mp
 import numpy as np
 import pandas as pd
 import pickle
@@ -10,31 +11,11 @@ import spacy
 from datasets import load_dataset, dataset_dict
 from pathlib import Path
 from src.Plot import Plot
-from src.Tasks.Task import Task
 
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
 from typing import IO
-from threading import Thread
-
-
-class EvalThread(Thread):
-    """Class to evaluate tasks in different threads."""
-
-    def __init__(self, task: Task, metrics: list):
-        """Initialize Thread."""
-        Thread.__init__(self)
-
-        self.task: Task = task
-        self.metrics: list = metrics
-
-    def run():
-        """Run evaluation."""
-        self.task.evaluate(self.metrics)
-        self.task.combine_results(self.metrics)
-        self.task.create_table(self.metrics)
-
 
 class Experiment:
     # TODO slots
@@ -148,34 +129,45 @@ class Experiment:
         pickle.dump(data, f)
         f.close()
 
-    def evaluate(self, overwrite: bool = False) -> Experiment:
-        """Do evaluate the damaged texts against the original ones."""
+    def evaluate(self, overwrite : bool = False) -> Experiment:
+
+        pool = mp.Pool(len(self.tasks))
+        metrics : list = self.metrics
+
         for task in self.tasks:
 
-            f_name: str = "." + task.name + "_results_data.p"
+            f_name : str = "." + task.name + "_results_data.p"
 
-            metrics: list = self.metrics
 
-            df_tmp: pd.DataFrame = pd.DataFrame()
+            df_tmp : pd.DataFrame = pd.DataFrame()
 
             if self.__check_file_exists(f_name):
-                f: IO = open(os.path.join(self.exp_wd, f_name), 'rb')
+                f : IO = open(os.path.join(self.exp_wd, f_name), 'rb')
                 df_tmp = pickle.load(f)
                 # TODO consts
-                metrics_in_df: np.ndarray = df_tmp['metric'].unique()
-                print("Already computed: ", *(m for m in metrics_in_df))\
-                    if self.verbose else None
-                metrics = \
-                    [m for m in metrics if m.name not in metrics_in_df]
-                print("New metrics to compute: ", *(m.name for m in metrics))\
-                    if self.verbose else None
+                metrics_in_df : np.ndarray = df_tmp['metric'].unique()
+                print("Already computed: ", *(m for m in metrics_in_df)) if self.verbose else None
+                metrics = [m for m in metrics if m.name not in metrics_in_df]
+                print("New metrics to compute: ", *(m.name for m in metrics)) if self.verbose else None
                 f.close()
 
-            task.evaluate(metrics)
-            task.combine_results(metrics)
-            task.create_table(metrics)
 
-            df: pd.DataFrame = task.df
+            pool.apply(task.evaluate, args=[metrics])
+            # task.evaluate(metrics)
+
+        pool.close()
+        pool.join()
+
+        # added
+        for task in self.tasks:
+
+            f_name : str = "." + task.name + "_results_data.p"
+
+            task.combine_results(self.metrics)
+            task.create_table(self.metrics)
+
+            
+            df : pd.DataFrame = task.df
             if df_tmp.size != 0:
                 df_tmp = df_tmp.append(df)
                 df = df_tmp
@@ -183,7 +175,7 @@ class Experiment:
                 # assign all computed values to task
                 task.df = df
 
-            path: str = os.path.join(self.exp_wd, f_name)
+            path : str = os.path.join(self.exp_wd, f_name)
             self.__dump(df, path)
             self.result_files.append(path)
 

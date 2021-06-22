@@ -34,7 +34,6 @@ class OneDim2(Task):
         #     yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
-        print("HIER")
 
         if len(metrics) == 0:
             return
