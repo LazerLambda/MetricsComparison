@@ -1,5 +1,5 @@
 from ..Tasks.Task import Task
-from ..Tasks.OneDim import OneDim
+from ..Tasks.OneDim2 import OneDim2
 from ..Tasks.TwoDim import TwoDim 
 import numpy as np
 
@@ -49,7 +49,7 @@ class Metric:
         pass
 
     def get_vis_info(self, t : Task) -> dict():
-        if isinstance(t, OneDim):
+        if isinstance(t, OneDim2):
             return dict()
 
         if isinstance(t, TwoDim):

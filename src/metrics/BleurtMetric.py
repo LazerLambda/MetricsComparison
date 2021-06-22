@@ -1,6 +1,6 @@
 from .Metric import Metric
 from ..Tasks.Task import Task
-from ..Tasks.OneDim import OneDim
+from ..Tasks.OneDim2 import OneDim2
 from ..Tasks.TwoDim import TwoDim 
 from bleurt import score
 
@@ -52,7 +52,7 @@ class BleurtMetric(Metric, object):
         return dict(zip(self._submetrics, [[] for _ in self._submetrics]))
 
     def get_vis_info(self, t : Task) -> dict():
-        if isinstance(t, OneDim):
+        if isinstance(t, OneDim2):
             return dict()
 
         if isinstance(t, TwoDim):
