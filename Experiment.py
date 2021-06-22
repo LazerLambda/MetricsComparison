@@ -174,10 +174,6 @@ class Experiment:
 
             f_name: str = "." + task.name + "_results_data.p"
 
-<<<<<<< HEAD
-=======
-            metrics: list = self.metrics
->>>>>>> master
 
             df_tmp: pd.DataFrame = pd.DataFrame()
 
