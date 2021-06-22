@@ -15,10 +15,7 @@ from pathlib import Path
 from src.Plot import Plot
 
 import os
-<<<<<<< HEAD
 # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-=======
->>>>>>> master
 import tensorflow as tf
 from typing import IO
 
@@ -168,16 +165,11 @@ class Experiment:
         pickle.dump(data, f)
         f.close()
 
-<<<<<<< HEAD
-    def evaluate(self, overwrite : bool = False) -> Experiment:
-
+    def evaluate(self, overwrite: bool = False) -> Experiment:
+        """Do evaluate the damaged texts against the original ones."""
         pool = mp.Pool(len(self.tasks))
         metrics : list = self.metrics
 
-=======
-    def evaluate(self, overwrite: bool = False) -> Experiment:
-        """Do evaluate the damaged texts against the original ones."""
->>>>>>> master
         for task in self.tasks:
 
             f_name: str = "." + task.name + "_results_data.p"
