@@ -76,7 +76,7 @@ class DropWordsOneDim(OneDim2):
 
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
-        for step in range(len(self.step_arr)):
+        for step in self.step_arr:
             ret_tuple : tuple = ([], []) 
             for _, (sentences, doc) in enumerate(self.texts):
                 
