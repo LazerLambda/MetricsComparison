@@ -24,6 +24,8 @@ class DropWordsOneDim(OneDim2):
     def drop_single(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:
         # TODO add upper bound for dropping
 
+        assert step >= 0 and step <= 1
+
         bound : float = 1 - 1 / len(doc)
         if len(doc) == 0:
             return sentence, False
@@ -76,7 +78,8 @@ class DropWordsOneDim(OneDim2):
 
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
-        for step in range(len(self.step_arr)):
+        for step in self.step_arr:
+
             ret_tuple : tuple = ([], []) 
             for _, (sentences, doc) in enumerate(self.texts):
                 
