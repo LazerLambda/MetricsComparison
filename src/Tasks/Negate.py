@@ -17,7 +17,7 @@ class Negate(OneDim, Task):
 
     def __init__(self, params : dict):
         super(Negate, self).__init__(params=params)
-        self.name = "negation_2"
+        self.name = "negation"
         self.descr = "Negated sentences in the text."
         self.step_arr = ['original', 'negated']
 

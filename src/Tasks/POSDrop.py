@@ -17,7 +17,7 @@ class POSDrop(OneDim):
 
     def __init__(self, params : dict):
         super(POSDrop, self).__init__(params=params)
-        self.name : str = "POSDrop"
+        self.name : str = "posdrop"
         self.descr : str = "DROP of words with specific POS tag"
 
         assert isinstance(params['pos list'], list)
