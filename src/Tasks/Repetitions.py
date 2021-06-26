@@ -1,4 +1,4 @@
-from .OneDim2 import OneDim2
+from .OneDim import OneDim
 
 import copy
 import math
@@ -9,12 +9,12 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
-class Repetitions2(OneDim2):
+class Repetition(OneDim):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
-        super(Repetitions2, self).__init__(params=params)
+        super(Repetition, self).__init__(params=params)
         self.name = "repetition_2"
         self.descr = "Word repetitions added to sentences"
 
@@ -114,7 +114,7 @@ class Repetitions2(OneDim2):
                 yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
-        super(Repetitions2, self).evaluate(metrics)
+        super(Repetition, self).evaluate(metrics)
         self.step_arr = [ "Rep. len.: " + str(step) + " * len(sents)" for step in self.step_arr]
 
     def create_table(self, metrics : list) -> None:

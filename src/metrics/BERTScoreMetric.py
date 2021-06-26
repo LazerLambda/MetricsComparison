@@ -1,6 +1,6 @@
 from .Metric import Metric
 from ..Tasks.Task import Task
-from ..Tasks.OneDim2 import OneDim2
+from ..Tasks.OneDim import OneDim
 from ..Tasks.TwoDim import TwoDim 
 from bert_score import BERTScorer
 
@@ -36,13 +36,12 @@ class BERTScoreMetric(Metric):
         assert len(ref) == len(cand)
         return ([1] * len(ref), [1] * len(ref), [1] * len(ref))
 
-
     def compute(self, ref : list, cand : list):
         assert len(ref) == len(cand)
         return self.scorer_bertscore.score(cand, ref)
 
     def get_vis_info(self, t : Task) -> dict():
-        if isinstance(t, OneDim2):
+        if isinstance(t, OneDim):
             return dict()
 
         if isinstance(t, TwoDim):

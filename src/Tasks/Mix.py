@@ -1,8 +1,8 @@
-from .OneDim2 import OneDim2
-from .Negate2 import Negate2
+from .OneDim import OneDim
+from .Negate import Negate
 from .SwapWordsOneDim import SwapWordsOneDim
 from .DropWordsOneDim import DropWordsOneDim
-from .POSDrop2 import POSDrop2
+from .POSDrop import POSDrop
 
 import copy
 import math
@@ -15,7 +15,7 @@ from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
 
-class Mix(OneDim2):
+class Mix(OneDim):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "nlp"]
 
@@ -76,7 +76,7 @@ class Mix(OneDim2):
 
                     # 'Neg + Swap'
                     if action == 'Neg + Swap':
-                        new_sentence, success = Negate2.negate(sentence=sentences[k], doc=doc[k])
+                        new_sentence, success = Negate.negate(sentence=sentences[k], doc=doc[k])
                         if success:
                             new_sentence_2, success = SwapWordsOneDim.swap_pairs(sentence=new_sentence, doc=self.nlp(new_sentence), step=1)
                             if success:
@@ -84,36 +84,36 @@ class Mix(OneDim2):
                                 sentences[k] = new_sentence_2
                     # 'Negated + POS Dropped'
                     if action == "Neg - POS 'ADJ'":
-                        new_sentence, success = Negate2.negate(sentence=sentences[k], doc=doc[k])
+                        new_sentence, success = Negate.negate(sentence=sentences[k], doc=doc[k])
                         if success:
-                            new_sentence_2, success = POSDrop2.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='ADJ')
+                            new_sentence_2, success = POSDrop.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='ADJ')
                             if success:
                                 indices.append(k)
                                 sentences[k] = new_sentence_2
                     if action == "Neg - POS 'DET'":
-                        new_sentence, success = Negate2.negate(sentence=sentences[k], doc=doc[k])
+                        new_sentence, success = Negate.negate(sentence=sentences[k], doc=doc[k])
                         if success:
-                            new_sentence_2, success = POSDrop2.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='DET')
+                            new_sentence_2, success = POSDrop.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='DET')
                             if success:
                                 indices.append(k)
                                 sentences[k] = new_sentence_2
                     if action == "Neg - POS 'VERB'":
-                        new_sentence, success = Negate2.negate(sentence=sentences[k], doc=doc[k])
+                        new_sentence, success = Negate.negate(sentence=sentences[k], doc=doc[k])
                         if success:
-                            new_sentence_2, success = POSDrop2.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='VERB')
+                            new_sentence_2, success = POSDrop.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='VERB')
                             if success:
                                 indices.append(k)
                                 sentences[k] = new_sentence_2
                     if action == "Neg - POS 'NOUN'":
-                        new_sentence, success = Negate2.negate(sentence=sentences[k], doc=doc[k])
+                        new_sentence, success = Negate.negate(sentence=sentences[k], doc=doc[k])
                         if success:
-                            new_sentence_2, success = POSDrop2.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='NOUN')
+                            new_sentence_2, success = POSDrop.drop_single_pos(sentence=new_sentence, doc=self.nlp(new_sentence), pos='NOUN')
                             if success:
                                 indices.append(k)
                                 sentences[k] = new_sentence_2
                     # 'Neg + Drop'
                     if action == 'Neg + Drop':
-                        new_sentence, success = Negate2.negate(sentence=sentences[k], doc=doc[k])
+                        new_sentence, success = Negate.negate(sentence=sentences[k], doc=doc[k])
                         if success:
                             new_sentence_2, success = DropWordsOneDim.drop_single(sentence=new_sentence, doc=self.nlp(new_sentence), step=1)
                             if success:

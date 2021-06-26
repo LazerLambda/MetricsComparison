@@ -10,12 +10,12 @@ from checklist.perturb import Perturb
 from functools import reduce
 from progress.bar import ShadyBar
 
-class OneDim2(Task):
+class OneDim(Task):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
-        super(OneDim2, self).__init__(params=params)
+        super(OneDim, self).__init__(params=params)
 
         self.set_steps(params['steps'])
 

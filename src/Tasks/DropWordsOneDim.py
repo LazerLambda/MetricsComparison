@@ -1,4 +1,4 @@
-from .OneDim2 import OneDim2
+from .OneDim import OneDim
 
 import copy
 import math
@@ -10,7 +10,7 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
-class DropWordsOneDim(OneDim2):
+class DropWordsOneDim(OneDim):
 
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]

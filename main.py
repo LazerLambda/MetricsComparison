@@ -12,10 +12,10 @@ from src.metrics.BleurtMetric import BleurtMetric
 from src.metrics.MEMetric import MEMetric
 from src.metrics.BERTScoreIDFMetric import BERTScoreIDFMetric
 
-from src.Tasks.Negate2 import Negate2
-from src.Tasks.POSDrop2 import POSDrop2
+from src.Tasks.Negate import Negate
+from src.Tasks.POSDrop import POSDrop
 from src.Tasks.DropWordsOneDim import DropWordsOneDim
-from src.Tasks.Repetitions2 import Repetitions2
+from src.Tasks.Repetition import Repetition
 from src.Tasks.SwapWordsOneDim import SwapWordsOneDim
 from src.Tasks.DropAndSwap import DropAndSwap
 from src.Tasks.Mix import Mix
@@ -83,9 +83,9 @@ if __name__ == "__main__":
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
         (DropAndSwap, ),
-        (Repetitions2,),
-        (Negate2, ),
-        (POSDrop2,),
+        (Repetition,),
+        (Negate, ),
+        (POSDrop,),
         (Mix, )]
 
     # loc : str = ".all_2021-06-10_16-17-08"

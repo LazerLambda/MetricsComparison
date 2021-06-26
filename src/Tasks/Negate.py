@@ -1,4 +1,4 @@
-from .OneDim2 import OneDim2
+from .OneDim import OneDim
 from .Task import Task
 
 import copy
@@ -11,12 +11,12 @@ from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
 
-class Negate2(OneDim2, Task):
+class Negate(OneDim, Task):
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
     def __init__(self, params : dict):
-        super(Negate2, self).__init__(params=params)
+        super(Negate, self).__init__(params=params)
         self.name = "negation_2"
         self.descr = "Negated sentences in the text."
         self.step_arr = ['original', 'negated']
@@ -41,7 +41,7 @@ class Negate2(OneDim2, Task):
     def perturbate(self) -> None:
         # [(degree of deterioration, deteriorated text, indices)]
 
-        # super(Negate2, self).perturbate()
+        # super(Negate, self).perturbate()
 
         # TODO remove
         self.step_arr = ['original', 'negated']
