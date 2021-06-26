@@ -22,23 +22,24 @@ class Task():
 
     def __init__(self, params : dict):
 
-        self.texts: list = []
-        self.results : list = []
-        self.dmgd_texts : list = []
-        self.combined_results : list = []
-        self.step_arr : list = []
-        self.path : str = params['path']
-        self.name : str = "To name the task, add a description instance to the __init__ method of the derived class."
-        self.df : pd.DataFrame = pd.DataFrame()
-        self.descr : str = "To describe the task, add a description instance to the __init__ method of the derived class."
+        
+        self.results: list = []
+        self.dmgd_texts: list = []
+        self.combined_results: list = []
+        self.step_arr: list = []
+        self.texts: list = params['texts']
+        self.path: str = params['path']
+        self.name: str = "Add a description instance to the __init__ method of the derived class."
+        self.df: pd.DataFrame = pd.DataFrame()
+        self.descr: str = "Add a description instance to the __init__ method of the derived class."
 
-        data : list = params['data']
-        nlp : spacy.lang = params['nlp']
+        # data : list = params['data']
+        # nlp : spacy.lang = params['nlp']
 
-        for text in data:
-            sentences: list = nltk.sent_tokenize(text)
-            doc: list = list(nlp.pipe(sentences))
-            self.texts.append((sentences, doc))
+        # for text in data:
+        #     sentences: list = nltk.sent_tokenize(text)
+        #     doc: list = list(nlp.pipe(sentences))
+        #     self.texts.append((sentences, doc))
 
     def set_steps(self, steps : dict) -> Task:
         return self

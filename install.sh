@@ -35,3 +35,6 @@ echo "\n\nDownload CoLA classifier from this location: \033[94mhttps://drive.goo
 
 cd ..
 echo "DONE"
+
+
+# TODO download BERT-base-mnli for ME

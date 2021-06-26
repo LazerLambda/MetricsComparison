@@ -1,5 +1,5 @@
 from ..Tasks.Task import Task
-from ..Tasks.OneDim import OneDim
+from ..Tasks.OneDim2 import OneDim2
 from ..Tasks.TwoDim import TwoDim 
 import numpy as np
 
@@ -9,12 +9,11 @@ class Metric:
 
     limits : tuple = (0,0)
 
-    def __init__(self, name : str, description : str, submetrics : list):
-        self.name : str = name
-        self.description : str = description
-        self.submetrics : list = submetrics
+    def __init__(self):
+        self.name : str = None
+        self.description : str = None
+        self.submetrics : list = None
         self.id : bool = False
-
         self.color = dict()
 
     def compute(self):
@@ -45,11 +44,8 @@ class Metric:
     def concat():
         pass
 
-    def init_dict(self):
-        pass
-
     def get_vis_info(self, t : Task) -> dict():
-        if isinstance(t, OneDim):
+        if isinstance(t, OneDim2):
             return dict()
 
         if isinstance(t, TwoDim):
