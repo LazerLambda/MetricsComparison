@@ -9,12 +9,11 @@ class Metric:
 
     limits : tuple = (0,0)
 
-    def __init__(self, name : str, description : str, submetrics : list):
-        self.name : str = name
-        self.description : str = description
-        self.submetrics : list = submetrics
+    def __init__(self):
+        self.name : str = None
+        self.description : str = None
+        self.submetrics : list = None
         self.id : bool = False
-
         self.color = dict()
 
     def compute(self):
@@ -43,9 +42,6 @@ class Metric:
 
     @staticmethod
     def concat():
-        pass
-
-    def init_dict(self):
         pass
 
     def get_vis_info(self, t : Task) -> dict():

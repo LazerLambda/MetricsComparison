@@ -13,25 +13,32 @@ class BleurtMetric(Metric):
 
     limits : tuple = (-1.5,1.5)
 
-    def __init__(self, name : str, description : str, submetric : list):
+    def __init__(self):
         
-        super(BleurtMetric, self).__init__(name, description, submetric)
+        super(BleurtMetric, self).__init__()
         
+        # Properties
+        self.name: str = "BLEURT"
+        self.description: str = "BLEURT, pre-trained, finetuned on WMT"
+        self.submetrics: str = ["BLEURT"]
+        self.id : bool = False
+
         # path : str = "src/bleurt/bleurt/test_checkpoint" + os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        path : str = "src/bleurt/bleurt/test_checkpoint"
+        path: str = "src/bleurt/bleurt/test_checkpoint"
 
         # path from parent folder of src
         self.scorer_bleurt: score.BleurtScorer = score.BleurtScorer(
             checkpoint=path)
 
-        palette = sns.color_palette(None, 1)
+        palette: sns.palettes._ColorPalette =\
+            sns.color_palette(None, 1)
         self.color : dict = {
             'BLEURT' : palette[0]
         }
-        self.id : bool = False
 
     def get_id(self, ref :list, cand : list):
-        raise Exception("ERROR:\n\t'-> BLEURT has to be computed.")
+        raise Exception(
+            "ERROR:\n\t'-> BLEURT has to be computed.")
 
 
     def compute(self, ref : list, cand : list):
@@ -47,10 +54,7 @@ class BleurtMetric(Metric):
                     return {
                         'BLEURT': acc['BLEURT'] + e['BLEURT']
                     }
-
-    def init_dict(self):
-        return dict(zip(self._submetrics, [[] for _ in self._submetrics]))
-
+                    
     def get_vis_info(self, t : Task) -> dict():
         if isinstance(t, OneDim2):
             return dict()
@@ -62,7 +66,6 @@ class BleurtMetric(Metric):
                 'vmin' : -1.5,
                 'vmax' : 1.5
             }
-        
         return None
 
         

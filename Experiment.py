@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime
+import nltk
 import numpy as np
 import pandas as pd
 import pickle
@@ -91,12 +92,12 @@ class Experiment:
                 'txt': 1,
                 'snt': 2},
             **kwargs) -> Experiment:
-        """Do initialize the experiment."""
-        nlp = spacy.load('en_core_web_sm')
+        """Initialize the experiment."""
+        
 
         self.metrics = metrics
 
-        # check if data is already existing
+        # check if data already exists
         if len(self.data) == 0:
             # TODO constant
             if self.__check_file_exists("original_data.p"):
@@ -117,14 +118,25 @@ class Experiment:
                     data_specs['seed'])
 
         assert len(self.data) != 0
+        # TODO rm
+        # print(self.data)
 
         pos_list: list = []
         if 'pos_list' in kwargs:
             pos_list = kwargs['pos_list']
 
+        # Prepare reference data
+        self.texts: list = []
+        nlp = spacy.load('en_core_web_sm')
+        for text in self.data:
+            sentences: list = nltk.sent_tokenize(text)
+            doc: list = list(nlp.pipe(sentences))
+            self.texts.append((sentences, doc))
+
         tasks = [(e[0], []) if len(e) == 1 else e for e in tasks]
         tasks = [(task[0], {**{
             'data': self.data,
+            'texts': self.texts,
             'nlp': nlp,
             'path': self.exp_wd,
             'steps': steps,
@@ -140,7 +152,7 @@ class Experiment:
         return self
 
     def perturbate(self, overwrite: bool = False) -> Experiment:
-        """Do damage the samples in different tasks."""
+        """Damage the samples in different tasks."""
         for task in self.tasks:
             f_name: str = "." + task.name + "_perturbated_data.p"
 
@@ -204,13 +216,13 @@ class Experiment:
 
             assert task.df.size != 0
 
-    def plot(self, p_list: list, metrics: list) -> Experiment:
+    def plot(self, p_list: list) -> Experiment:
         """Do plot the results."""
-        assert isinstance(p_list, list) and isinstance(metrics, list)
+        assert isinstance(p_list, list)
 
         for p_class in p_list:
             p: Plot = p_class(
                 [(t, t.df, t.name, t.descr) for t in self.tasks],
                 self.exp_wd)
-            p.plot(metrics)
+            p.plot(self.metrics)
         pass

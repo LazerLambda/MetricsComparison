@@ -8,9 +8,6 @@ import time
 from Experiment import Experiment
 
 from src.metrics.BERTScoreMetric import BERTScoreMetric
-from src.metrics.BleurtMetric import BleurtMetric
-from src.metrics.MEMetric import MEMetric
-from src.metrics.BERTScoreIDFMetric import BERTScoreIDFMetric
 
 from src.Tasks.Negate2 import Negate2
 from src.Tasks.POSDrop2 import POSDrop2
@@ -74,11 +71,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args = vars(args)
 
-    bm: BleurtMetric = BleurtMetric()
     bsm: BERTScoreMetric = BERTScoreMetric()
-    mem: MEMetric = MEMetric()
 
-    metrics: list = [bm, bsm, mem]
+    metrics: list = [bsm]
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
@@ -88,8 +83,6 @@ if __name__ == "__main__":
         (POSDrop2,),
         (Mix, )]
 
-    # loc : str = ".all_2021-06-10_16-17-08"
-    # loc : str = ".all_ME"
     exp = Experiment(loc=args['dir'], name=args['title'], verbose=True)
     exp.setup(
         tasks,
@@ -105,9 +98,6 @@ if __name__ == "__main__":
             'snt': args['steps']},
         pos_list=['ADJ', 'DET', 'VERB', 'NOUN'])
 
-    # access data here and setup BERTScore idf
-    # exp.metrics = metrics
-
     start_time = time.time()
     exp.perturbate()
     print("--- Perturbation took %s seconds ---" % (time.time() - start_time))
@@ -115,4 +105,4 @@ if __name__ == "__main__":
     start_time = time.time()
     exp.evaluate()
     print("--- Evaluation took %s seconds ---" % (time.time() - start_time))
-    exp.plot([Plot], metrics)
+    exp.plot([Plot])
