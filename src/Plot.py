@@ -63,8 +63,12 @@ class Plot:
 
                 x_i = j % x
                 y_i = j // x
-
-                ax = axes[y_i][x_i]
+                
+                ax = None
+                if x == 1:
+                    ax = axes[y_i]
+                else:
+                    ax = axes[y_i][x_i]
 
                 task.plot(ax, metric, submetric)
                 ax.title.set_text(
