@@ -7,10 +7,7 @@ import time
 
 from Experiment import Experiment
 
-from src.metrics.BERTScoreMetric import BERTScoreMetric
 from src.metrics.BleurtMetric import BleurtMetric
-from src.metrics.MEMetric import MEMetric
-from src.metrics.BERTScoreIDFMetric import BERTScoreIDFMetric
 
 from src.Tasks.Negate import Negate
 from src.Tasks.POSDrop import POSDrop
@@ -75,10 +72,7 @@ if __name__ == "__main__":
     args = vars(args)
 
     bm: BleurtMetric = BleurtMetric()
-    bsm: BERTScoreMetric = BERTScoreMetric()
-    mem: MEMetric = MEMetric()
-
-    metrics: list = [bm, bsm, mem]
+    metrics: list = [bm]
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
@@ -104,9 +98,6 @@ if __name__ == "__main__":
             'txt': args['steps'],
             'snt': args['steps']},
         pos_list=['ADJ', 'DET', 'VERB', 'NOUN'])
-
-    # access data here and setup BERTScore idf
-    # exp.metrics = metrics
 
     start_time = time.time()
     exp.perturbate()

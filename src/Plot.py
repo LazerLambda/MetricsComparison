@@ -66,7 +66,10 @@ class Plot:
                 
                 ax = None
                 if x == 1:
-                    ax = axes[y_i]
+                    if y== 1:
+                        ax = axes
+                    else:
+                        ax = axes[y_i]
                 else:
                     ax = axes[y_i][x_i]
 
