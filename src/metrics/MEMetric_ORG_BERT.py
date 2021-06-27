@@ -16,12 +16,12 @@ class MEMetric(Metric):
         super(MEMetric, self).__init__()
 
         # Properties
-        self.name: str = "Mark-Evaluate (Theorem based, SBERT)"
-        self.description: str = "ME-Petersen, ME*-Schnabel, ME*-CAPTURE"
+        self.name: str = "Mark-Evaluate (Original, BERT)"
+        self.description: str = "ME-Petersen, ME-Schnabel, ME-CAPTURE"
         self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
         self.id : bool = True
 
-        self.ME_scorer : ME = ME(sent_transf=True, orig=False)
+        self.ME_scorer : ME = ME(sent_transf=False, orig=True)
 
         palette = sns.color_palette(None, 4)
 
