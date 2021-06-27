@@ -27,22 +27,23 @@ class BLEUScoreMetric(Metric):
             sns.color_palette(None, 1)
 
         self.color : dict = {
-            'bleu' : palette[0]
+            'BLEU' : palette[0]
         }
 
 
     def get_id(self, ref :list, cand : list):
         assert len(ref) == len(cand)
-        return ([1] * len(ref), [1] * len(ref), [1] * len(ref))
+        return [[1]] # * len(cand)
 
 
     def compute(self, ref : list, cand : list):
+
+        # For this experiment, only one reference sample is used
         assert len(ref) == len(cand)
-        cand, ref = [[token.text for token in self.nlp(sent)] for sent in cand],\
-        [[[token.text for token in self.nlp(sent)]] for sent in ref]
-        self.bleu_hggfc.add_batch(predictions=cand, references=ref)
-        score = self.bleu_hggfc.compute()
-        return [score['bleu']]
+        cand, ref = [[token.text for token in self.nlp(str(sent))] for sent in cand],\
+        [[[token.text for token in self.nlp(str(sent))]] for sent in ref]
+        score = self.bleu_hggfc.compute(predictions=cand, references=ref)
+        return [[score['bleu']]]
 
     def get_vis_info(self, t : Task) -> dict():
         if isinstance(t, OneDim):
