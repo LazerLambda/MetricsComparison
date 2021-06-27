@@ -7,13 +7,13 @@ from ..Tasks.TwoDim import TwoDim
 
 import seaborn as sns
 
-class MEMetric(Metric):
+class MEMetricOrgBERT(Metric):
     
     limits : tuple = (0,1.05)
 
     def __init__(self):
         
-        super(MEMetric, self).__init__()
+        super(MEMetricOrgBERT, self).__init__()
 
         # Properties
         self.name: str = "Mark-Evaluate (Original, BERT)"
@@ -21,7 +21,7 @@ class MEMetric(Metric):
         self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
         self.id : bool = True
 
-        self.ME_scorer : ME = ME(sent_transf=False, orig=True)
+        self.ME_scorer : ME = ME(sent_transf=False, sntnc_lvl=True, orig=True, verbose=True)
 
         palette = sns.color_palette(None, 4)
 
@@ -36,7 +36,7 @@ class MEMetric(Metric):
         return ([1], [1], [1])
 
     def compute(self, ref : list, cand : list):
-        super(MEMetric, self).check_input(ref, cand)
+        super(MEMetricOrgBERT, self).check_input(ref, cand)
         score : dict = self.ME_scorer.estimate(cand=cand, ref=ref)
         return ([score['Petersen']], [score['Schnabel_qul']], [score['Schnabel_div']], [score['CAPTURE']])
 

@@ -7,13 +7,13 @@ from ..Tasks.TwoDim import TwoDim
 
 import seaborn as sns
 
-class MEMetric(Metric):
+class MEMetricOrgSBERT(Metric):
     
     limits : tuple = (0,1.05)
 
     def __init__(self):
         
-        super(MEMetric, self).__init__()
+        super(MEMetricOrgSBERT, self).__init__()
 
         # Properties
         self.name: str = "Mark-Evaluate (Original, SBERT)"
@@ -36,7 +36,7 @@ class MEMetric(Metric):
         return ([1], [1], [1])
 
     def compute(self, ref : list, cand : list):
-        super(MEMetric, self).check_input(ref, cand)
+        super(MEMetricOrgSBERT, self).check_input(ref, cand)
         score : dict = self.ME_scorer.estimate(cand=cand, ref=ref)
         return ([score['Petersen']], [score['Schnabel_qul']], [score['Schnabel_div']], [score['CAPTURE']])
 
