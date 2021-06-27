@@ -72,10 +72,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args = vars(args)
 
-    me_orig: MEMetricOrgBERT = MEMetricOrgBERT()
+    # me_orig: MEMetricOrgBERT = MEMetricOrgBERT()
     me_th: MEMetricThBERT = MEMetricThBERT()
 
-    metrics: list = [me_orig, me_th]
+    # metrics: list = [me_orig, me_th]
+    metrics: list = [me_th]
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),

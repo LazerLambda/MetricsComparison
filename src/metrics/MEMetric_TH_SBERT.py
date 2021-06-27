@@ -33,7 +33,7 @@ class MEMetricThSBERT(Metric):
         }
 
     def get_id(self, ref :list, cand : list):
-        return ([1], [1], [1])
+        return ([1], [1], [1], [1])
 
     def compute(self, ref : list, cand : list):
         super(MEMetricThSBERT, self).check_input(ref, cand)

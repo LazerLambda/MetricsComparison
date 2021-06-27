@@ -21,7 +21,7 @@ class MEMetricThBERT(Metric):
         self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
         self.id : bool = True
 
-        self.ME_scorer : ME = ME(sent_transf=False, sntnc_lvl=True, orig=False, verbose=True)
+        self.ME_scorer : ME = ME(sent_transf=False, sntnc_lvl=True, orig=False)
 
         palette = sns.color_palette(None, 4)
 
