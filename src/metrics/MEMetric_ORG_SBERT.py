@@ -19,7 +19,7 @@ class MEMetricOrgSBERT(Metric):
         self.name: str = "Mark-Evaluate (Original, SBERT)"
         self.description: str = "ME-Petersen, ME-Schnabel, ME-CAPTURE"
         self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
-        self.id : bool = True
+        self.id : bool = False
 
         self.ME_scorer : ME = ME(sent_transf=True, orig=True)
 
@@ -33,7 +33,7 @@ class MEMetricOrgSBERT(Metric):
         }
 
     def get_id(self, ref :list, cand : list):
-        return ([1], [1], [1])
+        return ([1], [1], [1], [1])
 
     def compute(self, ref : list, cand : list):
         super(MEMetricOrgSBERT, self).check_input(ref, cand)

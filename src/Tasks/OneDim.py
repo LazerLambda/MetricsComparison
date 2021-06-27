@@ -74,12 +74,26 @@ class OneDim(Task):
             self.results.append(step_results)
         bar.finish()
 
-    def combine_results(self, metrics : list) -> None:
+    def combine_results(self, metrics: list) -> None:
+        """Combine results of """
+        # list of results with each step
         for run in self.results:
-            acc = dict(zip([metric.name for metric in metrics], [dict(zip(metric.submetrics, [[] for _ in metric.submetrics])) for metric in metrics]))
+            # dict for each metric and each submetric
+            acc = dict(
+                zip(
+                    [metric.name for metric in metrics],
+                    [dict(zip(
+                        metric.submetrics,
+                        [
+                            [] for _ in metric.submetrics])) 
+                            for metric in metrics]))
+            # each text
             for result in run:
+                # each submetric
                 for i, metric in enumerate(metrics):
                     for j, submetric in enumerate(metric.submetrics):
+                        # append result to result list for metric.name and
+                        # it's specific submetric
                         acc[metric.name][submetric] += result[i][j]
             self.combined_results.append(acc)
 
