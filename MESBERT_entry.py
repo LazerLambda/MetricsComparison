@@ -76,7 +76,7 @@ if __name__ == "__main__":
     me_th: MEMetricThSBERT = MEMetricThSBERT()
 
     # metrics: list = [me_orig, me_th]
-    metrics: list = [sme_th]
+    metrics: list = [me_th]
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),

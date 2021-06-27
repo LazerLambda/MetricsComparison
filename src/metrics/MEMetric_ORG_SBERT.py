@@ -19,7 +19,7 @@ class MEMetricOrgSBERT(Metric):
         self.name: str = "Mark-Evaluate (Original, SBERT)"
         self.description: str = "ME-Petersen, ME-Schnabel, ME-CAPTURE"
         self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
-        self.id : bool = True
+        self.id : bool = False
 
         self.ME_scorer : ME = ME(sent_transf=True, orig=True)
 
