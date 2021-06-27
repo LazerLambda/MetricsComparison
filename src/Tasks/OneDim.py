@@ -94,8 +94,6 @@ class OneDim(Task):
                     for j, submetric in enumerate(metric.submetrics):
                         # append result to result list for metric.name and
                         # it's specific submetric
-                        print(result[i][j])
-                        print(acc[metric.name][submetric])
                         acc[metric.name][submetric] += result[i][j]
             self.combined_results.append(acc)
 
