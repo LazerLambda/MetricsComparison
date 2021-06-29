@@ -83,10 +83,7 @@ class ExperimentMEOrig(Experiment.Experiment):
                 data_specs['n'])
 
         for i in sample:
-            print(sent_candidates[i][0])
             self.texts.append(sent_candidates[i])
-        
-        print(self.texts)
 
         # prepare task configuration
         # TODO standardize pos_list
