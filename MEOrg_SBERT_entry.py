@@ -7,8 +7,7 @@ import time
 
 from Experiment import Experiment
 
-from src.metrics.MEMetric_ORG_BERT import MEMetricOrgBERT
-from src.metrics.MEMetric_TH_BERT import MEMetricThBERT
+from src.metrics.MEMetric_ORG_SBERT import MEMetricOrgSBERT
 
 from src.Tasks.Negate import Negate
 from src.Tasks.POSDrop import POSDrop
@@ -36,7 +35,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-n",
         "--number",
-        default=5,
+        default=300,
         type=int,
         dest="n",
         help="Number of texts.")
@@ -72,11 +71,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args = vars(args)
 
-    # me_orig: MEMetricOrgBERT = MEMetricOrgBERT()
-    me_th: MEMetricThBERT = MEMetricThBERT()
+    me_orig_SBERT: MEMetricOrgSBERT = MEMetricOrgSBERT()
 
-    # metrics: list = [me_orig, me_th]
-    metrics: list = [me_th]
+    metrics: list = [me_orig_SBERT]
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
@@ -94,6 +91,7 @@ if __name__ == "__main__":
             'name': 'cnn_dailymail',
             'version': '3.0.0',
             'n': args['n'],
+            'f': (lambda data, sample: data['train'][sample]['article']),
             'seed': args['seed']},
         steps={
             'steps': args['steps'],

@@ -77,7 +77,7 @@ class DropWordsOneDim(OneDim):
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
 
         for step in self.step_arr:
-            ret_tuple : tuple = ([], []) 
+            ret_tuple : tuple = ([], [])
             for _, (sentences, doc) in enumerate(self.texts):
                 
                 sentences : list = copy.deepcopy(sentences)
@@ -108,7 +108,6 @@ class DropWordsOneDim(OneDim):
     # def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
     #     for m in metrics:
     #         # if m.id and candidate == reference:
-    #         #     print("HIER2")
     #         #     yield m.get_id(cand=candidate, ref=reference)
     #         # else:
     #         yield m.compute(cand=candidate, ref=reference)
