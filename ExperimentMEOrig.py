@@ -9,7 +9,7 @@ import pickle
 import os
 import spacy
 
-from progress.bar import ShadyBar
+# from progress.bar import ShadyBar
 
 class ExperimentMEOrig(Experiment.Experiment):
 
@@ -65,7 +65,7 @@ class ExperimentMEOrig(Experiment.Experiment):
         self.texts: list = []
         nlp = spacy.load('en_core_web_sm')
 
-        bar: ShadyBar = ShadyBar("Creating dataset", max=len(self.data))
+        # bar: ShadyBar = ShadyBar("Creating dataset", max=len(self.data))
 
         sent_candidates: list = []
         for text in self.data:
@@ -74,8 +74,8 @@ class ExperimentMEOrig(Experiment.Experiment):
                 doc = nlp(sentence)
                 if len(doc) > 6 and len(doc) < 50:
                     sent_candidates.append(([sentence], [doc]))
-            bar.next()
-        bar.finish()
+            # bar.next()
+        # bar.finish()
         
         sample: np.ndarray = np.random.choice(
             np.arange(
