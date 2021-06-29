@@ -38,7 +38,7 @@ class MEMetricThBERT(Metric):
     def compute(self, ref : list, cand : list):
         super(MEMetricThBERT, self).check_input(ref, cand)
         score : dict = self.ME_scorer.estimate(cand=cand, ref=ref)
-        return ([score['Petersen']], [score['Schnabel_qul']], [score['Schnabel_div']], [score['CAPTURE']])
+        return (score['Petersen'], score['Schnabel_qul'], score['Schnabel_div'], score['CAPTURE'])
 
     @staticmethod
     def concat(acc, elem):
