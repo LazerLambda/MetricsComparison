@@ -53,19 +53,21 @@ class Experiment:
                 raise Exception(
                     "ERROR:\n\t'-> Specified location does not exist.")
 
-    def __load_dataset(
+    def load_dataset(
             self,
             name: str,
             vers: str,
             n: int,
+            f: callable,
             seed: int = None) -> None:
 
         np.random.seed(seed=seed)
 
         data: dataset_dict.DatasetDict = load_dataset(name, vers)
         sample: np.ndarray = np.random.choice(np.arange(len(data['train'])), n)
-        self.data: list = \
-            data['train'][sample]['article']  # TODO make property generics
+        # self.data: list = \
+        #     data['train'][sample]['article']  # TODO make property generics
+        self.data: list = f(data, sample)
         print("Sample chosen: " + str(sample)) if self.verbose else None
 
         # TODO set constant
@@ -73,7 +75,7 @@ class Experiment:
             (sample, self.data, name, vers),
             os.path.join(self.exp_wd, "original_data.p"))
 
-    def __check_file_exists(self, file: str) -> bool:
+    def check_file_exists(self, file: str) -> bool:
         return file in \
             [f for f in os.listdir(self.exp_wd)
                 if os.path.isfile(os.path.join(self.exp_wd, f))]
@@ -86,6 +88,7 @@ class Experiment:
                 'name': 'cnn_dailymail',
                 'version': '3.0.0',
                 'n': 2,
+                'f': (lambda data, sample: data['train'][sample]['article']),
                 'seed': None},
             steps: dict = {
                 'steps': 1,
@@ -100,7 +103,7 @@ class Experiment:
         # check if data already exists
         if len(self.data) == 0:
             # TODO constant
-            if self.__check_file_exists("original_data.p"):
+            if self.check_file_exists("original_data.p"):
                 f: IO = open(
                     os.path.join(
                         self.exp_wd,
@@ -111,16 +114,16 @@ class Experiment:
                 f.close()
                 print("Existing data loaded.") if self.verbose else None
             else:
-                self.__load_dataset(
+                self.load_dataset(
                     data_specs['name'],
                     data_specs['version'],
                     data_specs['n'],
+                    data_specs['f'],
                     data_specs['seed'])
 
         assert len(self.data) != 0
-        # TODO rm
-        # print(self.data)
 
+        # only if pos tags are provided
         pos_list: list = []
         if 'pos_list' in kwargs:
             pos_list = kwargs['pos_list']
@@ -133,6 +136,8 @@ class Experiment:
             doc: list = list(nlp.pipe(sentences))
             self.texts.append((sentences, doc))
 
+        # prepare task configuration
+        # TODO standardize pos_list
         tasks = [(e[0], []) if len(e) == 1 else e for e in tasks]
         tasks = [(task[0], {**{
             'data': self.data,
@@ -156,7 +161,7 @@ class Experiment:
         for task in self.tasks:
             f_name: str = "." + task.name + "_perturbated_data.p"
 
-            if self.__check_file_exists(f_name):
+            if self.check_file_exists(f_name):
                 print("Perturbations for " + task.name + " already exists.")\
                     if self.verbose else None
                 f: IO = open(os.path.join(self.exp_wd, f_name), 'rb')
@@ -185,7 +190,7 @@ class Experiment:
 
             df_tmp: pd.DataFrame = pd.DataFrame()
 
-            if self.__check_file_exists(f_name):
+            if self.check_file_exists(f_name):
                 f: IO = open(os.path.join(self.exp_wd, f_name), 'rb')
                 df_tmp = pickle.load(f)
                 # TODO consts

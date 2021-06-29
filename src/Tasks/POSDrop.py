@@ -20,6 +20,7 @@ class POSDrop(OneDim):
         self.name : str = "posdrop"
         self.descr : str = "DROP of words with specific POS tag"
 
+        assert 'pos list' in params.keys()
         assert isinstance(params['pos list'], list)
         self.step_arr : list = ['Original'] + params['pos list']
 

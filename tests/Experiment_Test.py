@@ -13,10 +13,8 @@ sys.path.insert(0, os.path.abspath(
 from Experiment import Experiment
 
 from src.Tasks.POSDrop import POSDrop
-from src.Tasks.NegationSent import Negation_Sent
-from src.Tasks.DropWordsTwoDim import DropWordsTwoDim
-from src.Tasks.SwapWordsTwoDim import SwapWordsTwoDim
-from src.Tasks.RepetitionTwoDim import RepetitionTwoDim
+from src.Tasks.Negate import Negate
+from src.Tasks.Repetition import Repetition
 
 from src.metrics.BleurtMetric import BleurtMetric
 from src.metrics.BERTScoreMetric import BERTScoreMetric
@@ -33,20 +31,26 @@ class ExperimentTest(unittest.TestCase):
 
     def test_init(self):
 
-        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+        bm = BleurtMetric()
+        bsm = BERTScoreMetric()
 
         metrics = [bm, bsm]
 
         steps_1d = {'steps': 1}
         steps_2d = {'txt' : 2, 'snt' : 2}
 
-        tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (RepetitionTwoDim, )]
+        tasks = [(Negate, ), (POSDrop, [('pos', 'ADJ')]), (Repetition, )]
 
         exp = Experiment(name="test_run")
 
         n = 10
-        exp.setup(tasks, metrics, data_specs={'name': 'cnn_dailymail', 'version' : '3.0.0', 'n' : n})
+        exp.setup(tasks, metrics, data_specs={
+            'name': 'cnn_dailymail',
+            'version' : '3.0.0',
+            'n' : n,
+            'f': (lambda data, sample: data['train'][sample]['article']),
+            'seed': None},
+            pos_list=['ADJ'])
 
         self.assertTrue(len(exp.data) != 0)
         self.assertTrue(len(exp.data) == n)
@@ -57,96 +61,106 @@ class ExperimentTest(unittest.TestCase):
         path = exp.exp_wd
         shutil.rmtree(path)
 
-    def test_perturb(self):
-        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+    # def test_perturb(self):
+    #     bm = BleurtMetric()
+    #     bsm = BERTScoreMetric()
 
-        metrics = [bm, bsm]
-        tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (RepetitionTwoDim, )]
+    #     metrics = [bm, bsm]
+    #     tasks = [(Negate, ), (POSDrop, [('pos', 'ADJ')]), (Repetition, )]
 
-        exp = Experiment(name="test_run")
-        exp.setup(tasks, metrics)
-        exp.perturbate()
+    #     exp = Experiment(name="test_run")
+    #     exp.setup(tasks, metrics)
+    #     exp.perturbate()
 
-        for t in exp.tasks:
-            self.assertTrue(len(t.dmgd_texts) != 0)
+    #     for t in exp.tasks:
+    #         self.assertTrue(len(t.dmgd_texts) != 0)
 
-        path = exp.exp_wd
-        shutil.rmtree(path)
+    #     path = exp.exp_wd
+    #     shutil.rmtree(path)
 
-    def test_evaluate(self):
-        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+    # def test_evaluate(self):
+    #     bm = BleurtMetric()
+    #     bsm = BERTScoreMetric()
 
-        # metrics = [bm]#, bsm]
-        metrics = [bm, bsm]
-        # tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]),] #(DropWordsTwoDim,),  (SwapWordsTwoDim,),  (RepetitionTwoDim, )]
-        tasks = [(Negation_Sent, )]#, (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (RepetitionTwoDim, )]
+    #     # metrics = [bm]#, bsm]
+    #     metrics = [bm, bsm]
+    #     # tasks = [(Negate, ), (POSDrop, [('pos', 'ADJ')]),] #(DropWordsTwoDim,),  (SwapWordsTwoDim,),  (Repetition, )]
+    #     tasks = [(Negate, )]#, (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (Repetition, )]
 
-        exp = Experiment(name="test_run")
-        exp.setup(tasks, metrics)
-        exp.perturbate()
-        exp.evaluate()
+    #     exp = Experiment(name="test_run")
+    #     exp.setup(tasks, metrics)
+    #     exp.perturbate()
+    #     exp.evaluate()
 
-        for path in exp.result_files:
-            f = open(path, 'rb')
-            print(path)
-            df = pickle.load(f)
-            f.close()
-            del df
+    #     for path in exp.result_files:
+    #         f = open(path, 'rb')
+    #         print(path)
+    #         df = pickle.load(f)
+    #         f.close()
+    #         del df
 
-        path = exp.exp_wd
-        shutil.rmtree(path)
+    #     path = exp.exp_wd
+    #     shutil.rmtree(path)
 
-    def test_exist_dir_1(self):
-        src = 'tests/mock_dir_1'
-        dest = 'mock_dir_test/'
-        destination = shutil.copytree(src, dest)
-        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+    # def test_exist_dir_1(self):
+    #     src = 'tests/mock_dir_1'
+    #     dest = 'mock_dir_test/'
+    #     destination = shutil.copytree(src, dest)        
+    #     bm = BleurtMetric()
+    #     bsm = BERTScoreMetric()
 
-        metrics = [bm, bsm]
-        tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,)]
-        # tasks = [(Negation_Sent, )]#, (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (RepetitionTwoDim, )]
+    #     metrics = [bm, bsm]
+    #     tasks = [(Negate, ), (POSDrop, [('pos', 'ADJ')]), (Repetition, )]
+    #     # tasks = [(Negate, )]#, (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (Repetition, )]
 
 
-        self.assertEqual(len([f for f in os.listdir('mock_dir_test/') if os.path.isfile(os.path.join('mock_dir_test/', f))]), 5)
-        exp = Experiment(loc="mock_dir_test",name=None)
-        exp.setup(tasks, metrics)
-        exp.perturbate()
-        self.assertEqual(len([f for f in os.listdir('mock_dir_test/') if os.path.isfile(os.path.join('mock_dir_test/', f))]), 6)
+    #     self.assertEqual(len([f for f in os.listdir('mock_dir_test/') if os.path.isfile(os.path.join('mock_dir_test/', f))]), 5)
+    #     exp = Experiment(loc="mock_dir_test",name=None)
+    #     exp.setup(tasks, metrics)
+    #     exp.perturbate()
+    #     self.assertEqual(len([f for f in os.listdir('mock_dir_test/') if os.path.isfile(os.path.join('mock_dir_test/', f))]), 6)
 
-        shutil.rmtree(dest)
+    #     shutil.rmtree(dest)
 
-    def test_exist_dir_2(self):
-        src = 'tests/mock_dir_2'
-        dest = 'mock_dir_test/'
-        destination = shutil.copytree(src, dest)
-        bm = BleurtMetric("BLEURT", "BLEURT without filtering", ['BLEURT'])
-        bsm = BERTScoreMetric("BERTScore", "BERTScore without filtering", ['P', 'R', 'F1'])
+    # def test_exist_dir_2(self):
+    #     src = 'tests/mock_dir_2'
+    #     dest = 'mock_dir_test/'
+    #     destination = shutil.copytree(src, dest)
+    #     bm = BleurtMetric()
+    #     bsm = BERTScoreMetric()
 
-        metrics = [bm, bsm]
-        tasks = [(Negation_Sent, ), (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,)]
-        # tasks = [(Negation_Sent, )]#, (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (RepetitionTwoDim, )]
+    #     metrics = [bm, bsm]
+    #     tasks = [(Negate, ), (POSDrop, [('pos', 'ADJ')]), (Repetition, )]
+    #     # tasks = [(Negate, )]#, (POSDrop, [('pos', 'ADJ')]), (DropWordsTwoDim,),  (SwapWordsTwoDim,),  (Repetition, )]
 
-        exp = Experiment(loc="mock_dir_test",name=None)
-        exp.setup(tasks, metrics)
-        exp.perturbate()
-        exp.evaluate()
+    #     exp = Experiment(loc="mock_dir_test",name=None)
+    #     exp.setup(tasks, metrics)
+    #     exp.perturbate()
+    #     exp.evaluate()
 
-        for t in exp.tasks:
+    #     for t in exp.tasks:
             
-            f_name = "." + t.name + "_results_data.p"
-            path = os.path.join("mock_dir_test", f_name)
-            f = open(path, 'rb')
-            data = pickle.load(f)
-            f.close()
-            metrics_measured = data['metric'].unique()
+    #         f_name = "." + t.name + "_results_data.p"
+    #         path = os.path.join("mock_dir_test", f_name)
+    #         f = open(path, 'rb')
+    #         data = pickle.load(f)
+    #         f.close()
+    #         metrics_measured = data['metric'].unique()
 
-            for m in [m.name for m in metrics]:
-                self.assertTrue(m in metrics_measured)
+    #         for m in [m.name for m in metrics]:
+    #             self.assertTrue(m in metrics_measured)
 
-        shutil.rmtree(destination)
+    #     shutil.rmtree(destination)
+
+    # def test_different_dataset(self):
+    #     exp = Experiment()
+    #     data_specs = {
+    #             'name': 'wmt19',
+    #             'version': 'de-en',
+    #             'n': 2,
+    #             'seed': None,
+    #             'call': lambda data, sample: data['train'][sample]['article']}
+    #     exp.setup(tasks, metrics)
 
 
 if __name__ == '__main__':

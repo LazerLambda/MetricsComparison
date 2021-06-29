@@ -33,12 +33,12 @@ class MEMetricThBERT(Metric):
         }
 
     def get_id(self, ref :list, cand : list):
-        return ([1], [1], [1], [1])
+        return ([1] * len(cand), [1] * len(cand), [1] * len(cand), [1] * len(cand))
 
     def compute(self, ref : list, cand : list):
         super(MEMetricThBERT, self).check_input(ref, cand)
         score : dict = self.ME_scorer.estimate(cand=cand, ref=ref)
-        return ([score['Petersen']], [score['Schnabel_qul']], [score['Schnabel_div']], [score['CAPTURE']])
+        return (score['Petersen'], score['Schnabel_qul'], score['Schnabel_div'], score['CAPTURE'])
 
     @staticmethod
     def concat(acc, elem):

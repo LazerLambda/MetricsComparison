@@ -5,10 +5,9 @@ from argparse import ArgumentParser
 
 import time
 
-from Experiment import Experiment
+from ExperimentMEOrig import ExperimentMEOrig
 
 from src.metrics.MEMetric_ORG_BERT import MEMetricOrgBERT
-from src.metrics.MEMetric_TH_BERT import MEMetricThBERT
 
 from src.Tasks.Negate import Negate
 from src.Tasks.POSDrop import POSDrop
@@ -36,7 +35,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-n",
         "--number",
-        default=5,
+        default=300,
         type=int,
         dest="n",
         help="Number of texts.")
@@ -72,11 +71,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args = vars(args)
 
-    # me_orig: MEMetricOrgBERT = MEMetricOrgBERT()
-    me_th: MEMetricThBERT = MEMetricThBERT()
+    me_orig_BERT: MEMetricOrgBERT = MEMetricOrgBERT()
 
-    # metrics: list = [me_orig, me_th]
-    metrics: list = [me_th]
+    metrics: list = [me_orig_BERT]
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
@@ -86,7 +83,7 @@ if __name__ == "__main__":
         (POSDrop,),
         (Mix, )]
 
-    exp = Experiment(loc=args['dir'], name=args['title'], verbose=True)
+    exp = ExperimentMEOrig(loc=args['dir'], name=args['title'], verbose=True)
     exp.setup(
         tasks,
         metrics,
