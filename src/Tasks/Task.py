@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import pickle
 import seaborn as sns
+import random
 import spacy
 
 from functools import reduce
@@ -32,6 +33,9 @@ class Task():
         self.name: str = "Add a description instance to the __init__ method of the derived class."
         self.df: pd.DataFrame = pd.DataFrame()
         self.descr: str = "Add a description instance to the __init__ method of the derived class."
+        
+        random.seed(params['seed'])
+
 
         # data : list = params['data']
         # nlp : spacy.lang = params['nlp']
