@@ -9,7 +9,7 @@ from Experiment import Experiment
 
 from src.metrics.BERTScoreMetric import BERTScoreMetric
 from src.metrics.BleurtMetric import BleurtMetric
-from src.metrics.MEMetric import MEMetric
+# from src.metrics.MEMetric import MEMetric
 from src.metrics.BERTScoreIDFMetric import BERTScoreIDFMetric
 
 from src.Tasks.Negate import Negate
@@ -76,9 +76,9 @@ if __name__ == "__main__":
 
     bm: BleurtMetric = BleurtMetric()
     bsm: BERTScoreMetric = BERTScoreMetric()
-    mem: MEMetric = MEMetric()
+    # mem: MEMetric = MEMetric()
 
-    metrics: list = [bm, bsm, mem]
+    metrics: list = [bm, bsm]
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
@@ -98,6 +98,7 @@ if __name__ == "__main__":
             'name': 'cnn_dailymail',
             'version': '3.0.0',
             'n': args['n'],
+            'f': (lambda data, sample: data['train'][sample]['article']),
             'seed': args['seed']},
         steps={
             'steps': args['steps'],
