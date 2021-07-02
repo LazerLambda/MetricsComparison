@@ -95,6 +95,7 @@ class ExperimentMEOrig(Experiment.Experiment):
             'nlp': nlp,
             'path': self.exp_wd,
             'steps': steps,
+            'seed': data_specs['seed'],
             'pos list': pos_list},
             **dict(task[1])}) for task in tasks]
 
