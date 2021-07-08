@@ -91,6 +91,7 @@ if __name__ == "__main__":
             'name': 'cnn_dailymail',
             'version': '3.0.0',
             'n': args['n'],
+            'f': (lambda data, sample: data['train'][sample]['article']),
             'seed': args['seed']},
         steps={
             'steps': args['steps'],
