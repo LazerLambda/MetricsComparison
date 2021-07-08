@@ -18,8 +18,8 @@ class BleurtRec(Metric):
         super(BleurtRec, self).__init__()
         
         # Properties
-        self.name: str = "BLEURT"
-        self.description: str = "BLEURT, pre-trained, finetuned on WMT"
+        self.name: str = "BLEURT-Base-128"
+        self.description: str = "BLEURT-Base-128, pre-trained, finetuned on WMT"
         self.submetrics: str = ["BLEURT"]
         self.id : bool = False
 
