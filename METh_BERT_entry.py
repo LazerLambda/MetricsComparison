@@ -77,14 +77,14 @@ if __name__ == "__main__":
 
     # metrics: list = [me_orig, me_th]
     metrics: list = [me_th]
-    tasks: list = [
-        (DropWordsOneDim, ),
-        (SwapWordsOneDim, ),
-        (DropAndSwap, ),
-        (Repetition,),
-        (Negate, ),
-        (POSDrop,),
-        (Mix, )]
+    tasks: list = [(Negate, )]
+        # (DropWordsOneDim, ),
+        # (SwapWordsOneDim, ),
+        # (DropAndSwap, ),
+        # (Repetition,),
+        # (Negate, ),
+        # (POSDrop,),
+        # (Mix, )]
 
     exp = Experiment(loc=args['dir'], name=args['title'], verbose=True)
     exp.setup(
