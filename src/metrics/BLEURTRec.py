@@ -42,7 +42,7 @@ class BleurtRec(Metric):
 
 
     def compute(self, ref : list, cand : list):
-        super(BleurtMetric, self).check_input(ref, cand)
+        super(BleurtRec, self).check_input(ref, cand)
         return [self.scorer_bleurt.score(references=ref, candidates=cand)]
 
     # TODO remove
