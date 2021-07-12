@@ -1,11 +1,6 @@
 
 cd src
 
-
-echo "Downloading library specific data"
-python -m spacy download en_core_web_sm
-python -c "import nltk; nltk.download('punkt')"
-
 echo "Installing BLEURT"
 git clone https://github.com/google-research/bleurt.git
 cd bleurt

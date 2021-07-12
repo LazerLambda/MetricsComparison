@@ -9,6 +9,7 @@ from Experiment import Experiment
 
 from src.metrics.BLEURTRec import BleurtRec
 from src.metrics.BLEUScoreMetric import BLEUScoreMetric
+from src.metrics.BERTScoreMetric import BERTScoreMetric
 from src.metrics.BERTScoreIDFMetric import BERTScoreIDFMetric
 from src.metrics.BleurtMetric import BleurtMetric
 from src.metrics.MEMetric_ORG_BERT import MEMetricOrgBERT
@@ -89,7 +90,7 @@ if __name__ == "__main__":
     meorgsb: MEMetricOrgSBERT = MEMetricOrgSBERT()
 
     metrics: list = [
-        bm
+        bm,
         bsm,
         bsmidf,
         bl,
