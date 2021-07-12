@@ -1,9 +1,6 @@
 
 cd src
 
-echo "Installing python dependencies"
-pip install --upgrade pip
-pip install -r requirements.txt
 
 echo "Downloading library specific data"
 python -m spacy download en_core_web_sm
@@ -23,6 +20,7 @@ cd ..
 echo "Downloading BERT pre-trained on MNLI for Mark-Evaluate"
 cd ME/markevaluate
 mkdir bert_base_mnli
+wget https://github.com/AIPHES/emnlp19-moverscore/releases/download/0.6/MNLI_BERT.zip
 unzip MNLI_BERT.zip -d bert_base_mnli
 rm MNLI_BERT.zip
 # leaving markevaluates
