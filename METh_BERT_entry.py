@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 
 import time
 
-from Experiment import Experiment
+from ExperimentMEOrig import ExperimentMEOrig
 
 from src.metrics.MEMetric_ORG_BERT import MEMetricOrgBERT
 from src.metrics.MEMetric_TH_BERT import MEMetricThBERT
@@ -86,7 +86,7 @@ if __name__ == "__main__":
         (POSDrop,),
         (Mix, )]
 
-    exp = Experiment(loc=args['dir'], name=args['title'], verbose=True)
+    exp = ExperimentMEOrig(loc=args['dir'], name=args['title'], verbose=True)
     exp.setup(
         tasks,
         metrics,
