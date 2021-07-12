@@ -10,8 +10,6 @@ cd ..
 echo "Installing BERTScore"
 pip install bert-score
 
-cd ..
-
 echo "Downloading BERT pre-trained on MNLI for Mark-Evaluate"
 cd ME/markevaluate
 mkdir bert_base_mnli
