@@ -12,7 +12,11 @@ import spacy
 # from progress.bar import ShadyBar
 
 class ExperimentMEOrig(Experiment.Experiment):
-
+    """Specific class for Mark-Evaluate.
+    
+    Due to the computational costs, only sentences are choosen instead of 
+    texts from the dataset.
+    """
     def setup(
             self,
             tasks: list,
@@ -28,7 +32,10 @@ class ExperimentMEOrig(Experiment.Experiment):
                 'txt': 1,
                 'snt': 2},
             **kwargs) -> Experiment:
-        """Initialize the experiment."""
+        """Initialize the experiment.
+        
+        Use sentences instead of the whole text
+        """
 
         self.metrics = metrics
 

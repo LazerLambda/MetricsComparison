@@ -7,10 +7,14 @@ import time
 
 from Experiment import Experiment
 
-from src.metrics.BERTScoreMetric import BERTScoreMetric
-from src.metrics.BleurtMetric import BleurtMetric
-# from src.metrics.MEMetric import MEMetric
+from src.metrics.BLEURTRec import BleurtRec
+from src.metrics.BLEUScoreMetric import BLEUScoreMetric
 from src.metrics.BERTScoreIDFMetric import BERTScoreIDFMetric
+from src.metrics.BleurtMetric import BleurtMetric
+from src.metrics.MEMetric_ORG_BERT import MEMetricOrgBERT
+from src.metrics.MEMetric_ORG_SBERT import MEMetricOrgSBERT
+from src.metrics.MEMetric_TH_BERT import MEMetricThBERT
+from src.metrics.MEMetric_TH_SBERT import MEMetricThSBERT
 
 from src.Tasks.Negate import Negate
 from src.Tasks.POSDrop import POSDrop
@@ -76,9 +80,25 @@ if __name__ == "__main__":
 
     bm: BleurtMetric = BleurtMetric()
     bsm: BERTScoreMetric = BERTScoreMetric()
-    # mem: MEMetric = MEMetric()
+    bsmidf: BERTScoreIDFMetric = BERTScoreIDFMetric()
+    bl: BLEUScoreMetric = BLEUScoreMetric()
+    blrtrc: BleurtRec = BleurtRec()
+    methb: MEMetricThBERT = MEMetricThBERT()
+    methsb: MEMetricThSBERT = MEMetricThSBERT()
+    meorgb: MEMetricOrgBERT = MEMetricOrgBERT()
+    meorgsb: MEMetricOrgSBERT = MEMetricOrgSBERT()
 
-    metrics: list = [bm, bsm]
+    metrics: list = [
+        bm
+        bsm,
+        bsmidf,
+        bl,
+        blrtrc,
+        methb,
+        methsb,
+        meorgb,
+        meorgsb]
+
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
