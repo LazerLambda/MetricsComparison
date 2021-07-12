@@ -19,8 +19,8 @@ echo "Installing BERTScore"
 pip install bert-score
 
 cd ..
-echo "\n\nDownload CoLA classifier from this location: \033[94mhttps://drive.google.com/file/d/1Hw5na_Iy4-kGEoX60bD8vXYeJDQrzyj6/view\033[0m\n\t'-> \033[93mput the folder 'cola_model' in the GRUEN folder.\033[0m\n\n"
 
+echo "Downloading BERT pre-trained on MNLI for Mark-Evaluate"
 cd ME/markevaluate
 mkdir bert_base_mnli
 unzip MNLI_BERT.zip -d bert_base_mnli
