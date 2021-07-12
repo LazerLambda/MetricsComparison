@@ -8,6 +8,11 @@
 - python libraries:
     ``` pip install --upgrade pip
         pip install -r requirements.txt```
+- Specific data for spacy and nltk is required:
+    ```
+    python -m spacy download en_core_web_sm
+    python -c "import nltk; nltk.download('punkt')"
+    ```
 - unzip installed 
 - GNU screen install ed (required for running the experiment from the thesis)
 
