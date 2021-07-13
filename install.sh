@@ -5,6 +5,10 @@ echo "Installing BLEURT"
 git clone https://github.com/google-research/bleurt.git
 cd bleurt
 pip install .
+
+echo "Downloading BLEURT-base-128"
+wget https://storage.googleapis.com/bleurt-oss/bleurt-base-128.zip
+unzip bleurt-base-128.zip
 cd ..
 
 echo "Installing BERTScore"
@@ -15,7 +19,6 @@ cd ME/markevaluate
 mkdir bert_base_mnli
 wget https://github.com/AIPHES/emnlp19-moverscore/releases/download/0.6/MNLI_BERT.zip
 unzip MNLI_BERT.zip -d bert_base_mnli
-rm MNLI_BERT.zip
 # leaving markevaluates
 cd ..
 # leaving ME
