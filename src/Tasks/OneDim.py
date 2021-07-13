@@ -114,11 +114,6 @@ class OneDim(Task):
 
     def plot(self, ax : any, metric : any, submetric : str, **kwargs) -> None:
 
-        # palette = ["m", "g"]
-
-        # if 'color' in kwargs.keys():
-        #     palette = [kwargs['color']]
-
         palette : list = [metric.color[submetric]]
 
         result = self.df[self.df['submetric'] == submetric]
