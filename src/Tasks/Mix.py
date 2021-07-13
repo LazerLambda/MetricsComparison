@@ -16,7 +16,7 @@ from checklist.perturb import Perturb
 
 
 class Mix(OneDim):
-
+     """Class for sequential task."""
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "nlp"]
 
     def __init__(self, params : dict):
@@ -38,8 +38,7 @@ class Mix(OneDim):
 
     # override
     def perturbate(self) -> None:
-        # [(degree of deterioration, deteriorated text, indices)]
-
+        """Perturbate words."""
 
         self.step_arr : list = [
             'Original',
@@ -129,8 +128,8 @@ class Mix(OneDim):
         # self.dump(self.dmgd_texts, "dmgd")
         bar.finish()
 
-    # override
     def create_table(self, metrics : list) -> None:
+        """Create table specifically."""
         data : list = []
         for i, step in enumerate(self.step_arr):
             for metric in metrics:

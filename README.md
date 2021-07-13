@@ -1,5 +1,7 @@
 # Comparison of evaluation measures for generated text based on pre-trained language models
 
+Experimental framework for the thesis "Comparison of evaluation measures for generated text based on pre-trained language models".
+
 ## Mark-Evaluate
  - The implemented version of Mark-Evaluate is available at src/ME/
 

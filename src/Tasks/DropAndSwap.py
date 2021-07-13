@@ -14,6 +14,11 @@ from checklist.perturb import Perturb
 
 
 class DropAndSwap(TwoDim):
+    """Conjoint Deterioration.
+
+    Class to create and evaluate impairments
+    on two axis for word drop and word swap.
+    """
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "nlp", "verbose"]
 
@@ -26,6 +31,7 @@ class DropAndSwap(TwoDim):
 
     @staticmethod
     def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step_swp : float) -> tuple:
+        """Swap words."""
 
         candidates : list = []
         candidates_text : list = []
@@ -61,7 +67,7 @@ class DropAndSwap(TwoDim):
 
         for i, j in sample:
             # TODO annotate
-            tmp_t : any = tmp_l[i]
+            tmp_t: any = tmp_l[i]
             tmp_l[i] = tmp_l[j]
             tmp_l[j] = tmp_t
 
@@ -86,8 +92,7 @@ class DropAndSwap(TwoDim):
 
     @staticmethod
     def drop_single(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:
-        # TODO add upper bound for dropping
-
+        """Drop words."""
         bound : float = 1 - 1 / len(doc)
         if len(doc) == 0:
             return sentence, False
@@ -133,9 +138,8 @@ class DropAndSwap(TwoDim):
 
         return sent, True
 
-
     def perturbate(self) -> None:
-
+        """Perturbate data on two axis."""
         bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr[0]) * len(self.step_arr[1]) * len(self.texts))
     
         for step_drop in self.step_arr[0]:
@@ -180,11 +184,12 @@ class DropAndSwap(TwoDim):
         bar.finish()
 
     def __eval(self, reference : list , candidate : list, metrics : list) -> dict:
+        """Evaluate function."""
         for m in metrics:
             yield m.compute(cand=candidate, ref=reference)
 
     def evaluate(self, metrics : list) -> None:
-
+        """Evaluate given impairments on both axis. """
         if len(metrics) == 0:
             return
 
@@ -252,7 +257,9 @@ class DropAndSwap(TwoDim):
         bar.finish()
 
     def create_table(self, metrics : list) -> None:
+        """Combine results into one pandas dataframe."""
         data : list = []
+        # iterate over impairment levels on both axis
         for i, step_drp in enumerate(self.step_arr[0]):
             for j, step_swp in enumerate(self.step_arr[1]):
                 for metric in metrics:
@@ -264,6 +271,7 @@ class DropAndSwap(TwoDim):
         self.df = pd.DataFrame(data=data, columns=['metric', 'submetric', 'degree_drp', 'degree_swp', 'value'])
 
     def plot(self, ax : any, metric : any, submetric : str, **kwargs) -> None:
+        """Plot results."""
         result = self.df[self.df['submetric'] == submetric].groupby(['metric', 'submetric', 'degree_drp', 'degree_swp'], as_index=False)\
             .mean()\
             .pivot(index="degree_drp", columns="degree_swp", values="value")
@@ -277,6 +285,3 @@ class DropAndSwap(TwoDim):
             vmax=vis_data['vmax'],
             cbar_kws={"shrink": 0.25},
             ax=ax)
-        # ax.legend(bbox_to_anchor=(1,0), loc="lower left")#,  bbox_transform=fig.transFigure)
-        # ax.set_ylabel("Degree of deterioration at text level", fontsize=10)
-        # ax.set_xlabel("Degree of deterioration at sentence level", fontsize=10)

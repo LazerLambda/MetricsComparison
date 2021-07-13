@@ -112,21 +112,6 @@ class OneDim(Task):
         ret = self.df.groupby(['metric', 'submetric', 'degree']).mean()
         return ret
 
-    # TODO annotate
-    # TODO maybe different plots due to different scaling
-    # def plot(self, ax : np.ndarray, title : str, metrics : list) -> None:
-    #     submetric_list : list = reduce(lambda acc, elem: acc + list(zip(elem.submetrics, [elem.name for _ in elem.submetrics])), [metric for metric in metrics], [])
-    #     results : list = [(self.df[self.df['submetric'] == submetric]) for submetric in submetric_list]
-    #     results: tuple = results, submetric_list
-    #     sns.set_theme(style="ticks", palette="pastel")
-    #     print(ax)
-    #     for i, result in enumerate(results[0]):
-    #         sns.boxplot(x="degree", y="value",
-    #             hue="submetric", # palette=["m", "g"],
-    #             data=result, ax=ax[i])
-    #         ax.set(ylim=(-1.5, 1.5))
-    #         ax.title.set_text(title)
-
     def plot(self, ax : any, metric : any, submetric : str, **kwargs) -> None:
 
         # palette = ["m", "g"]

@@ -6,7 +6,7 @@ screen -dmS METhSBERT_R
 screen -S METhSBERT_R -p 0 -X stuff 'python3.8 METh_SBERT_entry.py -n 2000 -sd 42 -s 4 -t MESBERT2000\n'
 
 screen -dmS MEOrgBERT_R
-screen -S MEOrgBERT_R -p 0 -X stuff 'python3.8 MEOrg_BERT_entry.py -n 500 -sd 42 -s 4 -t MEOrgBERT500\n'
+screen -S MEOrgBERT_R -p 0 -X stuff 'python3.8 MEOrg_BERT_entry.py -n 100 -sd 42 -s 4 -t MEOrgBERT100\n'
 
 screen -dmS MEOrgSBERT_R
 screen -S MEOrgSBERT_R -p 0 -X stuff 'python3.8 MEOrg_SBERT_entry.py -n 2000 -sd 42 -s 4 -t MEOrgSBERT2000\n'
