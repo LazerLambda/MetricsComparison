@@ -2,6 +2,30 @@
 
 Experimental framework for the thesis "Comparison of evaluation measures for generated text based on pre-trained language models".
 
+## Experiment-Project
+
+- Experiment.py:
+    - Handling of artificial impairment, evaluation and ploting (not used here)
+- ExperimentMEOrg.py:
+    - Inherited from Experiment.py to choose sentences instead of texts.
+- Tasks/:
+    - Task.py: Base class for all other tasks
+    - OneDim.py: Base class for all other tasks, where only one dimension of damages is applied
+    - TwoDim.py: Base class for DropAndSwap.py to impair in different ways
+    - *.py: One dimensional tasks inheriting from OneDim
+- metrics/:
+    - Metric.py: Base class for all metrics, including specific information regarding the behaviour of the metric
+    - *.py: Inheriting form Metric.py.
+- Plot.py
+    - Plots the results by task
+- PlotByMetric:
+    - inherits from Plot.py, plots the results by metric
+
+- *entry.py:
+    - modified main.py entry points for the GNU screen version in run_all_screens.sh
+- main.py
+    - Entry point for the experiment
+
 ## Mark-Evaluate
  - The implemented version of Mark-Evaluate is available at src/ME/
 
