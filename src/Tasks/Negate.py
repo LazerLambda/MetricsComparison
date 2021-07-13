@@ -12,7 +12,7 @@ from checklist.perturb import Perturb
 
 
 class Negate(OneDim, Task):
-     """Class for negation task."""
+    """Class for negation task."""
 
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
 
