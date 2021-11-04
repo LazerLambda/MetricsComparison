@@ -16,7 +16,8 @@ from checklist.perturb import Perturb
 
 
 class Mix(OneDim):
-     """Class for sequential task."""
+    """Class for sequential task."""
+
     __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr", "nlp"]
 
     def __init__(self, params : dict):
