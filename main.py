@@ -3,19 +3,10 @@
 
 from argparse import ArgumentParser
 
+import importlib
 import time
 
-from Experiment import Experiment
-
-from src.metrics.BLEURTRec import BleurtRec
-from src.metrics.BLEUScoreMetric import BLEUScoreMetric
-from src.metrics.BERTScoreMetric import BERTScoreMetric
-from src.metrics.BERTScoreIDFMetric import BERTScoreIDFMetric
-from src.metrics.BleurtMetric import BleurtMetric
-from src.metrics.MEMetric_ORG_BERT import MEMetricOrgBERT
-from src.metrics.MEMetric_ORG_SBERT import MEMetricOrgSBERT
-from src.metrics.MEMetric_TH_BERT import MEMetricThBERT
-from src.metrics.MEMetric_TH_SBERT import MEMetricThSBERT
+from src.Experiment import Experiment
 
 from src.Tasks.Negate import Negate
 from src.Tasks.POSDrop import POSDrop
@@ -33,13 +24,22 @@ if __name__ == "__main__":
 
     Main script to run experiments.
     Passing of different command line arguments is supported:
+        -m / --metric : name of metric-class in the metrics.custom_metrics folder
         -n / --number : number of samples, int
         -s / --steps : number of steps, int
         -d / --dir : path to directory, str
         -t / --title : title of the experiment, str
         -sd / --seed : seed for sampling : int
+        -st / --sentence : set, if sample should consists of sentences instead of texts
     """
     parser = ArgumentParser()
+    parser.add_argument(
+        "-m",
+        "--metrics_class",
+        required = True,
+        type=str,
+        dest="m",
+        help="Name of metric-class in the metrics.custom_metrics folder.")
     parser.add_argument(
         "-n",
         "--number",
@@ -75,30 +75,22 @@ if __name__ == "__main__":
         type=int,
         dest="seed",
         help="Seed for sampling.")
+    parser.add_argument(
+        "-st",
+        "--sentence",
+        default=False,
+        action='store_true',
+        dest="st",
+        help="Set to sample sentences instead of texts.")
 
     args = parser.parse_args()
     args = vars(args)
 
-    bm: BleurtMetric = BleurtMetric()
-    bsm: BERTScoreMetric = BERTScoreMetric()
-    bsmidf: BERTScoreIDFMetric = BERTScoreIDFMetric()
-    bl: BLEUScoreMetric = BLEUScoreMetric()
-    blrtrc: BleurtRec = BleurtRec()
-    methb: MEMetricThBERT = MEMetricThBERT()
-    methsb: MEMetricThSBERT = MEMetricThSBERT()
-    meorgb: MEMetricOrgBERT = MEMetricOrgBERT()
-    meorgsb: MEMetricOrgSBERT = MEMetricOrgSBERT()
-
-    metrics: list = [
-        bm,
-        bsm,
-        bsmidf,
-        bl,
-        blrtrc,
-        methb,
-        methsb,
-        meorgb,
-        meorgsb]
+    # Import Custom Metric dynamically
+    metric_class: type = getattr(
+        importlib.import_module("src.metrics.custom_metrics." + args['m']),
+        args['m'])
+    instance: any = metric_class()
 
     tasks: list = [
         (DropWordsOneDim, ),
@@ -108,10 +100,17 @@ if __name__ == "__main__":
         (Negate, ),
         (POSDrop,),
         (Mix, )]
+    metrics: list =  [instance]
 
     # loc : str = ".all_2021-06-10_16-17-08"
     # loc : str = ".all_ME"
-    exp = Experiment(loc=args['dir'], name=args['title'], verbose=True)
+
+    exp = Experiment(
+        loc=args['dir'],
+        name=args['title'],
+        sentence=args['st'],
+        verbose=True)
+    
     exp.setup(
         tasks,
         metrics,
@@ -127,9 +126,7 @@ if __name__ == "__main__":
             'snt': args['steps']},
         pos_list=['ADJ', 'DET', 'VERB', 'NOUN'])
 
-    # access data here and setup BERTScore idf
-    # exp.metrics = metrics
-
+    # Perturbate
     start_time = time.time()
     exp.perturbate()
     print("--- Perturbation took %s seconds ---" % (time.time() - start_time))
@@ -137,4 +134,4 @@ if __name__ == "__main__":
     start_time = time.time()
     exp.evaluate()
     print("--- Evaluation took %s seconds ---" % (time.time() - start_time))
-    exp.plot([Plot])
+    # exp.plot([Plot])

@@ -1,26 +1,35 @@
+from ..Experiment import Experiment
 from ..Tasks.Task import Task
 from ..Tasks.OneDim import OneDim
 from ..Tasks.TwoDim import TwoDim 
 import numpy as np
 
 class Metric:
+    """Class name must be the same as file name."""
 
     # TODO slots
 
     limits : tuple = (0,0)
 
-    def __init__(self):
-        self.name : str = None
-        self.description : str = None
-        self.submetrics : list = None
-        self.id : bool = False
-        self.color = dict()
+    def __init__(self, **kwargs):
+        self.name: str = None
+        self.description: str = None
+        self.submetrics: list = None
+        self.id: bool = False
+        self.color: Experiment() = dict()
+        self.experiment: Experiment() = None
+
+    def set_exp(self, exp: Experiment()):
+        """Set experiment as class variable.
+        Change method to access data from experiment class.
+        """
+        self.experiment = exp
 
     def compute(self):
-        pass
+        raise NotImplementedError("compute method is not implemented.")
 
     def get_id(self, ref :list, cand : list):
-        pass
+        raise NotImplementedError("get_id method is not implemented.")
 
     @staticmethod
     def check_input(ref : list, cand : list):
@@ -42,7 +51,7 @@ class Metric:
 
     @staticmethod
     def concat():
-        pass
+        raise NotImplementedError("concat method is not implemented.")
 
     def get_vis_info(self, t : Task) -> dict():
         if isinstance(t, OneDim):
