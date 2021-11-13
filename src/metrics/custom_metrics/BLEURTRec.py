@@ -2,10 +2,7 @@ from ..Metric import Metric
 from ...Tasks.Task import Task
 from bleurt import score
 
-
-import cmasher as cmr
 import os
-import seaborn as sns
 
 class BLEURTRec(Metric):
 
@@ -28,16 +25,9 @@ class BLEURTRec(Metric):
         self.scorer_bleurt: score.BleurtScorer = score.BleurtScorer(
             checkpoint=path)
 
-        palette: sns.palettes._ColorPalette =\
-            sns.color_palette(None, 1)
-        self.color : dict = {
-            'BLEURT' : palette[0]
-        }
-
     def get_id(self, ref :list, cand : list):
         raise Exception(
             "ERROR:\n\t'-> BLEURT has to be computed.")
-
 
     def compute(self, ref : list, cand : list):
         super(BLEURTRec, self).check_input(ref, cand)

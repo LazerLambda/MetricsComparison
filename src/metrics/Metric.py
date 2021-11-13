@@ -48,20 +48,3 @@ class Metric:
 
             raise Exception(("ERROR:\n\t'->A sentence pair includes an empty sentence at position {}:"
                 "\n\tReference: {}\n\tCandidate: {}").format(index, zipped[index][0], zipped[index][1]))
-
-    @staticmethod
-    def concat():
-        raise NotImplementedError("concat method is not implemented.")
-
-    def get_vis_info(self, t : Task) -> dict():
-        if isinstance(t, OneDim):
-            return dict()
-
-        if isinstance(t, TwoDim):
-            return {
-                'color': None,
-                'vmin' : None,
-                'vmax' : None
-            }
-        
-        return None
