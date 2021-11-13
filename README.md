@@ -31,6 +31,7 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
     - To evaluate each metric, a wrapper must be written based on the class  `Metric.py`
     - All custom metric wrapper files must be stored in the `custom metrics` folder
     - All metrics related files (e.g. repositories, models etc.) should be stored in the `metrics` folder so that:
+    ```bash
     .
     ├── ...
     ├── metrics
@@ -40,6 +41,7 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
     │       ├── metric_2_wrapper.py
     │       └── ...
     └── ...
+    ``` 
 
 
 ## Mark-Evaluate
