@@ -19,7 +19,7 @@ class Metric:
         self.color: Experiment() = dict()
         self.experiment: Experiment() = None
 
-    def set_exp(self, exp: Experiment()):
+    def set_exp(self, exp: Experiment):
         """Set experiment as class variable.
         Change method to access data from experiment class.
         """

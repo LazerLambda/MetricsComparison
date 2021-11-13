@@ -22,7 +22,7 @@ class BLEURTRec(Metric):
         self.id : bool = False
 
         # path : str = "src/bleurt/bleurt/test_checkpoint" + os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        path: str = "src/metrics/bleurt/bleurt-base-128"
+        path: str = "src/metrics/bleurt/BLEURT-20"
 
         # path from parent folder of src
         self.scorer_bleurt: score.BleurtScorer = score.BleurtScorer(
