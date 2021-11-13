@@ -47,7 +47,7 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
 
 
 ## Mark-Evaluate
- - The implemented version of Mark-Evaluate is available at src/ME/
+ - The implemented version of Mark-Evaluate is available at src/metric/ME/
 
 ## Prerequisites
 - python 3.8
