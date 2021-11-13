@@ -35,6 +35,8 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
     .
     ├── ...
     ├── metrics
+    │   ├── RespectiveMetric1Folder     # Folder including prerequisites for metric_1_wrapper.py
+    │   ├── RespectiveMetric2Folder     # Folder including prerequisites for metric_2_wrapper.py
     │   ├── Metric.py                   # Parent class for metric wrappers
     │   └── custom_etrics               # Put metric wrapper python files here
     │       ├── metric_1_wrapper.py
