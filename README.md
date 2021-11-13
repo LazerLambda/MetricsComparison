@@ -4,7 +4,7 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
 
 ## Experiment-Project
 
-- Experiment.py:
+- src/Experiment.py:
     - Handling of artificial impairment, evaluation and ploting (not used here)
 - ExperimentMEOrg.py:
     - Inherited from Experiment.py to choose sentences instead of texts.
@@ -25,6 +25,26 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
     - modified main.py entry points for the GNU screen version in run_all_screens.sh
 - main.py
     - Entry point for the experiment
+
+## Folder Structure
+- The folder `metrics` entails all data to compute the metrics
+    - To evaluate each metric, a wrapper must be written based on the class  `Metric.py`
+    - All custom metric wrapper files must be stored in the `custom metrics` folder
+    - All metrics related files (e.g. repositories, models etc.) should be stored in the `metrics` folder so that:
+    ```bash
+    .
+    ├── ...
+    ├── metrics
+    │   ├── RespectiveMetric1Folder     # Folder including prerequisites for metric_1_wrapper.py
+    │   ├── RespectiveMetric2Folder     # Folder including prerequisites for metric_2_wrapper.py
+    │   ├── Metric.py                   # Parent class for metric wrappers
+    │   └── custom_etrics               # Put metric wrapper python files here
+    │       ├── metric_1_wrapper.py
+    │       ├── metric_2_wrapper.py
+    │       └── ...
+    └── ...
+    ``` 
+
 
 ## Mark-Evaluate
  - The implemented version of Mark-Evaluate is available at src/ME/
