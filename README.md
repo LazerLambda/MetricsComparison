@@ -33,12 +33,12 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
     - All metrics related files (e.g. repositories, models etc.) should be stored in the `metrics` folder so that:
         .
         ├── ...
-        ├── metrics                         
+        ├── metrics
         │   ├── Metric.py                   # Parent class for metric wrappers
         │   └── custom_etrics               # Put metric wrapper python files here
-        │       ├── metric_1_wrapper.py     
+        │       ├── metric_1_wrapper.py
         │       ├── metric_2_wrapper.py
-        │       └── ...                    
+        │       └── ...
         └── ...
 
 
