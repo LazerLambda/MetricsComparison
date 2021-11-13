@@ -6,8 +6,6 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
 
 - src/Experiment.py:
     - Handling of artificial impairment, evaluation and ploting (not used here)
-- ExperimentMEOrg.py:
-    - Inherited from Experiment.py to choose sentences instead of texts.
 - Tasks/:
     - Task.py: Base class for all other tasks
     - OneDim.py: Base class for all other tasks, where only one dimension of damages is applied
@@ -15,7 +13,9 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
     - *.py: One dimensional tasks inheriting from OneDim
 - metrics/:
     - Metric.py: Base class for all metrics, including specific information regarding the behaviour of the metric
-    - *.py: Inheriting form Metric.py.
+    - Prerequisites for the used metrics
+    - custom_metrics/
+        - *.py: Inheriting form Metric.py.
 - Plot.py
     - Plots the results by task
 - PlotByMetric:
