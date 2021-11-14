@@ -18,8 +18,7 @@ class NUBIAMetric(Metric):
 
     def compute(self, ref: list, cand: list) -> list:
         super(NUBIAMetric, self).check_input(ref, cand)
-        score = [[self.nubia.score(ref, cand)] for ref, cand in zip(ref, cand)]
-        print(score)
+        score: list = [[self.nubia.score(ref, cand)] for ref, cand in zip(ref, cand)]
         return score
             
 
