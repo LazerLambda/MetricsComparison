@@ -26,6 +26,10 @@ class Metric:
         self.experiment = exp
 
     def compute(self):
+        """Compute results.
+        Must be returned as a list of lists, depending on the
+        number of important submetrics: [[result_1, result_2,...],...]
+        """
         raise NotImplementedError("compute method is not implemented.")
 
     def get_id(self, ref :list, cand : list):
