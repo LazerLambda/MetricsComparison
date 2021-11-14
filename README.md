@@ -75,7 +75,7 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
 
 - BLEURT (https://github.com/google-research/bleurt) must be downloaded into src/ and installed as described in the BLEURT README
 
-## Re-Running the experiment
+## Re-Run the experiment
 
 The experiment was run using the "run_all_screens.sh" script. This resutls will be written in hidden folders bearing the specific name of the experiment run.
     
