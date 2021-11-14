@@ -6,8 +6,6 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
 
 - src/Experiment.py:
     - Handling of artificial impairment, evaluation and ploting (not used here)
-- ExperimentMEOrg.py:
-    - Inherited from Experiment.py to choose sentences instead of texts.
 - Tasks/:
     - Task.py: Base class for all other tasks
     - OneDim.py: Base class for all other tasks, where only one dimension of damages is applied
@@ -15,7 +13,9 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
     - *.py: One dimensional tasks inheriting from OneDim
 - metrics/:
     - Metric.py: Base class for all metrics, including specific information regarding the behaviour of the metric
-    - *.py: Inheriting form Metric.py.
+    - Prerequisites for the used metrics
+    - custom_metrics/
+        - *.py: Inheriting form Metric.py.
 - Plot.py
     - Plots the results by task
 - PlotByMetric:
@@ -47,7 +47,7 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
 
 
 ## Mark-Evaluate
- - The implemented version of Mark-Evaluate is available at src/ME/
+ - The implemented version of Mark-Evaluate is available at src/metric/ME/
 
 ## Prerequisites
 - python 3.8
@@ -75,7 +75,7 @@ Experimental framework for the thesis "Comparison of evaluation measures for gen
 
 - BLEURT (https://github.com/google-research/bleurt) must be downloaded into src/ and installed as described in the BLEURT README
 
-## Re-Running the experiment
+## Re-Run the experiment
 
 The experiment was run using the "run_all_screens.sh" script. This resutls will be written in hidden folders bearing the specific name of the experiment run.
     
