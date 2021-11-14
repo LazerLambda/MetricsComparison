@@ -21,7 +21,7 @@ screen -dmS BERTScore_R
 screen -S BERTScore_R -p 0 -X stuff 'python3.8 main.py -m BERTScoreMetric -n 2000 -sd 42 -s 4 -t BERTScore2000\n'
 
 screen -dmS BERTScoreIDF_R
-sscreen -S BERTScoreIDF_R -p 0 -X stuff 'python3.8 main.py -m BERTScoreIDFMetric -n 2000 -sd 42 -s 4 -t BERTScoreIDF2000\n'
+screen -S BERTScoreIDF_R -p 0 -X stuff 'python3.8 main.py -m BERTScoreIDFMetric -n 2000 -sd 42 -s 4 -t BERTScoreIDF2000\n'
 
 screen -dmS NUBIA
-sscreen -S NUBIA -p 0 -X stuff 'python3.8 main.py -m NUBIAMetric -n 2000 -sd 42 -s 4 -t NUBIA2000\n'
+screen -S NUBIA -p 0 -X stuff 'python3.8 main.py -m NUBIAMetric -n 2000 -sd 42 -s 4 -t NUBIA2000\n'
