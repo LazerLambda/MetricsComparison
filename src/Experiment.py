@@ -26,6 +26,7 @@ class Experiment:
             self,
             name: str = None,
             loc: str = None,
+            sentence: bool = False,
             verbose: bool = True):
         """Experiment Inialization."""
         self.tasks: list = []
@@ -33,6 +34,7 @@ class Experiment:
         self.data: list = []
         self.verbose: bool = verbose
         self.result_files: list = []
+        self.sentence: bool = sentence
 
         # create directory if not specified
         if loc is None:
@@ -131,10 +133,28 @@ class Experiment:
         # Prepare reference data
         self.texts: list = []
         nlp = spacy.load('en_core_web_sm')
-        for text in self.data:
-            sentences: list = nltk.sent_tokenize(text)
-            doc: list = list(nlp.pipe(sentences))
-            self.texts.append((sentences, doc))
+    
+        if self.sentence:
+            sent_candidates: list = []
+            for text in self.data:
+                sentences: list = nltk.sent_tokenize(text)
+                for sentence in sentences:
+                    doc = nlp(sentence)
+                    if len(doc) > 6 and len(doc) < 50:
+                        sent_candidates.append(([sentence], [doc]))
+            
+            sample: np.ndarray = np.random.choice(
+                np.arange(
+                    len(sent_candidates)),
+                    data_specs['n'])
+
+            for i in sample:
+                self.texts.append(sent_candidates[i])
+        else: 
+            for text in self.data:
+                sentences: list = nltk.sent_tokenize(text)
+                doc: list = list(nlp.pipe(sentences))
+                self.texts.append((sentences, doc))
 
         # prepare task configuration
         # TODO standardize pos_list
@@ -154,6 +174,9 @@ class Experiment:
 
         for task, param in tasks:
             self.tasks.append(task(param))
+
+        for metric in self.metrics:
+            metric.set_exp(self)
 
         return self
 
