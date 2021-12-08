@@ -4,7 +4,7 @@
 
 Philipp Koch
 """
-from .. import Metric
+from ..Metric import Metric
 
 from moverscore_v2 import get_idf_dict, word_mover_score
 
