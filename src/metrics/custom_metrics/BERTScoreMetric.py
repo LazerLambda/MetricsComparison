@@ -15,7 +15,10 @@ class BERTScoreMetric(Metric):
         self.submetrics: list = ["R", "P", "F1"]
         self.id : bool = True
 
-        self.scorer_bertscore: BERTScorer = BERTScorer(lang="en")
+        self.scorer_bertscore: BERTScorer = BERTScorer(
+            lang="en",
+            rescale_with_baseline=True,
+            use_fast_tokenizer=True)
 
 
     def get_id(self, ref :list, cand : list):
