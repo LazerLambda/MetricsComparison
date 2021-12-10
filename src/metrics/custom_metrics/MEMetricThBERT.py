@@ -17,7 +17,10 @@ class MEMetricThBERT(Metric):
         self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
         self.id : bool = True
 
-        self.ME_scorer : ME = ME(sent_transf=False, sntnc_lvl=True, orig=False)
+        self.ME_scorer : ME = ME(
+            sent_transf=False,
+            sntnc_lvl=True,
+            orig=False)
 
     def get_id(self, ref :list, cand : list):
         """Return id value for each word and each metric."""

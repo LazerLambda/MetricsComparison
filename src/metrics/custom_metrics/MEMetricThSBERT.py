@@ -14,10 +14,15 @@ class MEMetricThSBERT(Metric):
         # Properties
         self.name: str = "Mark-Evaluate (Theorem based, SBERT)"
         self.description: str = "ME-Petersen, ME*-Schnabel, ME*-CAPTURE"
-        self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
+        # self.submetrics : list = ['Petersen', 'Schnabel_qul', 'Schnabel_div', 'CAPTURE']
+        self.submetrics : list = ['Petersen']
         self.id : bool = True
 
-        self.ME_scorer : ME = ME(sent_transf=True, orig=False)
+        self.ME_scorer : ME = ME(
+            metric=['Petersen'],
+            sntnc_lvl=False,
+            sent_transf=True,
+            orig=False)
 
     def get_id(self, ref :list, cand : list):
         """Return id value for each word and each metric."""
@@ -26,4 +31,6 @@ class MEMetricThSBERT(Metric):
     def compute(self, ref : list, cand : list):
         super(MEMetricThSBERT, self).check_input(ref, cand)
         score : dict = self.ME_scorer.estimate(cand=cand, ref=ref)
-        return ([score['Petersen']], [score['Schnabel_qul']], [score['Schnabel_div']], [score['CAPTURE']])
+        print(score['Petersen'])
+        # return ([score['Petersen']], [score['Schnabel_qul']], [score['Schnabel_div']], [score['CAPTURE']])
+        return [[score['Petersen']]]
