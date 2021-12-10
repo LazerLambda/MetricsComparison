@@ -8,6 +8,8 @@ from ..Metric import Metric
 
 from moverscore_v2 import get_idf_dict, word_mover_score
 
+import numpy as np
+
 
 class MoverScoreMetric(Metric):
     """Class to organize Mover-ScoreMetric."""
@@ -36,16 +38,22 @@ class MoverScoreMetric(Metric):
 
         IDF-Scores are computed on each sentence, since the corpus
         consists of one sentence each.
+
+        Returns
+        -------
+        scores : list
+            list of list with the computed scores for each sentence.
         """
         super(MoverScoreMetric, self).check_input(ref, cand)
 
         idf_dict_ref: dict = get_idf_dict(ref)
         idf_dict_cnd: dict = get_idf_dict(cand)
 
-        return word_mover_score(
+        scores: list = word_mover_score(
             ref,
             cand,
             idf_dict_ref,
             idf_dict_cnd,
             n_gram=1,
             remove_subwords=False)
+        return [scores]
