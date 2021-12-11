@@ -44,7 +44,7 @@ class Task():
         #     doc: list = list(nlp.pipe(sentences))
         #     self.texts.append((sentences, doc))
 
-    def set_steps(self, steps : dict) -> Task:
+    def set_steps(self, steps : dict):
         return self
 
     def perturbate_1d(self, f : callable) -> None:

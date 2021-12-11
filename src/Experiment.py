@@ -94,7 +94,7 @@ class Experiment:
                 'steps': 1,
                 'txt': 1,
                 'snt': 2},
-            **kwargs) -> Experiment:
+            **kwargs):
         """Initialize the experiment."""
         
 
@@ -178,7 +178,7 @@ class Experiment:
 
         return self
 
-    def perturbate(self, overwrite: bool = False) -> Experiment:
+    def perturbate(self, overwrite: bool = False):
         """Damage the samples in different tasks."""
         for task in self.tasks:
             f_name: str = "." + task.name + "_perturbated_data.p"
@@ -202,7 +202,7 @@ class Experiment:
         pickle.dump(data, f)
         f.close()
 
-    def evaluate(self, overwrite: bool = False) -> Experiment:
+    def evaluate(self, overwrite: bool = False):
         """Do evaluate the damaged texts against the original ones."""
         for task in self.tasks:
 
@@ -243,7 +243,7 @@ class Experiment:
 
             assert task.df.size != 0
 
-    def plot(self, p_list: list) -> Experiment:
+    def plot(self, p_list: list):
         """Do plot the results."""
         assert isinstance(p_list, list)
 
