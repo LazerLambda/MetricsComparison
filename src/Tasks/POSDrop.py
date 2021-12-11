@@ -45,7 +45,7 @@ class POSDrop(OneDim):
         
         diff : int = 0
         for i in candidates:
-            bounds : tuple = doc[i].idx - diff, doc[i].idx + len(doc[i].text) - diff
+            bounds : tuple = (doc[i].idx - diff, doc[i].idx + len(doc[i].text) - diff)
             sentence : str = sentence[0:bounds[0]] + sentence[(bounds[1] + 1)::]
             diff += len(doc[i].text) + 1
         
