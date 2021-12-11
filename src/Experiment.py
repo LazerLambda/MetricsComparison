@@ -1,7 +1,5 @@
 """Experiment class. Manage the experiment process as well as the files."""
 
-from __future__ import annotations
-
 import datetime
 import nltk
 import numpy as np
