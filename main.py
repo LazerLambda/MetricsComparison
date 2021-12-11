@@ -95,7 +95,7 @@ if __name__ == "__main__":
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
-        (DropAndSwap, ),
+        # (DropAndSwap, ),
         (Repetition,),
         (Negate, ),
         (POSDrop,),
