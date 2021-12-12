@@ -25,3 +25,6 @@ screen -S BERTScoreIDF_R -p 0 -X stuff 'python3.8 main.py -m BERTScoreIDFMetric 
 
 screen -dmS NUBIA
 screen -S NUBIA -p 0 -X stuff 'python3.8 main.py -m NUBIAMetric -n 2000 -sd 42 -s 4 -t NUBIA2000\n'
+
+screen -dmS MoverScore
+screen -S MoverScore -p 0 -X stuff 'python3 main.py -m MoverScoreMetric -n 2000 -sd 42 -s 4 -t MoverScoreMetric2000\n'
