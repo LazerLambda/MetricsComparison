@@ -44,8 +44,7 @@ class BERTScoreIDFMetric(Metric):
             model_type="microsoft/deberta-xlarge-mnli",
             idf=True,
             idf_sents=ref,
-            rescale_with_baseline=True,
-            use_fast_tokenizer=True)
+            rescale_with_baseline=True)
 
 
     def get_id(self, ref :list, cand : list):

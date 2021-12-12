@@ -18,8 +18,7 @@ class BERTScoreMetric(Metric):
         self.scorer_bertscore: BERTScorer = BERTScorer(
             lang="en",
             model_type="microsoft/deberta-xlarge-mnli",
-            rescale_with_baseline=True,
-            use_fast_tokenizer=True)
+            rescale_with_baseline=True)
 
 
     def get_id(self, ref :list, cand : list):
