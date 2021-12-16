@@ -1,6 +1,6 @@
 [submodule "ME"]
 	path = src/metrics/ME
 	url = https://github.com/LazerLambda/ME
-[submodule "src/ME"]
-	path = src/metrics/ME
-	url = https://github.com/LazerLambda/ME
+[submodule "nubia"]
+	path = src/metrics/nubia
+	url = https://github.com/LazerLambda/nubia
