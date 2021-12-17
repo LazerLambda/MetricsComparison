@@ -17,7 +17,7 @@ class BERTScoreMetric(Metric):
 
         self.scorer_bertscore: BERTScorer = BERTScorer(
             lang="en",
-            model_type="microsoft/deberta-xlarge-mnli",
+            model_type="microsoft/deberta-v2-xlarge-mnli",
             rescale_with_baseline=True)
 
 

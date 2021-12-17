@@ -98,8 +98,8 @@ if __name__ == "__main__":
         # (DropAndSwap, ),
         (Repetition,),
         (Negate, ),
-        (POSDrop,),
-        (Mix, )]
+        (POSDrop,),]
+        # (Mix, )]
     metrics: list =  [instance]
 
     # loc : str = ".all_2021-06-10_16-17-08"

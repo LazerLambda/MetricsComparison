@@ -9,7 +9,7 @@ from ..Metric import Metric
 from moverscore_v2 import get_idf_dict, word_mover_score
 
 import numpy as np
-
+import torch
 
 class MoverScoreMetric(Metric):
     """Class to organize Mover-ScoreMetric."""
@@ -56,4 +56,5 @@ class MoverScoreMetric(Metric):
             idf_dict_cnd,
             n_gram=1,
             remove_subwords=False)
+        torch.cuda.empty_cache()
         return [scores]
