@@ -3,6 +3,8 @@ from bert_score import BERTScorer
 
 from itertools import chain
 
+import torch
+
 
 class BERTScoreIDFMetric(Metric):
 

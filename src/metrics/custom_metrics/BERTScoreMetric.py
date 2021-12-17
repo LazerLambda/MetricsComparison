@@ -1,6 +1,7 @@
 from ..Metric import Metric
 from bert_score import BERTScorer
 
+import torch
 
 class BERTScoreMetric(Metric):
 
