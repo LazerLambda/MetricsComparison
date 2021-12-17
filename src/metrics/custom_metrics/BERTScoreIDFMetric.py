@@ -41,7 +41,7 @@ class BERTScoreIDFMetric(Metric):
         ref: list = list(chain.from_iterable(ref))
         self.scorer_bertscore: BERTScorer = BERTScorer(
             lang="en",
-            model_type="microsoft/deberta-v2-xlarge-mnli",
+            model_type="microsoft/deberta-xlarge-mnli",
             idf=True,
             idf_sents=ref,
             rescale_with_baseline=True,
