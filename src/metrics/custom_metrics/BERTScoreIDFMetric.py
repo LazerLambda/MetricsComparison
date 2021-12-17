@@ -55,4 +55,6 @@ class BERTScoreIDFMetric(Metric):
 
     def compute(self, ref : list, cand : list):
         assert len(ref) == len(cand)
-        return self.scorer_bertscore.score(cand, ref)
+        result = self.scorer_bertscore.score(cand, ref)
+        torch.cuda.empty_cache()
+        return result
