@@ -20,7 +20,7 @@ class BERTScoreMetric(Metric):
             lang="en",
             model_type="microsoft/deberta-xlarge-mnli",
             rescale_with_baseline=True,
-            batch_size=32,
+            batch_size=16,
             use_fast_tokenizer=False)
 
 
