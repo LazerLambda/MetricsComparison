@@ -24,9 +24,11 @@ class MEMetricThBERT(Metric):
 
     def get_id(self, ref :list, cand : list):
         """Return id value for each word and each metric."""
+        print(([1] * len(cand)))
         return ([1] * len(cand))
 
     def compute(self, ref : list, cand : list):
         super(MEMetricThBERT, self).check_input(ref, cand)
         score : dict = self.ME_scorer.estimate(cand=cand, ref=ref)
-        return (score['Petersen'])
+        print([score['Petersen']])
+        return [score['Petersen']]
