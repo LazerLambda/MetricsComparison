@@ -21,6 +21,7 @@ class BERTScoreMetric(Metric):
             model_type="microsoft/deberta-xlarge-mnli",
             rescale_with_baseline=True,
             batch_size=16,
+            device='cpu',
             use_fast_tokenizer=False)
 
 

@@ -46,7 +46,8 @@ class BERTScoreIDFMetric(Metric):
             model_type="microsoft/deberta-xlarge-mnli",
             idf=True,
             idf_sents=ref,
-            batch_size=16,
+            batch_size=1,
+            device='cpu',
             rescale_with_baseline=True,
             use_fast_tokenizer=False)
 
