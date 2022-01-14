@@ -25,7 +25,8 @@ class Experiment:
             name: str = None,
             loc: str = None,
             sentence: bool = False,
-            verbose: bool = True):
+            verbose: bool = True,
+            scale_down: int = None):
         """Experiment Inialization."""
         self.tasks: list = []
         self.metrics: list = []
@@ -33,6 +34,7 @@ class Experiment:
         self.verbose: bool = verbose
         self.result_files: list = []
         self.sentence: bool = sentence
+        self.scale_down: bool = scale_down
 
         # create directory if not specified
         if loc is None:
@@ -65,8 +67,13 @@ class Experiment:
 
         data: dataset_dict.DatasetDict = load_dataset(name, vers)
         sample: np.ndarray = np.random.choice(np.arange(len(data['train'])), n)
-        # self.data: list = \
-        #     data['train'][sample]['article']  # TODO make property generics
+
+        # for smaller sample sizes, draw from initial sample
+        if self.scale_down is not None:
+            sample = np.random.choice(sample, self.scale_down)
+            if self.verbose:
+                print("Sample scaled down to %d." % self.scale_down)
+
         self.data: list = f(data, sample)
         print("Sample chosen: " + str(sample)) if self.verbose else None
 

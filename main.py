@@ -82,6 +82,13 @@ if __name__ == "__main__":
         action='store_true',
         dest="st",
         help="Set to sample sentences instead of texts.")
+    parser.add_argument(
+        "-sc",
+        "--scale-down",
+        default=None,
+        type=int,
+        dest="sc",
+        help="Scale sample down (if computational costs are too high).")
 
     args = parser.parse_args()
     args = vars(args)
@@ -109,7 +116,8 @@ if __name__ == "__main__":
         loc=args['dir'],
         name=args['title'],
         sentence=args['st'],
-        verbose=True)
+        verbose=True,
+        scale_down=args['sc'])
     
     exp.setup(
         tasks,
