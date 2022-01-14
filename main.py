@@ -87,6 +87,13 @@ if __name__ == "__main__":
         type=int,
         dest="sc",
         help="Scale sample down (if computational costs are too high).")
+    parser.add_argument(
+        "-stn",
+        "--sentence-n",
+        default=None,
+        type=int,
+        dest="stn",
+        help="Number of sentences, if -st option is chosen.")
 
     args = parser.parse_args()
     args = vars(args)
@@ -115,7 +122,8 @@ if __name__ == "__main__":
         name=args['title'],
         sentence=args['st'],
         verbose=True,
-        scale_down=args['sc'])
+        scale_down=args['sc'],
+        sentence_n=args['stn'])
     
     exp.setup(
         tasks,

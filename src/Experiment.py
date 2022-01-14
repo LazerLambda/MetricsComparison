@@ -26,7 +26,8 @@ class Experiment:
             loc: str = None,
             sentence: bool = False,
             verbose: bool = True,
-            scale_down: int = None):
+            scale_down: int = None,
+            sentence_n: int = None):
         """Experiment Inialization."""
         self.tasks: list = []
         self.metrics: list = []
@@ -35,6 +36,7 @@ class Experiment:
         self.result_files: list = []
         self.sentence: bool = sentence
         self.scale_down: bool = scale_down
+        self.sentence_n: bool = sentence_n
 
         # create directory if not specified
         if loc is None:
@@ -140,6 +142,7 @@ class Experiment:
         nlp = spacy.load('en_core_web_sm')
     
         if self.sentence:
+            # Sample sentences, if sentence option is chosen
             sent_candidates: list = []
             for text in self.data:
                 sentences: list = nltk.sent_tokenize(text)
@@ -148,10 +151,11 @@ class Experiment:
                     if len(doc) > 6 and len(doc) < 50:
                         sent_candidates.append(([sentence], [doc]))
             
+            # choose indices
             sample: np.ndarray = np.random.choice(
                 np.arange(
                     len(sent_candidates)),
-                    data_specs['n'])
+                    self.sentence_n)
 
             for i in sample:
                 self.texts.append(sent_candidates[i])
