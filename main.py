@@ -13,8 +13,6 @@ from src.Tasks.POSDrop import POSDrop
 from src.Tasks.DropWordsOneDim import DropWordsOneDim
 from src.Tasks.Repetition import Repetition
 from src.Tasks.SwapWordsOneDim import SwapWordsOneDim
-from src.Tasks.DropAndSwap import DropAndSwap
-from src.Tasks.Mix import Mix
 
 from src.Plot import Plot
 from src.PlotByMetric import PlotByMetric

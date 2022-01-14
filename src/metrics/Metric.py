@@ -1,7 +1,6 @@
 from ..Experiment import Experiment
 from ..Tasks.Task import Task
-from ..Tasks.OneDim import OneDim
-from ..Tasks.TwoDim import TwoDim 
+from ..Tasks.OneDim import OneDim 
 import numpy as np
 
 class Metric:
