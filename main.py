@@ -105,8 +105,8 @@ if __name__ == "__main__":
     instance: any = metric_class()
 
     tasks: list = [
-        # (DropWordsOneDim, ),
-        # (SwapWordsOneDim, ),
+        (DropWordsOneDim, ),
+        (SwapWordsOneDim, ),
         # (DropAndSwap, ),
         (Repetition,),
         (Negate, ),
