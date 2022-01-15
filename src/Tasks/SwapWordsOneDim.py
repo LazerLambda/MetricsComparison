@@ -1,3 +1,4 @@
+"""Word Swap Module."""
 from .OneDim import OneDim
 
 import copy
@@ -10,25 +11,49 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
+
 class SwapWordsOneDim(OneDim):
+    """Class for word swap task."""
 
+    __slots__ = [
+        "texts", "results", "dmgd_texts",
+        "combined_results", "step_arr", "path",
+        "name", "df", "descr"]
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
-
-    def __init__(self, params : dict):
+    def __init__(self, params: dict):
+        """Initialize."""
         super(SwapWordsOneDim, self).__init__(params=params)
         self.name = "swapped_words"
         self.descr = "Swapped words"
 
     @staticmethod
-    def swap_pairs(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:
+    def swap_pairs(
+            sentence: str,
+            doc: spacy.tokens.doc.Doc,
+            step: float) -> tuple:
+        """Drop words.
 
+        Params
+        ------
+        sentence : str
+            sentence
+        doc : spacy.tokens.doc.Doc
+            spacy document containing linguistic information
+            about the sentence
+        step : float
+            fraction of how many tokens are to be swapped
+
+        Returns
+        -------
+        tuple
+            Tuple including sentence and success of modification
+        """
         # identity category
         if step == 0:
             return sentence, True
 
-        candidates : list = []
-        candidates_text : list = []
+        candidates: list = []
+        candidates_text: list = []
 
         for i in range(len(doc)):
 
@@ -36,7 +61,8 @@ class SwapWordsOneDim(OneDim):
 
             # TODO maybe exclude first token ?
 
-            if doc[i].pos_ != "PUNCT" and not lower_text in candidates_text:
+            if doc[i].pos_ != "PUNCT" and\
+                    lower_text not in candidates_text:
                 candidates.append(i)
                 candidates_text.append(lower_text)
             else:
@@ -46,22 +72,23 @@ class SwapWordsOneDim(OneDim):
             return sentence, False
 
         step = 0.999999 if step == 1.0 else step
-        upper : int = math.floor(step * len(candidates))
+        upper: int = math.floor(step * len(candidates))
         if upper % 2 == 1:
             upper += 1
 
         assert int(upper) <= len(candidates)
 
-        sample : list = random.sample(candidates, upper)
-        sample = [(sample[2 * i], sample[2 * i + 1]) for i in range(upper // 2)]
+        sample: list = random.sample(candidates, upper)
+        sample = [
+            (sample[2 * i], sample[2 * i + 1])
+            for i in range(upper // 2)]
 
-        tmp_l : list = []
+        tmp_l: list = []
         for i in range(len(doc)):
             tmp_l.append(doc[i])
 
         for i, j in sample:
-            # TODO annotate
-            tmp_t : any = tmp_l[i]
+            tmp_t: any = tmp_l[i]
             tmp_l[i] = tmp_l[j]
             tmp_l[j] = tmp_t
 
@@ -83,31 +110,35 @@ class SwapWordsOneDim(OneDim):
             return sent, False
 
         return sent, True
-    
-    def perturbate(self) -> None:
 
-        bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
+    def perturbate(self) -> None:
+        """Perturbate sentences."""
+        bar: ShadyBar = ShadyBar(
+            message="Perturbating " + self.name + " ",
+            max=len(self.step_arr) * len(self.texts))
 
         for step in self.step_arr:
-            ret_tuple : tuple = ([], []) 
+            ret_tuple: tuple = ([], [])
             for _, (sentences, doc) in enumerate(self.texts):
-                
-                sentences : list = copy.deepcopy(sentences)
-                indices : list = []
+
+                sentences: list = copy.deepcopy(sentences)
+                indices: list = []
 
                 for i in range(len(sentences)):
-                    
+
                     if len(doc[i]) < 2:
                         continue
 
                     new_sentence = sentences[i]
-                    new_sentence, success = self.swap_pairs(sentence=sentences[i], doc=doc[i], step=step)
+                    new_sentence, success = self.swap_pairs(
+                        sentence=sentences[i],
+                        doc=doc[i],
+                        step=step)
 
                     if success:
                         indices.append(i)
                         sentences[i] = new_sentence
-                    
-                
+
                 ret_tuple[0].append(sentences)
                 ret_tuple[1].append(indices)
                 bar.next()

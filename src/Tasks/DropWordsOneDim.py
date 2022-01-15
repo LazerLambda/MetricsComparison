@@ -1,3 +1,4 @@
+"""Word Drop Module."""
 from .OneDim import OneDim
 
 import copy
@@ -10,28 +11,51 @@ import spacy
 from progress.bar import ShadyBar
 from checklist.perturb import Perturb
 
+
 class DropWordsOneDim(OneDim):
     """Class for word drop task."""
 
-    __slots__ = ["texts", "results", "dmgd_texts", "combined_results", "step_arr", "path", "name", "df", "descr"]
+    __slots__ = [
+        "texts", "results", "dmgd_texts",
+        "combined_results", "step_arr", "path",
+        "name", "df", "descr"]
 
-    def __init__(self, params : dict):
+    def __init__(self, params: dict):
+        """Initialize."""
         super(DropWordsOneDim, self).__init__(params=params)
         self.name = "dropped_words"
         self.descr = "Dropped words"
 
     @staticmethod
-    def drop_single(sentence : str, doc : spacy.tokens.doc.Doc, step : float) -> tuple:
-        """Drop words."""
+    def drop_single(
+            sentence: str,
+            doc: spacy.tokens.doc.Doc,
+            step: float) -> tuple:
+        """Drop words.
 
-        bound : float = 1 - 1 / len(doc)
+        Params
+        ------
+        sentence : str
+            sentence
+        doc : spacy.tokens.doc.Doc
+            spacy document containing linguistic information
+            about the sentence
+        step : float
+            fraction of how many tokens are to be dropped
+
+        Returns
+        -------
+        tuple
+            Tuple including sentence and success of modification
+        """
+        bound: float = 1 - 1 / len(doc)
         if len(doc) == 0:
             return sentence, False
 
         if step == 0:
             return sentence, True
 
-        candidates : list = []
+        candidates: list = []
         for i in range(len(doc)):
             if doc[i].pos_ != "PUNCT":
                 candidates.append(i)
@@ -42,10 +66,10 @@ class DropWordsOneDim(OneDim):
         if step > bound:
             step = bound
 
-        prop : float = int(math.floor(step * len(candidates)))
-        drop_list : list = random.sample(candidates, k=prop)
+        prop: float = int(math.floor(step * len(candidates)))
+        drop_list: list = random.sample(candidates, k=prop)
 
-        sent : str = ""
+        sent: str = ""
 
         for i in range(len(doc)):
 
@@ -71,31 +95,35 @@ class DropWordsOneDim(OneDim):
             return sent, False
 
         return sent, True
-    
+
     def perturbate(self) -> None:
         """Perturbate sentences."""
-        bar : ShadyBar = ShadyBar(message="Perturbating " + self.name + " ", max=len(self.step_arr) * len(self.texts))
+        bar: ShadyBar = ShadyBar(
+            message="Perturbating " + self.name + " ",
+            max=len(self.step_arr) * len(self.texts))
 
         for step in self.step_arr:
-            ret_tuple : tuple = ([], [])
+            ret_tuple: tuple = ([], [])
             for _, (sentences, doc) in enumerate(self.texts):
-                
-                sentences : list = copy.deepcopy(sentences)
-                indices : list = []
+
+                sentences: list = copy.deepcopy(sentences)
+                indices: list = []
 
                 for i in range(len(sentences)):
-                    
+
                     if len(doc[i]) < 2:
                         continue
 
                     new_sentence = sentences[i]
-                    new_sentence, success = self.drop_single(sentence=sentences[i], doc=doc[i], step=step)
+                    new_sentence, success = self.drop_single(
+                        sentence=sentences[i],
+                        doc=doc[i],
+                        step=step)
 
                     if success:
                         indices.append(i)
                         sentences[i] = new_sentence
-                    
-                
+
                 ret_tuple[0].append(sentences)
                 ret_tuple[1].append(indices)
                 bar.next()

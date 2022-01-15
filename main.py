@@ -14,27 +14,26 @@ from src.Tasks.DropWordsOneDim import DropWordsOneDim
 from src.Tasks.Repetition import Repetition
 from src.Tasks.SwapWordsOneDim import SwapWordsOneDim
 
-from src.Plot import Plot
-from src.PlotByMetric import PlotByMetric
-
 if __name__ == "__main__":
     """ Main script
 
     Main script to run experiments.
     Passing of different command line arguments is supported:
-        -m / --metric : name of metric-class in the metrics.custom_metrics folder
+        -m / --metric : name of metric-class in
+            the metrics.custom_metrics folder
         -n / --number : number of samples, int
         -s / --steps : number of steps, int
         -d / --dir : path to directory, str
         -t / --title : title of the experiment, str
         -sd / --seed : seed for sampling : int
-        -st / --sentence : set, if sample should consists of sentences instead of texts
+        -st / --sentence : set, if sample should
+            consists of sentences instead of texts
     """
     parser = ArgumentParser()
     parser.add_argument(
         "-m",
         "--metrics_class",
-        required = True,
+        required=True,
         type=str,
         dest="m",
         help="Name of metric-class in the metrics.custom_metrics folder.")
@@ -107,15 +106,10 @@ if __name__ == "__main__":
     tasks: list = [
         (DropWordsOneDim, ),
         (SwapWordsOneDim, ),
-        # (DropAndSwap, ),
         (Repetition,),
         (Negate, ),
-        (POSDrop,),]
-        # (Mix, )]
-    metrics: list =  [instance]
-
-    # loc : str = ".all_2021-06-10_16-17-08"
-    # loc : str = ".all_ME"
+        (POSDrop,)]
+    metrics: list = [instance]
 
     exp = Experiment(
         loc=args['dir'],
@@ -124,7 +118,7 @@ if __name__ == "__main__":
         verbose=True,
         scale_down=args['sc'],
         sentence_n=args['stn'])
-    
+
     exp.setup(
         tasks,
         metrics,
@@ -148,4 +142,3 @@ if __name__ == "__main__":
     start_time = time.time()
     exp.evaluate()
     print("--- Evaluation took %s seconds ---" % (time.time() - start_time))
-    # exp.plot([Plot])

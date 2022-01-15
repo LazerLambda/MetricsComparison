@@ -1,15 +1,12 @@
-"""MoverScore Metric.
+"""MoverScore Metric."""
 
-23. Nov. 2021
-
-Philipp Koch
-"""
 from ..Metric import Metric
 
 from moverscore_v2 import get_idf_dict, word_mover_score
 
 import numpy as np
 import torch
+
 
 class MoverScoreMetric(Metric):
     """Class to organize Mover-ScoreMetric."""
