@@ -49,7 +49,7 @@ class POSDrop(OneDim):
             sentence : str = sentence[0:bounds[0]] + sentence[(bounds[1] + 1)::]
             diff += len(doc[i].text) + 1
         
-        if len(sentence) == 0:
+        if len(sentence.strip()) == 0:
             return sentence, False
 
         return sentence, True

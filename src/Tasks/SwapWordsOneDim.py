@@ -78,7 +78,7 @@ class SwapWordsOneDim(OneDim):
                     word = " " + token.text
             sent += word
 
-        if len(sent) == 0:
+        if len(sent.strip()) == 0:
             print("Sentence empty! Word swap")
             return sent, False
 

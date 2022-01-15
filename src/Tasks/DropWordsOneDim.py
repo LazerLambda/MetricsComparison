@@ -66,7 +66,7 @@ class DropWordsOneDim(OneDim):
                     word = " " + token.text
             sent += word
 
-        if len(sent) == 0:
+        if len(sent.strip()) == 0:
             print("Sentence empty! Word drop")
             return sent, False
 

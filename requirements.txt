@@ -7,6 +7,7 @@ progress==1.5
 scikit-learn==0.24.1
 sentence-transformers==1.0.3
 spacy==2.3.5
+torch
 tensorflow==2.4.0
 tensorflow-estimator==2.4.0
 tensorflow-probability==0.12.1

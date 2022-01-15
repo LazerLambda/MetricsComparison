@@ -34,7 +34,7 @@ class Negate(OneDim, Task):
         except Exception:
             pass
 
-        if len(sentence) == 0:
+        if len(sentence.strip()) == 0:
             print("Sentence empty! Negation.")
             return sentence, False
 

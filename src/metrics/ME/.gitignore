@@ -7,3 +7,4 @@ me.py.lprof
 profile.txt
 misc/
 bert_base_mnli/
+*.zip
