@@ -1,6 +1,6 @@
 # Comparison of evaluation measures for generated text based on pre-trained language models
 
-Experimental framework for the paper "Pre-trained language models evaluating themselves - A comparative study".
+Experimental framework for the paper [Pre-trained language models evaluating themselves - A comparative study](https://aclanthology.org/2022.insights-1.25/).
 
 
 ## Mark-Evaluate
